@@ -4,11 +4,12 @@ public class GameManager : MonoSingleton<GameManager>
 {
 	private static GameManager mngInstance = null;
 
-	//[Header("Manager 스크립트")]
+	[Header("Manager 스크립트")]
+	public PoolManager poolManager;
 
 	[Header("플레이어 정보")]
 	public GameObject playerObj;
-	[HideInInspector] public PlayerController playerController;
+	[HideInInspector] public PlayerController playerController;		// 컨트롤러 스크립트
 
 	[Header("스탯")]
 	public PlayerStats playerStats;

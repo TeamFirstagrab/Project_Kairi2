@@ -1,16 +1,14 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+	public void TakeDamage(int attack)
+	{
+		Debug.Log("Damaged");
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	public void Die()
+	{
+		throw new System.NotImplementedException();
+	}
 }

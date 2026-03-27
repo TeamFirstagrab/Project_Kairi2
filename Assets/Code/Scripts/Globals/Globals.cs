@@ -21,7 +21,7 @@ namespace Globals
 		public static readonly string throwingEnemy = "ThrowingEnemy";
 		public static readonly string bullet = "Bullet";
 		// 오브젝트
-		public static readonly string obj = "Object";
+		public static readonly string obj = "NormalObject";
 		public static readonly string throwingObj = "ThrowingObject";
 		// 플레이어 관련
 		public static readonly string player = "Player";

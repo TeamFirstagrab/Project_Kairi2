@@ -11,6 +11,8 @@ TagManager:
   - ThrowingObject
   - Enemy
   - ThrowingEnemy
+  - Platform
+  - OneWayPlatform
   layers:
   - Default
   - TransparentFX

@@ -3,8 +3,6 @@ using Globals;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using static UnityEditor.PlayerSettings;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -51,8 +49,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	/// </summary>
 	private void FixedUpdate()
 	{
-		rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
-
 		if(dashTime <= 0)
 		{
 			speed = GameManager.Instance.playerStatsRuntime.speed;
@@ -65,6 +61,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 			speed = GameManager.Instance.playerStatsRuntime.dashSpeed;
 		}
 		isDash = false;
+
+		rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
 	}
 
 	private void Update()

@@ -5,6 +5,14 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ground
+  - ExplosionObject
+  - BreakObject
+  - NormalObject
+  - ThrowingObject
+  - Enemy
+  - ThrowingEnemy
+  - Platform
+  - OneWayPlatform
   layers:
   - Default
   - TransparentFX

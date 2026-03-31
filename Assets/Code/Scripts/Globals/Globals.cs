@@ -23,6 +23,8 @@ namespace Globals
 		// 오브젝트
 		public static readonly string obj = "NormalObject";
 		public static readonly string throwingObj = "ThrowingObject";
+		public static readonly string crackObj = "CrackObject";
+		public static readonly string expObj = "ExplosionObject";
 		// 플레이어 관련
 		public static readonly string player = "Player";
 		public static readonly string hook = "Hook";

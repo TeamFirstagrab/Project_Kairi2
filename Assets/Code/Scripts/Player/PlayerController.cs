@@ -3,6 +3,7 @@ using Globals;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using EnumType;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -11,7 +12,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private SpriteRenderer sprite;
 	private bool isGrounded;	// 땅 여부
 	private bool isDash;        // 대쉬 사용 여부
-	private PlayerState state;  // 플레이어 상태
+	private bool isAttack;      // 공격 여부
+
+	// 공격
+	public Transform attackPos;
+	public Vector2 attackBoxSize;
+
+	// 애니메이션
+	private Animator animator;
 
 	// 이동
 	private Vector2 inputVec;   // 입력된 플레이어 이동값 (-1, 0, 1)
@@ -34,13 +42,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 		rigid = GetComponent<Rigidbody2D>();
 		sprite = GetComponent<SpriteRenderer>();
 		groundMask = LayerMask.GetMask(TagName.ground);
+		animator = GetComponent<Animator>();
 	}
 
 	private void Start()
 	{
 		isGrounded = true;
 		isDash = false;
-		state = PlayerState.Idle;
+		isAttack = false;
 		speed = GameManager.Instance.playerStatsRuntime.speed;
 	}
 
@@ -49,7 +58,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	/// </summary>
 	private void FixedUpdate()
 	{
-		if(dashTime <= 0)
+		if (dashTime <= 0)
 		{
 			speed = GameManager.Instance.playerStatsRuntime.speed;
 			if (isDash)
@@ -63,6 +72,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		isDash = false;
 
 		rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
+		UpdateSprite();		// 좌우 플립
 	}
 
 	private void Update()
@@ -107,13 +117,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 	/// <summary>
 	/// Input System
 	/// </summary>
-	void OnMove(InputValue val)     // 좌우 이동 (AD)
+	private void OnMove(InputValue val)     // 좌우 이동 (AD)
 	{
 		if (isDash) return;     // 대쉬 사용 중일 경우 리턴
 		inputVec = val.Get<Vector2>();
 	}
 
-	void OnJump(InputValue val)     // 점프 (W)
+	private void OnJump(InputValue val)     // 점프 (W)
 	{
 		if (!isGrounded) return;    // 땅에 서있지 않을 경우 리턴
 
@@ -121,24 +131,62 @@ public class PlayerController : MonoBehaviour, IDamageable
 		isGrounded = false;
 	}
 
-	void OnCrouch(InputValue val)   // 구르기/대쉬/내려가기 (S)
+	private void OnCrouch(InputValue val)   // 구르기/대쉬/내려가기 (S)
 	{
 		if (isDash) return;     // 대쉬 사용 중일 경우 리턴
-		isDash = true;
+		StartCoroutine(PlayerDash());
+	}
+
+	private void OnAttack(InputValue val)	// 공격 (LClick)
+	{
+		if (isAttack) return;
+		
+		// 플레이어 공격에 닿은 적 및 부서지는 오브젝트 처리
+		Collider2D[] colls = Physics2D.OverlapBoxAll(attackPos.position, attackBoxSize, 0);
+		foreach(var item in colls)
+		{
+			if (item.CompareTag(TagName.enemy)) // 적
+				item.GetComponent<Enemy>().TakeDamage(GameManager.Instance.playerStatsRuntime.attack);
+			else if (item.CompareTag(TagName.crackObj))     // 부서지는 오브젝트
+				item.GetComponent<ObjectController>().count -= GameManager.Instance.playerStatsRuntime.attack;
+			Debug.Log(item.tag);				
+		}
+		StartCoroutine(PlayerAttack());
+	}
+
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.blue;
+		Gizmos.DrawWireCube(attackPos.position, attackBoxSize);
 	}
 
 	/// <summary>
 	/// Coroutine
 	/// </summary>
-	//IEnumerator PlayerDash()    // 플레이어 대쉬
-	//{
-	//	float originalGravity = rigid.gravityScale;     // 원래 이동 속도 저장
-	//	isDash = true;
-	//	rigid.linearVelocity = new Vector2(inputVec.x * GameManager.Instance.playerStatsRuntime.dashSpeed, 0f);
-	//	// 정해진 무적 시간만큼 기다리기
-	//	yield return new WaitForSeconds(GameManager.Instance.playerStatsRuntime.invincibilityDuration);
-	//	isDash = false;
-	//}
+	IEnumerator PlayerDash()    // 플레이어 대쉬
+	{
+		speed = GameManager.Instance.playerStatsRuntime.speed;
+		isDash = true;
+
+		yield return new WaitForSeconds(GameManager.Instance.playerStatsRuntime.dashDuration);
+
+		dashTime -= Time.deltaTime;
+		speed = GameManager.Instance.playerStatsRuntime.dashSpeed;
+
+		isDash = false;
+	}
+
+	IEnumerator PlayerAttack()	// 플레이어 공격
+	{
+		// 공격
+		animator.SetTrigger("Attack");
+		isAttack = true;
+
+		// 쿨타임 대기
+		yield return new WaitForSeconds(GameManager.Instance.playerStatsRuntime.attackCoolTime);
+		
+		isAttack = false;
+	}
 
 	/// <summary>
 	/// Interface

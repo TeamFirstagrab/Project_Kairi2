@@ -38,8 +38,7 @@ public class ObjectController : MonoBehaviour
 	}
 	void Update()
 	{
-		if (isGrounded && rigid.linearVelocity == Vector2.zero)
-			gameObject.tag = tagName.obj;
+		UpdateCrackSprite();
 
 		//// 현재 태그에 따라 레이어마스크 대상 변경하기
 		//if (gameObject.CompareTag(tagName.throwingObj))
@@ -144,12 +143,6 @@ public class ObjectController : MonoBehaviour
 				//target.SetHitDirection(hitDir);
 				Explode();
 			}
-		}
-
-		if (crackObject && collision.gameObject.CompareTag(tagName.throwingObj) || collision.gameObject.CompareTag(tagName.throwingEnemy))
-		{
-			count--;
-			UpdateCrackSprite();
 		}
 	}
 

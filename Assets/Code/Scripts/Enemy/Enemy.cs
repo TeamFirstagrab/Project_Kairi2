@@ -9,6 +9,5 @@ public class Enemy : MonoBehaviour, IDamageable
 
 	public void Die()
 	{
-		throw new System.NotImplementedException();
 	}
 }

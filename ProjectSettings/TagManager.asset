@@ -6,13 +6,13 @@ TagManager:
   tags:
   - Ground
   - ExplosionObject
-  - BreakObject
   - NormalObject
   - ThrowingObject
   - Enemy
   - ThrowingEnemy
   - Platform
   - OneWayPlatform
+  - CrackObject
   layers:
   - Default
   - TransparentFX

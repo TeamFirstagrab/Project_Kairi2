@@ -10,6 +10,7 @@ namespace EnumType
 		Jump,           // 점프
 		Dash,			// 대쉬
 		Land,           // 착지
+		Attack,			// 공격
 		Damaged,        // 데미지 받은 상태
 	}
 

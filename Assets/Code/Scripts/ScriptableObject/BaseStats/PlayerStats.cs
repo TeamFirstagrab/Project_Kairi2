@@ -9,7 +9,9 @@ public class PlayerStats : ScriptableObject
 	[Header("점프 높이")]
 	public float jumpForce;
 	[Header("공격력")]
-	public float attack;
+	public int attack;
+	[Header("공격 쿨타임")]
+	public float attackCoolTime;
 	[Header("체력")]
 	public float maxHP;
 	[Header("대쉬 속도")]

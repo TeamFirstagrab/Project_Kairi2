@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// 플레이어 정보
 	private Rigidbody2D rigid;
 	private SpriteRenderer sprite;
-	private bool isGrounded;	// 땅 여부
+	private bool isGrounded;    // 땅 여부
+	private bool isGroundedSpecial;		// 떨어질 수 있는 땅
 	private bool isDash;        // 대쉬 사용 여부
 	private bool isAttack;      // 공격 여부
 
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	[SerializeField] private Transform groundCheckObj;      // 땅 체크 오브젝트 (프리펩)
 	public float checkRadius = 0.1f;    // 땅 체크 반지름
 	LayerMask groundMask;
+	LayerMask groundSpecialMask;
 
 	// 코루틴
 	private Coroutine playerDashCoroutine;  // 플레이어 대쉬
@@ -42,12 +44,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 		rigid = GetComponent<Rigidbody2D>();
 		sprite = GetComponent<SpriteRenderer>();
 		groundMask = LayerMask.GetMask(TagName.ground);
+		groundSpecialMask = LayerMask.GetMask(TagName.groundSpecial);
 		animator = GetComponent<Animator>();
 	}
 
 	private void Start()
 	{
 		isGrounded = true;
+		isGroundedSpecial = false;
 		isDash = false;
 		isAttack = false;
 		speed = GameManager.Instance.playerStatsRuntime.speed;
@@ -111,7 +115,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void GroundCheck()
 	{
-		isGrounded = Physics2D.OverlapCircle(groundCheckObj.position, checkRadius, groundMask);
+		isGrounded = Physics2D.OverlapCircle(groundCheckObj.position, checkRadius);
+		isGroundedSpecial = Physics2D.OverlapCircle(groundCheckObj.position, checkRadius, groundSpecialMask);
 	}
 
 	/// <summary>
@@ -133,8 +138,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void OnCrouch(InputValue val)   // 구르기/대쉬/내려가기 (S)
 	{
+		Debug.Log("isGrounded: " + isGrounded + ", isGroundedS: " + isGroundedSpecial);
 		if (isDash) return;     // 대쉬 사용 중일 경우 리턴
-		StartCoroutine(PlayerDash());
+		if (isGroundedSpecial)	// 아래로 내려갈 수 있는 플랫폼에 있을 경우
+		{
+			// 플레이어 위치가 살짝 내려가게
+			transform.position += Vector3.down * 0.1f;
+		}
+		else if(isGrounded)		// 땅에 있을 경우 대쉬
+		{
+			StartCoroutine(PlayerDash());
+		}
 	}
 
 	private void OnAttack(InputValue val)	// 공격 (LClick)

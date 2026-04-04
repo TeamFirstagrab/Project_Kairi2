@@ -30,7 +30,7 @@ namespace Globals
 		public static readonly string hook = "Hook";
 		// 배경 요소
 		public static readonly string ground = "Ground";
-		public static readonly string groundCheck = "GroundCheck";
+		public static readonly string groundSpecial = "OneWayPlatform";
 		public static readonly string trigger = "Trigger";
 		// NPC
 		public static readonly string npc = "NPC";

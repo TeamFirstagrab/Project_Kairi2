@@ -419,7 +419,7 @@ MonoBehaviour:
   attackPos: {fileID: 1659302311}
   attackBoxSize: {x: 1.9, y: 1.65}
   groundCheckObj: {fileID: 1199716175}
-  checkRadius: 0.1
+  checkRadius: 0.01
 --- !u!95 &58512547
 Animator:
   serializedVersion: 7

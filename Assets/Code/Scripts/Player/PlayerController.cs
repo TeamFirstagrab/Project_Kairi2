@@ -92,9 +92,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 	{
 		// 좌우 플립
 		if (inputVec.x > 0)
-			sprite.flipX = false;
+			transform.eulerAngles = new Vector2(0f, 0f);
 		else if (inputVec.x < 0)
-			sprite.flipX = true;
+			transform.eulerAngles = new Vector2(0f, 180f);
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
@@ -138,7 +138,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	private void OnCrouch(InputValue val)   // 구르기/대쉬/내려가기 (S)
 	{
-		Debug.Log("isGrounded: " + isGrounded + ", isGroundedS: " + isGroundedSpecial);
 		if (isDash) return;     // 대쉬 사용 중일 경우 리턴
 		if (isGroundedSpecial)	// 아래로 내려갈 수 있는 플랫폼에 있을 경우
 		{
@@ -172,6 +171,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	{
 		Gizmos.color = Color.blue;
 		Gizmos.DrawWireCube(attackPos.position, attackBoxSize);
+		Gizmos.DrawWireSphere(groundCheckObj.position, checkRadius);
 	}
 
 	/// <summary>

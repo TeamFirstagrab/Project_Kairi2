@@ -6,13 +6,6 @@ using UnityEngine;
 /// </summary>
 namespace Globals
 {
-	// 애니메이션 이름(string) 관련 클래스
-	public static class AnimationVarName
-	{
-		public static readonly string playerState = "playerState";  // 플레이어 상태
-		public static readonly string enemyState = "enemyState";  // 플레이어 상태
-	}
-
 	// 태그 이름(string) 관련 클래스
 	public static class TagName
 	{
@@ -36,5 +29,22 @@ namespace Globals
 		public static readonly string npc = "NPC";
 		// 카메라
 		public static readonly string cameraBound = "CameraBound";
+	}
+
+	// 적 관련 데이터
+	public static class EnemyData
+	{
+		public static readonly float findPlayerDist = 5f;	// 플레이어 인식 범위
+		public static readonly float aggroOffDist = 10f;	// 플레이어 어그로 풀리는 범위
+		public static readonly float attackDist = 1.5f;		// 플레이어 공격 범위
+	}
+
+	// 애니메이션 이름 관련 클래스
+	public static class EnemyAnimName	// 적
+	{
+		public static readonly string Idle = "Enemy_Idle";
+		public static readonly string Chase = "Enemy_Run";
+		public static readonly string Attack = "Enemy_Shot1";
+		public static readonly string Patrol = "Enemy_Walk";
 	}
 }

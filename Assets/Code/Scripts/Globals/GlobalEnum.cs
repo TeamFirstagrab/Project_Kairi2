@@ -14,6 +14,16 @@ namespace EnumType
 		Damaged,        // 데미지 받은 상태
 	}
 
+	public enum EnemyState
+	{
+		IDLE = 0,
+		CHASE,
+		ATTACK,
+		PATROL,
+
+		MAX,
+	}
+
 	// 오브젝트 타입
 	public enum ObjectType
 	{

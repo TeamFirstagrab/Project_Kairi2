@@ -1,36 +1,38 @@
-using EnumType;
+ï»¿using EnumType;
 using Globals;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+enum DashType { NONE = 0, NORMAL, READY, DOWN }
+
 public class PlayerController : MonoBehaviour, IDamageable
 {
-	// ÇÃ·¹ÀÌ¾î Á¤º¸
+	// í”Œë ˆì´ì–´ ì •ë³´
 	private Rigidbody2D rigid;
 	private SpriteRenderer sprite;
-	private bool isGrounded;    // ¶¥ ¿©ºÎ
-	private bool isGroundedSpecial;		// ¶³¾îÁú ¼ö ÀÖ´Â ¶¥
-	private bool isDash;        // ´ë½¬ »ç¿ë ¿©ºÎ
-	private bool isAttack;      // °ø°İ ¿©ºÎ
+	private bool isGrounded;    // ë•… ì—¬ë¶€
+	private bool isGroundedSpecial;     // ë–¨ì–´ì§ˆ ìˆ˜ ìˆëŠ” ë•…
+	private bool isDash;        // ëŒ€ì‰¬ ì‚¬ìš© ì—¬ë¶€
+	private bool isAttack;      // ê³µê²© ì—¬ë¶€
+	float originalGravity;
 
-	// °ø°İ
-	public Transform attackPos;
-	public Vector2 attackBoxSize;
-
-	// ¾Ö´Ï¸ŞÀÌ¼Ç
+	// ì• ë‹ˆë©”ì´ì…˜
 	private Animator animator;
 
-	// ÀÌµ¿
-	private Vector2 inputVec;   // ÀÔ·ÂµÈ ÇÃ·¹ÀÌ¾î ÀÌµ¿°ª (-1, 0, 1)
-	private float speed;        // ÇÃ·¹ÀÌ¾î ÀÌµ¿ ¼Óµµ
-	private float dashTime;		// ´ë½¬ Áö¼Ó ½Ã°£
+	// ì´ë™
+	private Vector2 inputVec;   // ì…ë ¥ëœ í”Œë ˆì´ì–´ ì´ë™ê°’ (-1, 0, 1)
+	private float speed;        // í”Œë ˆì´ì–´ ì´ë™ ì†ë„
+	private float dashTime;     // ëŒ€ì‰¬ ì§€ì† ì‹œê°„
 
-	// ¶¥ Ã¼Å©
-	[SerializeField] private Transform groundCheckObj;      // ¶¥ Ã¼Å© ¿ÀºêÁ§Æ® (ÇÁ¸®Æé)
-	public float checkRadius = 0.1f;    // ¶¥ Ã¼Å© ¹İÁö¸§
+	// ë•… ì²´í¬
+	[SerializeField] private Transform groundCheckObj;      // ë•… ì²´í¬ ì˜¤ë¸Œì íŠ¸ (í”„ë¦¬í©)
+	public float checkRadius = 0.1f;    // ë•… ì²´í¬ ë°˜ì§€ë¦„
 	private LayerMask groundMask;
 	private LayerMask oneWayPlatformMask;
+
+	// ë§ˆìš°ìŠ¤ ì…ë ¥
+	Vector2 mousePos, transPos, targetPos;
 
 	/// <summary>
 	/// Init
@@ -40,7 +42,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		rigid = GetComponent<Rigidbody2D>();
 		sprite = GetComponent<SpriteRenderer>();
 		groundMask = LayerMask.GetMask(TagName.ground);
-		oneWayPlatformMask = LayerMask.GetMask(TagName.groundSpecial);
+		oneWayPlatformMask = LayerMask.GetMask(TagName.oneWayPlatform);
 		animator = GetComponent<Animator>();
 	}
 
@@ -51,6 +53,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		isDash = false;
 		isAttack = false;
 		speed = GameManager.Instance.playerStatsRuntime.speed;
+		originalGravity = rigid.gravityScale;
 	}
 
 	/// <summary>
@@ -71,22 +74,24 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 		isDash = false;
 
-		rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
-		UpdateSprite();		// ÁÂ¿ì ÇÃ¸³
+		if (!isDash)
+			rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
+		UpdateSprite();     // ì¢Œìš° í”Œë¦½
 	}
 
 	private void Update()
 	{
-		if(inputVec.x == 0)		// ÁÂ¿ì ÀÌµ¿ ÀÔ·ÂÀÌ ¾øÀ» °æ¿ì
+		if (inputVec.x == 0)        // ì¢Œìš° ì´ë™ ì…ë ¥ì´ ì—†ì„ ê²½ìš°
 			rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-		else	// ÁÂ¿ì ÀÌµ¿ÀÌ ÀÖÀ» °æ¿ì
+		else    // ì¢Œìš° ì´ë™ì´ ìˆì„ ê²½ìš°
 			rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+		rigid.gravityScale = originalGravity;
 	}
 
-	// ÇÃ·¹ÀÌ¾î ½ºÇÁ¶óÀÌÆ® ¾÷µ¥ÀÌÆ®
+	// í”Œë ˆì´ì–´ ìŠ¤í”„ë¼ì´íŠ¸ ì—…ë°ì´íŠ¸
 	private void UpdateSprite()
 	{
-		// ÁÂ¿ì ÇÃ¸³
+		// ì¢Œìš° í”Œë¦½
 		if (inputVec.x > 0)
 			transform.eulerAngles = new Vector2(0f, 0f);
 		else if (inputVec.x < 0)
@@ -118,104 +123,164 @@ public class PlayerController : MonoBehaviour, IDamageable
 	/// <summary>
 	/// Input System
 	/// </summary>
-	private void OnMove(InputValue val)     // ÁÂ¿ì ÀÌµ¿ (AD)
+	private void OnMove(InputValue val)     // ì¢Œìš° ì´ë™ (AD)
 	{
-		if (isDash) return;     // ´ë½¬ »ç¿ë ÁßÀÏ °æ¿ì ¸®ÅÏ
+		if (isDash) return;     // ëŒ€ì‰¬ ì‚¬ìš© ì¤‘ì¼ ê²½ìš° ë¦¬í„´
 		inputVec = val.Get<Vector2>();
 	}
 
-	private void OnJump(InputValue val)     // Á¡ÇÁ (W)
+	private void OnJump(InputValue val)     // ì í”„ (W)
 	{
-		if (!isGrounded) return;    // ¶¥¿¡ ¼­ÀÖÁö ¾ÊÀ» °æ¿ì ¸®ÅÏ
+		if (!isGrounded) return;    // ë•…ì— ì„œìˆì§€ ì•Šì„ ê²½ìš° ë¦¬í„´
 
 		rigid.AddForce(Vector2.up * GameManager.Instance.playerStatsRuntime.jumpForce, ForceMode2D.Impulse);
 		isGrounded = false;
 	}
 
-	private void OnCrouch(InputValue val)   // ±¸¸£±â/´ë½¬/³»·Á°¡±â (S)
+	private void OnCrouch(InputValue val)
 	{
-		if (isDash) return;     // ´ë½¬ »ç¿ë ÁßÀÏ °æ¿ì ¸®ÅÏ
-		if (isGroundedSpecial)	// ¾Æ·¡·Î ³»·Á°¥ ¼ö ÀÖ´Â ÇÃ·§Æû¿¡ ÀÖÀ» °æ¿ì
+		if (isDash) return;
+
+		if (isGroundedSpecial)
 		{
-			// ÇÃ·¹ÀÌ¾î À§Ä¡°¡ »ìÂ¦ ³»·Á°¡°Ô
 			transform.position += Vector3.down * 0.1f;
 		}
-		else if(isGrounded)		// ¶¥¿¡ ÀÖÀ» °æ¿ì ´ë½¬
+		else if (isGrounded)
 		{
-			StartCoroutine(PlayerDash());
+			Vector2 dir = inputVec;
+
+			// ì…ë ¥ ì—†ìœ¼ë©´ ë°”ë¼ë³´ëŠ” ë°©í–¥ìœ¼ë¡œ ëŒ€ì‰¬
+			if (dir == Vector2.zero)
+				dir = transform.eulerAngles.y == 0 ? Vector2.right : Vector2.left;
+
+			StartCoroutine(PlayerDash(dir));
 		}
 	}
 
-	private void OnAttack(InputValue val)	// °ø°İ (LClick)
+	private void OnAttack(InputValue val)
 	{
 		if (isAttack) return;
-		
-		// ÇÃ·¹ÀÌ¾î °ø°İ¿¡ ´êÀº Àû ¹× ºÎ¼­Áö´Â ¿ÀºêÁ§Æ® Ã³¸®
-		Collider2D[] colls = Physics2D.OverlapBoxAll(attackPos.position, attackBoxSize, 0);
-		foreach(var item in colls)
-		{
-			if (item.CompareTag(TagName.enemy)) // Àû
-				item.GetComponent<Enemy>().TakeDamage(GameManager.Instance.playerStatsRuntime.attack);
-			else if (item.CompareTag(TagName.crackObj))     // ºÎ¼­Áö´Â ¿ÀºêÁ§Æ®
-				item.GetComponent<ObjectController>().count -= GameManager.Instance.playerStatsRuntime.attack;
-			GameManager.Instance.cameraShake.ShakeForSeconds(1f);     // Ä«¸Ş¶ó ½¦ÀÌÅ·
-			Debug.Log($"broken {item.tag}");
-		}
-		StartCoroutine(PlayerAttack());
+
+		mousePos = Input.mousePosition;
+		transPos = Camera.main.ScreenToWorldPoint(mousePos);
+		targetPos = new Vector2(transPos.x, transPos.y);
+
+		// ë§ˆìš°ìŠ¤ ë°©í–¥ìœ¼ë¡œ ê³µê²©
+		StartCoroutine(PlayerAttack(targetPos));
 	}
 
+
+
+	/// <summary>
+	/// Debug
+	/// </summary>
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.blue;
-		Gizmos.DrawWireCube(attackPos.position, attackBoxSize);
 		Gizmos.DrawWireSphere(groundCheckObj.position, checkRadius);
 	}
 
 	/// <summary>
 	/// Coroutine
 	/// </summary>
-	IEnumerator PlayerDash()    // ÇÃ·¹ÀÌ¾î ´ë½¬
+	private IEnumerator PlayerDash(Vector2 dir)
 	{
-		speed = GameManager.Instance.playerStatsRuntime.speed;
 		isDash = true;
 
-		yield return new WaitForSeconds(GameManager.Instance.playerStatsRuntime.dashDuration);
+		float originalGravity = rigid.gravityScale;
+		rigid.gravityScale = 0f;
 
-		dashTime -= Time.deltaTime;
-		speed = GameManager.Instance.playerStatsRuntime.dashSpeed;
+		float dashSpeed = GameManager.Instance.playerStatsRuntime.dashSpeed;
+		float dashDuration = GameManager.Instance.playerStatsRuntime.dashDuration;
 
+		float time = 0f;
+
+		while (time < dashDuration)
+		{
+			rigid.linearVelocity = dir * dashSpeed;
+			time += Time.deltaTime;
+			yield return null;
+		}
+
+		rigid.gravityScale = originalGravity;
 		isDash = false;
 	}
 
-	IEnumerator PlayerAttack()	// ÇÃ·¹ÀÌ¾î °ø°İ
+	IEnumerator PlayerAttack(Vector2 target)
 	{
-		// °ø°İ
-		animator.Play(PlayerAnimName.Attack);	// ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+		animator.Play(PlayerAnimName.Attack);
+		isDash = true;
 		isAttack = true;
 
-		// ÄğÅ¸ÀÓ ´ë±â
+		float dashSpeed = GameManager.Instance.playerStatsRuntime.dashSpeed;
+		float dashDuration = GameManager.Instance.playerStatsRuntime.dashDuration;
+
+		Vector2 startPos = transform.position;
+		Vector2 dir = (target - (Vector2)transform.position).normalized;
+
+		rigid.gravityScale = 0f;    // ì¤‘ë ¥ 0ìœ¼ë¡œ
+
+		transform.localScale = new Vector3(((dir.x < 0) ? -1 : 1), 1, 1);
+
+		float dashDistance = dashSpeed * dashDuration;      // ëŒ€ì‰¬ ê±°ë¦¬
+		Vector2 endPos = startPos + dir * dashDistance;     // ëª©í‘œ ìœ„ì¹˜ (ê¸°ë³¸ê°’)
+
+		CapsuleCollider2D col = GetComponent<CapsuleCollider2D>();
+		LayerMask isLayer = ~LayerMask.GetMask("Player");
+		RaycastHit2D hit = Physics2D.CapsuleCast(
+			col.bounds.center,
+			col.size,
+			CapsuleDirection2D.Vertical,
+			0f,
+			dir,
+			dashDistance,
+			isLayer
+		);
+
+		float time = 0f;
+
+		if (hit)
+		{
+			// ê³µê²© ë²”ìœ„ê°€ ë²½ì„ ë„˜ì—ˆì„ ê²½ìš°
+			if (hit.transform.CompareTag(TagName.ground))
+				endPos = startPos + dir * (hit.distance - 0.1f);    // ë²½ ë°”ë¡œ ì•ì—ì„œ ë©ˆì¶¤
+			// ë¶€ì„œì§€ëŠ” ì˜¤ë¸Œì íŠ¸ì¸ ê²½ìš°
+			if(hit.transform.CompareTag(TagName.crackObj) || hit.transform.CompareTag(TagName.enemy))
+			{
+				endPos = startPos + dir * GameManager.Instance.playerStatsRuntime.attackDist;
+				hit.transform.GetComponent<IDamageable>().TakeDamage(GameManager.Instance.playerStatsRuntime.attack);	// ë°ë¯¸ì§€ ì£¼ê¸°
+			}
+
+		}
+
+		while (time < dashDuration)
+		{
+			transform.position = Vector2.Lerp(startPos, endPos, time / dashDuration);
+			time += Time.deltaTime;
+			yield return null;
+		}
+
+		transform.position = endPos; // ë§ˆì§€ë§‰ ë³´ì •
+		rigid.gravityScale = originalGravity;
+
 		yield return new WaitForSeconds(GameManager.Instance.playerStatsRuntime.attackCoolTime);
-		
+
+		isDash = false;
 		isAttack = false;
 	}
 
 	/// <summary>
 	/// Interface
 	/// </summary>
-	public void TakeDamage(int attack)  // µ¥¹ÌÁö
+	public void TakeDamage(int attack)  // ë°ë¯¸ì§€
 	{
-		if (isDash) return;   // ¹«ÀûÀÏ °æ¿ì ¸®ÅÏ
+		if (isDash) return;   // ë¬´ì ì¼ ê²½ìš° ë¦¬í„´
 
-		GameManager.Instance.playerStatsRuntime.currentHP -= attack;    // Ã¼·Â °¨¼Ò
+		GameManager.Instance.playerStatsRuntime.currentHP -= attack;    // ì²´ë ¥ ê°ì†Œ
 
-		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)     // Ã¼·ÂÀÌ 0 ÀÌÇÏÀÏ ¶§
+		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)     // ì²´ë ¥ì´ 0 ì´í•˜ì¼ ë•Œ
 		{
 			return;
 		}
-	}
-
-	public void Die()   // Á×À½ Ã³¸®
-	{
-
 	}
 }

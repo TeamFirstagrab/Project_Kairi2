@@ -8,6 +8,8 @@ public class PlayerStatsRuntime
 	public float speed;
 	[Header("점프 높이")]
 	public float jumpForce;
+	[Header("공격 사거리")]
+	public float attackDist;
 	[Header("공격력")]
 	public int attack;
 	[Header("공격 쿨타임")]
@@ -28,6 +30,7 @@ public class PlayerStatsRuntime
 		speed = baseStats.speed;
 		jumpForce = baseStats.jumpForce;
 		attack = baseStats.attack;
+		attackDist = baseStats.attackDist;
 		attackCoolTime = baseStats.attackCoolTime;
 		maxHP = baseStats.maxHP;
 		currentHP = maxHP;

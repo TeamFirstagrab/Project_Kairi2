@@ -4,5 +4,4 @@ using UnityEngine;
 public interface IDamageable
 {
 	public void TakeDamage(int attack);    // 데미지 입기
-	public void Die();	// 죽음 처리
 }

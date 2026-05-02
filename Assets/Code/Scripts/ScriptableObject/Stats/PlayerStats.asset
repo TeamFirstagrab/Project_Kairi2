@@ -15,8 +15,9 @@ MonoBehaviour:
   speed: 10.5
   jumpForce: 15
   attack: 1
-  attackCoolTime: 0.5
+  attackDist: 0
+  attackCoolTime: 0.3
   maxHP: 1
   dashSpeed: 30
-  dashDuration: 0.1
+  dashDuration: 0.2
   invincibilityDuration: 0.2

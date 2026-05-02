@@ -3,7 +3,7 @@ using System.Collections;
 using tagName = Globals.TagName;    // 태그
 using Globals;
 
-public class ObjectController : MonoBehaviour
+public class ObjectController : MonoBehaviour, IDamageable
 {
 	[Header("터지는 오브젝트")]
 	public bool explosionObject;
@@ -186,4 +186,9 @@ public class ObjectController : MonoBehaviour
 			isGrounded = false;
 	}
 
+	public void TakeDamage(int attack)
+	{
+		if(crackObject)		// 부서지는 오브젝트일 경우
+			GameManager.Instance.poolManager.ReturnToPool(gameObject);
+	}
 }

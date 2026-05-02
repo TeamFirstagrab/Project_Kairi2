@@ -17,10 +17,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private bool isAttack;      // 공격 여부
 	float originalGravity;
 
-	// 공격
-	public Transform attackPos;
-	public Vector2 attackBoxSize;
-
 	// 애니메이션
 	private Animator animator;
 
@@ -46,7 +42,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		rigid = GetComponent<Rigidbody2D>();
 		sprite = GetComponent<SpriteRenderer>();
 		groundMask = LayerMask.GetMask(TagName.ground);
-		oneWayPlatformMask = LayerMask.GetMask(TagName.groundSpecial);
+		oneWayPlatformMask = LayerMask.GetMask(TagName.oneWayPlatform);
 		animator = GetComponent<Animator>();
 	}
 
@@ -181,7 +177,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.blue;
-		Gizmos.DrawWireCube(attackPos.position, attackBoxSize);
 		Gizmos.DrawWireSphere(groundCheckObj.position, checkRadius);
 	}
 
@@ -244,9 +239,19 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		float time = 0f;
 
-		// 공격 범위가 벽을 넘었을 경우
-		if (hit && hit.transform.CompareTag(TagName.ground))
-			endPos = startPos + dir * (hit.distance - 0.1f);    // 벽 바로 앞에서 멈춤
+		if (hit)
+		{
+			// 공격 범위가 벽을 넘었을 경우
+			if (hit.transform.CompareTag(TagName.ground))
+				endPos = startPos + dir * (hit.distance - 0.1f);    // 벽 바로 앞에서 멈춤
+			// 부서지는 오브젝트인 경우
+			if(hit.transform.CompareTag(TagName.crackObj) || hit.transform.CompareTag(TagName.enemy))
+			{
+				endPos = startPos + dir * GameManager.Instance.playerStatsRuntime.attackDist;
+				hit.transform.GetComponent<IDamageable>().TakeDamage(GameManager.Instance.playerStatsRuntime.attack);	// 데미지 주기
+			}
+
+		}
 
 		while (time < dashDuration)
 		{
@@ -277,10 +282,5 @@ public class PlayerController : MonoBehaviour, IDamageable
 		{
 			return;
 		}
-	}
-
-	public void Die()   // 죽음 처리
-	{
-
 	}
 }

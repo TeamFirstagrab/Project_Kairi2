@@ -38,7 +38,7 @@ public class EnemyChase : IEnemyState
 			Vector2 dir = (_player.position - p_enemy.transform.position).normalized;   // 플레이어 방향
 
 			// 추적 속도만큼 이동
-			p_enemy._rb.linearVelocity = new Vector2(dir.x * p_enemy.GetComponent<EnemyDataManager>()._enemyStats.ChaseSpeed, 0f);
+			p_enemy.rb.linearVelocity = new Vector2(dir.x * p_enemy.GetComponent<EnemyDataManager>()._enemyStats.ChaseSpeed, 0f);
 
 			// 적 이동 방향에 맞게 캐릭터 Flip
 			if(dir.x != 0f)
@@ -52,7 +52,7 @@ public class EnemyChase : IEnemyState
 			float dist = Vector2.Distance(p_enemy.transform.position, _player.position);
 			if (dist <= p_enemy.GetComponent<EnemyDataManager>()._enemyStats.AttackRange)
 			{
-				p_enemy._rb.linearVelocity = Vector2.zero;
+				p_enemy.rb.linearVelocity = Vector2.zero;
 				p_enemy.ChangeState(EnemyState.ATTACK);
 			}
 		}

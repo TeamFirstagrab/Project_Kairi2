@@ -36,11 +36,11 @@ public class EnemyPatrol : IEnemyState
 		}
 		Vector2 dir = p_enemy.transform.localScale.x < 0 ? Vector2.right : Vector2.left;
 		_moveTimer += Time.deltaTime;
-		p_enemy._rb.linearVelocity = new Vector2(dir.x * p_enemy.GetComponent<EnemyDataManager>()._enemyStats.PatrolSpeed, 0f);
+		p_enemy.rb.linearVelocity = new Vector2(dir.x * p_enemy.GetComponent<EnemyDataManager>()._enemyStats.PatrolSpeed, 0f);
 
 		if(_moveTimer >= _moveTime)
 		{
-			p_enemy._rb.linearVelocity = Vector2.zero;
+			p_enemy.rb.linearVelocity = Vector2.zero;
 			p_enemy.ChangeState(EnemyState.IDLE);
 		}
 	}

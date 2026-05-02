@@ -51,6 +51,6 @@ public class GameManager : MonoSingleton<GameManager>
 
 		// 플레이어 스탯
 		if (playerStatsRuntime != null) // 플레이어 초기화
-			playerStatsRuntime = new PlayerStatsRuntime(playerStats);	// 스탯 값 복제ㅋ
+			playerStatsRuntime = new PlayerStatsRuntime(playerStats);	// 스탯 값 복제
 	}
 }

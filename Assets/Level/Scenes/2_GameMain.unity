@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 58512543}
   - component: {fileID: 58512546}
   - component: {fileID: 58512548}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -308,8 +308,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!61 &58512548
-BoxCollider2D:
+--- !u!70 &58512548
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -342,18 +342,9 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0929839, y: -0.09298372}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3, y: 3}
-    newSize: {x: 1, y: 2}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1.078333, y: 1.8222036}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0, y: -0.10456717}
+  m_Size: {x: 1.0076816, y: 1.9064319}
+  m_Direction: 0
 --- !u!1 &71193433
 GameObject:
   m_ObjectHideFlags: 0
@@ -30856,6 +30847,7 @@ MonoBehaviour:
   playerStatsRuntime:
     speed: 0
     jumpForce: 0
+    attackDist: 0
     attack: 0
     attackCoolTime: 0
     maxHP: 0

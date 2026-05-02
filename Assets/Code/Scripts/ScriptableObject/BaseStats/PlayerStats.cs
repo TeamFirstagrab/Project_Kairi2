@@ -10,6 +10,8 @@ public class PlayerStats : ScriptableObject
 	public float jumpForce;
 	[Header("공격력")]
 	public int attack;
+	[Header("공격 사거리")]
+	public float attackDist;
 	[Header("공격 쿨타임")]
 	public float attackCoolTime;
 	[Header("체력")]

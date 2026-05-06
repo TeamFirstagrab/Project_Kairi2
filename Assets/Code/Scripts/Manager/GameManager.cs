@@ -7,6 +7,7 @@ public class GameManager : MonoSingleton<GameManager>
 
 	[Header("Manager")]
 	public PoolManager poolManager;
+	public SceneReloader sceneReloader;
 
 	[Header("Camera")]
 	public CameraShake cameraShake;

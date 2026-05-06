@@ -4,10 +4,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
+	// UI
+	[Header("Glitch Global Volume 오브젝트")]
+	public GameObject glitchGlobalVolume;
+	[Header("TV Global Volume 오브젝트")]
+	public GameObject tvGlobalVolume;
+	[Header("검은 화면 UI")]
+	public Image blackCanvas;
+
 	// 플레이어 정보
+	[Header("플레이어 리스폰 위치")]
+	[SerializeField] Vector2 spawnPoint;
 	private Rigidbody2D rigid;
 	private bool isGrounded;    // 땅 여부
 	private bool isGroundedSpecial;     // 떨어질 수 있는 땅
@@ -76,10 +88,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void Update()
 	{
 		Debug.DrawLine(attackStartPos, attackEndPos);
-		//if (inputVec.x == 0)        // 좌우 이동 입력이 없을 경우
-		//	rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-		//else    // 좌우 이동이 있을 경우
-		//	rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+		if (inputVec.x == 0)        // 좌우 이동 입력이 없을 경우
+			rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+		else    // 좌우 이동이 있을 경우
+			rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 
 		rigid.gravityScale = originalGravity;
 	}
@@ -219,7 +231,19 @@ public class PlayerController : MonoBehaviour, IDamageable
 		StartCoroutine(PlayerAttack(targetPos));
 	}
 
+	void RespawnPlayer()
+	{
+		rigid.linearVelocity = Vector2.zero;
 
+		transform.position = spawnPoint;
+
+		GameManager.Instance.playerStatsRuntime.currentHP = GameManager.Instance.playerStats.maxHP;
+
+		blackCanvas.gameObject.SetActive(false);
+
+		glitchGlobalVolume.SetActive(false);
+		tvGlobalVolume.SetActive(false);
+	}
 
 	/// <summary>
 	/// Debug
@@ -320,6 +344,20 @@ public class PlayerController : MonoBehaviour, IDamageable
 		isDash = false;
 	}
 
+	IEnumerator PlayerDie()		// 플레이어 사망
+	{
+		if (glitchGlobalVolume && tvGlobalVolume)
+		{
+			glitchGlobalVolume.SetActive(true);
+			tvGlobalVolume.SetActive(true);
+			yield return new WaitForSeconds(0.5f);
+			blackCanvas.gameObject.SetActive(true);
+			GameManager.Instance.sceneReloader.SetAlpha(1f);
+			yield return new WaitForSeconds(0.5f);
+			RespawnPlayer();
+		}
+	}
+
 	/// <summary>
 	/// Interface
 	/// </summary>
@@ -331,7 +369,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)     // 체력이 0 이하일 때
 		{
-			Debug.Log("플레이어 사망");
+			StartCoroutine(PlayerDie());
 			return;
 		}
 	}

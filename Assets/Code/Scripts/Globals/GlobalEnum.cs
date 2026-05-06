@@ -14,6 +14,14 @@ namespace EnumType
 		Damaged,        // 데미지 받은 상태
 	}
 
+	enum PlayerDashType		// 대쉬
+	{ 
+		NONE = 0, 
+		NORMAL, 
+		READY, 
+		DOWN
+	}
+
 	public enum EnemyState
 	{
 		IDLE = 0,

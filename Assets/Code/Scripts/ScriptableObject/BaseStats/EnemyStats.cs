@@ -22,7 +22,7 @@ public class EnemyStats : ScriptableObject
 	[Header("시야 범위")]
 	public float SightRange;
 	[Header("공격력")]
-	public float Attack;
+	public int Attack;
 	[Header("공격 범위")]
 	public float AttackRange;
 	[Header("체력")]

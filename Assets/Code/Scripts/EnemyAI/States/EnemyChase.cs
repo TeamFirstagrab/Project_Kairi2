@@ -10,23 +10,20 @@ public class EnemyChase : IEnemyState
 	{
 		Debug.Log("Enter Chase");
 
-		p_enemy.GetComponent<Animator>().Play(EnemyAnimName.Chase);    // 탐색 애니메이션
+		p_enemy.GetComponent<Animator>().Play(EnemyAnimName.chase);    // 탐색 애니메이션
 		_chaseTime = 0f;
 	}
 
 	public void UpdateState(Enemy p_enemy)
 	{
-		Debug.Log("Chasing...");
-
 		_chaseTimer += Time.deltaTime;
 		Transform _player = GameManager.Instance.playerObj.transform;
 
 		// 플레이어 체크
 		bool _playerVisible = p_enemy.GetComponent<EnemySight>().IsPlayerInRange();
 		if (_playerVisible) _chaseTimer = 0f;
-
 		// 시야 밖으로 벗어났고, 시간이 끝났을 경우
-		if(!_playerVisible && _chaseTimer >= _chaseTime)
+		else if(_chaseTimer >= _chaseTime)
 		{
 			// 기본 상태로 전환
 			p_enemy.ChangeState(EnemyState.IDLE);

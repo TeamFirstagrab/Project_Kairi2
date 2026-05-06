@@ -117,20 +117,6 @@ public class ObjectController : MonoBehaviour, IDamageable
 	{
 		CheckGround(collision);     // 바닥 체크
 
-		if (collision.gameObject.CompareTag(tagName.enemy))
-		{
-			if (collision.gameObject.TryGetComponent<Enemy>(out var target))
-			{
-				//// 첫 번째 접촉점 기준
-				//ContactPoint2D contact = collision.contacts[0];
-
-				//// normal은 "맞은 대상 기준으로 바깥 방향"
-				//Vector2 hitDir = -contact.normal;
-				//target.SetHitDirection(hitDir);
-				target.TakeDamage(1);       // 닿은 적에게 데미지 주기
-			}
-		}
-
 		if (explosionObject && collision.gameObject.CompareTag(tagName.enemy))
 		{
 			if (collision.gameObject.TryGetComponent<Enemy>(out var target))
@@ -189,6 +175,6 @@ public class ObjectController : MonoBehaviour, IDamageable
 	public void TakeDamage(int attack)
 	{
 		if(crackObject)		// 부서지는 오브젝트일 경우
-			GameManager.Instance.poolManager.ReturnToPool(gameObject);
+			Destroy(gameObject);
 	}
 }

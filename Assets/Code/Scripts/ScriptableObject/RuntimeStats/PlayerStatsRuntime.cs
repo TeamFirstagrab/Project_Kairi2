@@ -8,7 +8,7 @@ public class PlayerStatsRuntime
 	public float speed;
 	[Header("점프 높이")]
 	public float jumpForce;
-	[Header("공격 사거리")]
+	[Header("공격 시 추가로 길어질 사거리")]
 	public float attackDist;
 	[Header("공격력")]
 	public int attack;
@@ -17,8 +17,8 @@ public class PlayerStatsRuntime
 	[Header("체력")]
 	public float maxHP;
 	public float currentHP;
-	[Header("대쉬 속도")]
-	public float dashSpeed;
+	[Header("대쉬 사거리")]
+	public float dashDist;
 	[Header("대쉬 시간")]
 	public float dashDuration;
 	[Header("무적 시간")]
@@ -34,7 +34,7 @@ public class PlayerStatsRuntime
 		attackCoolTime = baseStats.attackCoolTime;
 		maxHP = baseStats.maxHP;
 		currentHP = maxHP;
-		dashSpeed = baseStats.dashSpeed;
+		dashDist = baseStats.dashDist;
 		dashDuration = baseStats.dashDuration;
 		invincibilityDuration = baseStats.invincibilityDuration;
 	}

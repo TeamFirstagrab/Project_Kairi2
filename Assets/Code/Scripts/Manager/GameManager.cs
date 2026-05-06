@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -6,6 +7,7 @@ public class GameManager : MonoSingleton<GameManager>
 
 	[Header("Manager")]
 	public PoolManager poolManager;
+	public SceneReloader sceneReloader;
 
 	[Header("Camera")]
 	public CameraShake cameraShake;

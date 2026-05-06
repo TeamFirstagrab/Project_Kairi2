@@ -17,7 +17,7 @@ MonoBehaviour:
   MoveSpeed: 1
   PatrolSpeed: 1.5
   ChaseSpeed: 7
-  SightRoundRange: 2
+  SightRoundRange: 3
   SightRange: 999
   Attack: 1
   AttackRange: 5

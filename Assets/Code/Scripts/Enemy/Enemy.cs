@@ -26,8 +26,6 @@ public class Enemy : MonoBehaviour, IDamageable
 	private void Update()
 	{
 		stateList[enemyState]?.UpdateState(this);
-
-		Debug.Log($"main enemy state: {enemyState}");
 	}
 
 	private void InitStateList()
@@ -54,10 +52,12 @@ public class Enemy : MonoBehaviour, IDamageable
 	// 인터페이스 상속
 	public void TakeDamage(int attack)
 	{
-		// TODO: 데미지 수정
 		enemyStatsRuntime.CurrentHP -= attack;
 
 		if (enemyStatsRuntime.CurrentHP < 0)
+		{
 			Destroy(gameObject);
+			Debug.Log($"적 사망 (데미지: {attack})");
+		}
 	}
 }

@@ -18,8 +18,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private Animator animator;
 
 	// 이동
+	[SerializeField] float acceleration = 15f;
+	[SerializeField] float deceleration = 10f;
 	private Vector2 inputVec;   // 입력된 플레이어 이동값 (-1, 0, 1)
-	private float speed;        // 플레이어 이동 속도
+	private float maxSpeed;        // 플레이어 이동 속도
 
 	// 대쉬
 	private float dashTime;     // 대쉬 지속 시간
@@ -59,7 +61,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		isDashReady = false;
 		canDash = true;
 		isAttack = false;
-		speed = GameManager.Instance.playerStatsRuntime.speed;
+		maxSpeed = GameManager.Instance.playerStatsRuntime.speed;
 		originalGravity = rigid.gravityScale;
 	}
 
@@ -74,10 +76,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void Update()
 	{
 		Debug.DrawLine(attackStartPos, attackEndPos);
-		if (inputVec.x == 0)        // 좌우 이동 입력이 없을 경우
-			rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-		else    // 좌우 이동이 있을 경우
-			rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+		//if (inputVec.x == 0)        // 좌우 이동 입력이 없을 경우
+		//	rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+		//else    // 좌우 이동이 있을 경우
+		//	rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 
 		rigid.gravityScale = originalGravity;
 	}
@@ -86,7 +88,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void UpdateDash()
 	{
 		if (!isDash)
-			rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
+		{
+			HandleMovement();
+		}
 
 		UpdateSprite(inputVec);     // 좌우 플립
 	}
@@ -99,6 +103,25 @@ public class PlayerController : MonoBehaviour, IDamageable
 			transform.eulerAngles = new Vector2(0f, 0f);
 		else if (target.x < 0)
 			transform.eulerAngles = new Vector2(0f, 180f);
+	}
+
+	private void HandleMovement()
+	{
+		float targetSpeed = inputVec.x * maxSpeed;
+		float currentSpeed = rigid.linearVelocity.x;
+
+		float speedDiff = targetSpeed - currentSpeed;
+
+		// 입력 있으면 가속 / 없으면 감속
+		float accelRate = (Mathf.Abs(inputVec.x) > 0.01f) ? acceleration : deceleration;
+
+		// 힘 적용
+		float movement = speedDiff * accelRate;
+		rigid.AddForce(Vector2.right * movement);
+
+		// 최대 속도 제한
+		float clampedSpeed = Mathf.Clamp(rigid.linearVelocity.x, -maxSpeed, maxSpeed);
+		rigid.linearVelocity = new Vector2(clampedSpeed, rigid.linearVelocity.y);
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)

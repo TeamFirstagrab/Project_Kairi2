@@ -47,8 +47,11 @@ namespace Globals
 	public static class PlayerAnimName   // 플레이어
 	{
 		public static readonly string idle = "Idle";
-		public static readonly string chase = "Run";
+		public static readonly string run = "Run";
 		public static readonly string attack = "Attack";
+		public static readonly string landDown = "LandDown";
+		public static readonly string landing = "Landing";
+		public static readonly string landUp = "LandUp";
 	}
 
 	// 프리펩 이름 관련 클래스

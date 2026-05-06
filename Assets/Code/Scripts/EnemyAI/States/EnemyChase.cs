@@ -22,9 +22,8 @@ public class EnemyChase : IEnemyState
 		// 플레이어 체크
 		bool _playerVisible = p_enemy.GetComponent<EnemySight>().IsPlayerInRange();
 		if (_playerVisible) _chaseTimer = 0f;
-
 		// 시야 밖으로 벗어났고, 시간이 끝났을 경우
-		if(!_playerVisible && _chaseTimer >= _chaseTime)
+		else if(_chaseTimer >= _chaseTime)
 		{
 			// 기본 상태로 전환
 			p_enemy.ChangeState(EnemyState.IDLE);

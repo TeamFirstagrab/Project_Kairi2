@@ -8,6 +8,7 @@ public class EnemyBullet : MonoBehaviour
     [Header("생존 시간")]
     public float lifeTime = 2f;
     private Vector2 moveDir;
+	private bool isReverseDir = false;	// 튕겨졌는지 여부
 
     void OnEnable()
     {
@@ -37,10 +38,14 @@ public class EnemyBullet : MonoBehaviour
 			if (damage != null)
 			{
 				damage.TakeDamage(GameManager.Instance.playerStatsRuntime.attack);  // 데미지 주기
-				//ReturnToPool();
 			}
 
         }
+		if(isReverseDir && other.CompareTag(tagName.enemy))
+		{
+			// 데미지 주기
+			other.GetComponent<IDamageable>()?.TakeDamage(GameManager.Instance.playerStatsRuntime.attack);
+		}
         if (!other.isTrigger && !other.CompareTag(tagName.enemy) && !other.CompareTag(tagName.bullet))
             ReturnToPool();
     }
@@ -48,12 +53,16 @@ public class EnemyBullet : MonoBehaviour
     void ReturnToPool()
     {
         GameManager.Instance.poolManager.ReturnToPool(gameObject);
-        //Destroy(silhouette);    // 잔상 제거
     }
 
     void OnDisable()
     {
         CancelInvoke();     // 풀에서 다시 꺼낼 때 중복 Invoke 방지
-        //Destroy(silhouette);    // 잔상 제거
     }
+
+	public void DeflectBullet()     // 튕겨져나가기
+	{
+		moveDir = moveDir.x > 0 ? Vector2.left : Vector2.right;
+		isReverseDir = true;
+	}
 }

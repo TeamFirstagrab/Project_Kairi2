@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 	private PlayerDash dash;
 	private PlayerAttack attack;
 	private PlayerGroundChecker groundChecker;
+	private PlayerSlowMode slowMode;
 	private float originalGravity;
 
 	private void Awake()
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
 		movement = GetComponent<PlayerMovement>();
 		dash = GetComponent<PlayerDash>();
 		attack = GetComponent<PlayerAttack>();
+		slowMode = GetComponent<PlayerSlowMode>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 	}
 
@@ -71,6 +73,8 @@ public class PlayerController : MonoBehaviour
 
 	private void OnCrouch()
 	{
+		if (!groundChecker.isGrounded) return;
+
 		dash.isDashReady = true;
 		animator.Play(PlayerAnimName.landDown);
 		if (groundChecker.isGroundedSpecial)
@@ -90,6 +94,14 @@ public class PlayerController : MonoBehaviour
 	{
 		Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		attack.TryAttack(mouseWorld);
+	}
+
+	private void OnSlow(InputValue val)
+	{
+		if(val.isPressed)
+			slowMode.EnterSlow();
+		else
+			slowMode.ExitSlow();
 	}
 
 	private void OnCollisionEnter2D(Collision2D col) => groundChecker.Check();

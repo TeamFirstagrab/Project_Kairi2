@@ -13,11 +13,13 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
 	private Rigidbody2D rigid;
 	private PlayerDash dash;
+	private PlayerSlowMode slowMode;
 
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
 		dash = GetComponent<PlayerDash>();
+		slowMode = GetComponent<PlayerSlowMode>();
 	}
 
 	public void TakeDamage(int attack)
@@ -27,7 +29,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
 
 		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)
+		{
+			slowMode.ExitSlow();
 			StartCoroutine(PlayerDie());
+		}
 	}
 
 	private IEnumerator PlayerDie()

@@ -29,7 +29,6 @@ public class GameManager : MonoSingleton<GameManager>
 
 		// 스크립트 불러오기
 		playerController = GetComponent<PlayerController>();
-		sceneReloader = GetComponent<SceneReloader>();
 
 		// 창 설정
 		Screen.fullScreenMode = FullScreenMode.Windowed;

@@ -32,6 +32,7 @@ namespace Globals
 
 	public static class LayerName
 	{
+		public static readonly string ground = "Ground";
 		public static readonly string player = "Player";
 		public static readonly string enemy = "Enemy";
 	}

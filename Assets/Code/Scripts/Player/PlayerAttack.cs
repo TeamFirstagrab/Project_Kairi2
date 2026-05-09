@@ -73,6 +73,10 @@ public class PlayerAttack : MonoBehaviour
 		float time = 0f;
 		while (time < stats.dashDuration)
 		{
+			transform.position = Vector2.MoveTowards(
+				transform.position,
+				endPos,
+				stats.attackSpeed * Time.deltaTime);
 			transform.position = Vector2.Lerp(startPos, endPos, time / stats.dashDuration);
 			time += Time.deltaTime;
 			yield return null;

@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
 		if (enemyStatsRuntime.CurrentHP < 0)
 		{
-			Destroy(gameObject);
+			GameManager.Instance.poolManager.ReturnToPool(gameObject);
 			Debug.Log($"적 사망 (데미지: {attack})");
 		}
 	}

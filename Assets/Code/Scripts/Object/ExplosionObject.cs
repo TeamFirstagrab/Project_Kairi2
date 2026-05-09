@@ -1,60 +1,98 @@
-using UnityEngine;
 using Globals;
 using System.Collections;
+using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
+using tagName = Globals.TagName;
 
-public class ExplosionObject : MonoBehaviour, IInteractionObject
+/// <summary>
+/// Æø¹ß ¿ÀºêÁ§Æ®
+/// Àû°ú Ãæµ¹ÇÏ°Å³ª TakeDamage È£Ãâ ½Ã ¹üÀ§ Æø¹ß
+/// </summary>
+public class ExplosionObject : BaseObject
 {
-	[Header("Æø¹ß ÀÌÆåÆ® ÇÁ¸®Æé")]
+	[Header("Æø¹ß ÀÌÆåÆ®")]
 	public GameObject explosionEffectPrefab;
+
 	[Header("Æø¹ß ¹üÀ§")]
 	public float explosionRadius = 2f;
-	public bool isExplosion = false;  // Æø¹ß ¿©ºÎ
 
-	public void OnInteract()
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	//  ÃÊ±âÈ­
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+	protected override void Awake()
 	{
-		if (isExplosion) Explode();
+		base.Awake();
 	}
 
-	private void Explode()
+	//protected override void Start()
+	//{
+	//	base.Start();
+	//}
+
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	//  Ãæµ¹ Ã³¸®
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+	//protected override void OnCollisionEnter2D(Collision2D collision)
+	//{
+	//	base.OnCollisionEnter2D(collision);     // ¹Ù´Ú Ã¼Å©
+
+	//	if (collision.gameObject.CompareTag(tagName.enemy) &&
+	//		collision.gameObject.TryGetComponent<Enemy>(out _))
+	//	{
+	//		Explode();
+	//	}
+	//}
+
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	//  Æø¹ß ·ÎÁ÷
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+	public void Explode()
 	{
 		//GameManager.Instance.audioManager.ObjectExplosionSound(1f);
 		//GameManager.Instance.cameraShake.ShakeForSeconds(1f);
-		Vector2 explosionPos = transform.position;  // ÅÍÁö´Â À§Ä¡
+
+		Vector2 explosionPos = transform.position;
 		Collider2D[] hits = Physics2D.OverlapCircleAll(explosionPos, explosionRadius);
 
 		foreach (var hit in hits)
 		{
-			if (hit.CompareTag(TagName.enemy))
+			if (hit.CompareTag(tagName.enemy) &&
+				hit.TryGetComponent<Enemy>(out var target))
 			{
-				if (hit.TryGetComponent<Enemy>(out var target))
-				{
-					//Vector2 hitDir = (target.transform.position - transform.position).normalized;
-					//target.SetHitDirection(hitDir);
-					target.TakeDamage(1);
-				}
+				target.TakeDamage(1);
 			}
 		}
-		StartCoroutine(SpawnExplosionEffect(explosionPos));
-		//ownerSpawner?.OnObjectDestroyed(this);
+
+		GameManager.Instance.StartCoroutine(SpawnExplosionEffect(explosionPos));
+		GameManager.Instance.poolManager.ReturnToPool(gameObject);
 	}
 
-	void OnCollisionEnter2D(Collision2D collision)
-	{
-		if(!collision.transform.CompareTag(TagName.player) 
-			&& !collision.transform.CompareTag(TagName.ground))
-		{
-			isExplosion = true;
-		}
-	}
-
-
-	/// <summary>
-	/// Coroutine
-	/// </summary>
-	IEnumerator SpawnExplosionEffect(Vector2 position)
+	private IEnumerator SpawnExplosionEffect(Vector2 position)
 	{
 		GameObject effect = Instantiate(explosionEffectPrefab, position, Quaternion.identity);
 		yield return new WaitForSeconds(1.07f);
 		Destroy(effect);
+	}
+
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	//  IDamageable
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+	public override void TakeDamage(int attack)
+	{
+		Explode();
+	}
+
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+	//  Gizmo
+	// ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+
+	private void OnDrawGizmosSelected()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(transform.position, explosionRadius);
 	}
 }

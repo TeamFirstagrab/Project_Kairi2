@@ -19,5 +19,5 @@ MonoBehaviour:
   attackCoolTime: 0.3
   maxHP: 1
   dashDist: 20
-  dashDuration: 0.2
-  invincibilityDuration: 0.2
+  dashDuration: 0.5
+  invincibilityDuration: 0.5

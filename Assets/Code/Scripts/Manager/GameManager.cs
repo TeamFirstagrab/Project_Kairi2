@@ -24,6 +24,9 @@ public class GameManager : MonoSingleton<GameManager>
 
 	protected new void Awake()
 	{
+		Screen.fullScreenMode = FullScreenMode.Windowed;
+		Screen.SetResolution(1920, 1080, false); // 원하는 창 크기
+
 		// 스크립트 불러오기
 		playerController = GetComponent<PlayerController>();
 

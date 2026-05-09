@@ -16,6 +16,7 @@ namespace Globals
 		public static readonly string obj = "NormalObject";
 		public static readonly string crackObj = "CrackObject";
 		public static readonly string expObj = "ExplosionObject";
+		public static readonly string door = "Door";
 		// 플레이어 관련
 		public static readonly string player = "Player";
 		public static readonly string hook = "Hook";
@@ -31,6 +32,7 @@ namespace Globals
 
 	public static class LayerName
 	{
+		public static readonly string ground = "Ground";
 		public static readonly string player = "Player";
 		public static readonly string enemy = "Enemy";
 	}
@@ -52,6 +54,7 @@ namespace Globals
 		public static readonly string landDown = "LandDown";
 		public static readonly string landing = "Landing";
 		public static readonly string landUp = "LandUp";
+		public static readonly string slide = "Slide";
 	}
 
 	// 프리펩 이름 관련 클래스

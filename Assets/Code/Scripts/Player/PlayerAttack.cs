@@ -59,7 +59,7 @@ public class PlayerAttack : MonoBehaviour
 				  || hit.transform.CompareTag(TagName.expObj)
 				  || hit.transform.CompareTag(TagName.enemy))
 			{
-				GameManager.Instance.cameraShake.ShakeForSeconds(0.5f);
+				GameManager.Instance.cameraShake.ShakeForSeconds();
 				hit.transform.GetComponent<IDamageable>()?.TakeDamage(stats.attack);
 				endPos = startPos + dir * (dist + stats.attackDist);
 			}
@@ -67,6 +67,10 @@ public class PlayerAttack : MonoBehaviour
 			{
 				hit.transform.GetComponent<EnemyBullet>()?.DeflectBullet();
 				endPos = startPos;
+			}
+			else if(hit.transform.CompareTag(TagName.door))
+			{
+				hit.transform.GetComponent<IInteractionObject>().OnInteract();
 			}
 		}
 

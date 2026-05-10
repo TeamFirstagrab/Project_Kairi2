@@ -17,6 +17,10 @@ public class SceneReloader : MonoBehaviour
 	public void Reload()
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+		SetAlpha(1f);       // 씬 시작 시 바로 검정으로 세팅
+		blackPanel.gameObject.SetActive(true);
+		FadeOut();          // 페이드 아웃 시작
 	}
 
 	public void SetAlpha(float alpha)   // 알파값 바로 세팅

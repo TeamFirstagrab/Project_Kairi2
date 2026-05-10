@@ -8,10 +8,10 @@ public class CameraShake : MonoBehaviour
 	private CinemachineImpulseSource impulseSource;
 
 	[SerializeField]
-	private float magnitude = 0.05f;
+	private float magnitude = 0.05f;	// 세기
 
 	[SerializeField]
-	private float roughness = 0.05f;
+	private float roughness = 0.05f;	// 빠르기
 
 	private CinemachineCamera virtualCamera;
 	private CinemachineBasicMultiChannelPerlin noise;
@@ -28,7 +28,7 @@ public class CameraShake : MonoBehaviour
 		impulseSource.GenerateImpulse();
 	}
 
-	public void ShakeForSeconds(float duration = 2f)
+	public void ShakeForSeconds(float duration = 0.5f)
 	{
 		if (noise != null)
 		{

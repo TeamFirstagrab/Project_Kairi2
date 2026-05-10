@@ -21,14 +21,14 @@ public class BloodEffect : MonoBehaviour
 
 	public void ActiveBloodEffect(Vector2 dir)
 	{
-		Debug.Log($"Active blood effect");
 		spriteIdx = Random.Range(0, bloodSprites.Count);
 		spriteRenderer.sprite = bloodSprites[spriteIdx];
 	}
 
 	private void Update()
 	{
-		if(isActive)
-			ActiveBloodEffect(Vector2.up);
+		if (!isActive) return;	// TODO: 임시 코드
+
+		ActiveBloodEffect(Vector2.up);
 	}
 }

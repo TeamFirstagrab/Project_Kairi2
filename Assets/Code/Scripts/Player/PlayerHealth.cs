@@ -41,11 +41,11 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 		{
 			glitchGlobalVolume.SetActive(true);
 			tvGlobalVolume.SetActive(true);
-			yield return new WaitForSeconds(0.5f);
-			blackCanvas.gameObject.SetActive(true);
-			GameManager.Instance.sceneReloader.SetAlpha(1f);
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(0.3f);
 			Respawn();
+			blackCanvas.gameObject.SetActive(true);
+			GameManager.Instance.sceneReloader.Reload();
+			yield return new WaitForSeconds(0.3f);
 		}
 
 	}

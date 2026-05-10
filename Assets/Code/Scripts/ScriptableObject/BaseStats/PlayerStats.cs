@@ -10,7 +10,7 @@ public class PlayerStats : ScriptableObject
 	public float jumpForce;
 	[Header("공격력")]
 	public int attack;
-	[Header("공격 시 추가로 길어질 사거리")]
+	[Header("공격 대쉬 사거리")]
 	public float attackDist;
 	[Header("공격 쿨타임")]
 	public float attackCoolTime;

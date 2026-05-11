@@ -2,45 +2,47 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-	[SerializeField] float acceleration = 15f;
-	[SerializeField] float deceleration = 10f;
+    // 일반 이동
+    [SerializeField] float acceleration = 15f;
+    [SerializeField] float deceleration = 10f;
 
-	private Rigidbody2D rigid;
-	private float maxSpeed;
+    private Rigidbody2D rigid;
+    private float maxSpeed;
 
-	public Vector2 inputVec;
 
-	private void Awake()
-	{
-		rigid = GetComponent<Rigidbody2D>();
-	}
+    public Vector2 inputVec;
 
-	public void Init()
-	{
-		maxSpeed = GameManager.Instance.playerStatsRuntime.speed;
-	}
+    private void Awake()
+    {
+        rigid = GetComponent<Rigidbody2D>();
+    }
 
-	public void HandleMovement()
-	{
-		float targetSpeed = inputVec.x * maxSpeed;
-		float speedDiff = targetSpeed - rigid.linearVelocity.x;
-		float accelRate = (Mathf.Abs(inputVec.x) > 0.01f) ? acceleration : deceleration;
+    public void Init()
+    {
+        maxSpeed = GameManager.Instance.playerStatsRuntime.speed;
+    }
 
-		rigid.AddForce(Vector2.right * speedDiff * accelRate);
-		rigid.linearVelocity = new Vector2(
-			Mathf.Clamp(rigid.linearVelocity.x, -maxSpeed, maxSpeed),
-			rigid.linearVelocity.y);
-	}
+    public void HandleMovement()
+    {
+        float targetSpeed = inputVec.x * maxSpeed;
+        float speedDiff = targetSpeed - rigid.linearVelocity.x;
+        float accelRate = (Mathf.Abs(inputVec.x) > 0.01f) ? acceleration : deceleration;
 
-	public void UpdateSprite()
-	{
-		if (inputVec.x > 0) transform.eulerAngles = Vector3.zero;
-		else if (inputVec.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
-	}
+        rigid.AddForce(Vector2.right * speedDiff * accelRate);
+        rigid.linearVelocity = new Vector2(
+            Mathf.Clamp(rigid.linearVelocity.x, -maxSpeed, maxSpeed),
+            rigid.linearVelocity.y);
+    }
 
-	public void UpdateSprite(Vector2 dir)
-	{
-		if (dir.x > 0) transform.eulerAngles = Vector3.zero;
-		else if (dir.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
-	}
+    public void UpdateSprite()
+    {
+        if (inputVec.x > 0) transform.eulerAngles = Vector3.zero;
+        else if (inputVec.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
+    }
+
+    public void UpdateSprite(Vector2 dir)
+    {
+        if (dir.x > 0) transform.eulerAngles = Vector3.zero;
+        else if (dir.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
+    }
 }

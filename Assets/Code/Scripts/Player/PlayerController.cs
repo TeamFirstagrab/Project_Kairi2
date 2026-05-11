@@ -38,7 +38,8 @@ public class PlayerController : MonoBehaviour
 		if (!dash.isDashing)
 			movement.HandleMovement();
 
-		movement.UpdateSprite();
+		if(!climb.isWallJump)
+			movement.UpdateSprite();
 	}
 
 	private void Update()
@@ -67,13 +68,14 @@ public class PlayerController : MonoBehaviour
 	}
 
 	private void OnJump(InputValue val)
-	{
-		if (!groundChecker.isGrounded) return;
-		if (climb.isWall)
-		{
-			climb.WallJump();
-			return;
-		}
+    {
+        if (climb.isWall)
+        {
+            climb.WallJump();
+            return;
+        }
+        if (!groundChecker.isGrounded) return;
+
 		rigid.AddForce(Vector2.up * GameManager.Instance.playerStatsRuntime.jumpForce, ForceMode2D.Impulse);
 		groundChecker.isGrounded = false;
 	}

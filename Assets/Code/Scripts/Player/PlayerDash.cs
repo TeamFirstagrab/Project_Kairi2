@@ -35,7 +35,7 @@ public class PlayerDash : MonoBehaviour
 		originalGravity = rigid.gravityScale;
 		rigid.gravityScale = 0f;
 
-		animator.Play(PlayerAnimName.slide);
+		animator.Play(PlayerAnimName.roll);
 
 		var stats = GameManager.Instance.playerStatsRuntime;
 		Vector2 dashDir = movement.inputVec.normalized;		// 대쉬 방향

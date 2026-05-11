@@ -13,6 +13,7 @@ TagManager:
   - CrackObject
   - Bullet
   - Door
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - OneWayPlatform
   - Player
   - Enemy
-  - 
+  - Wall
   - 
   - 
   - 

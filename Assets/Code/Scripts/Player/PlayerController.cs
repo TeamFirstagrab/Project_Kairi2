@@ -1,4 +1,5 @@
-﻿using Globals;
+﻿// PlayerController.cs
+using Globals;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,7 @@ public class PlayerController : MonoBehaviour
 	private PlayerAttack attack;
 	private PlayerGroundChecker groundChecker;
 	private PlayerSlowMode slowMode;
+	private PlayerClimb climb;
 	private float originalGravity;
 
 	private void Awake()
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
 		dash = GetComponent<PlayerDash>();
 		attack = GetComponent<PlayerAttack>();
 		slowMode = GetComponent<PlayerSlowMode>();
+		climb = GetComponent<PlayerClimb>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 	}
 
@@ -34,27 +37,26 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!dash.isDashing)
 			movement.HandleMovement();
+
 		movement.UpdateSprite();
 	}
 
 	private void Update()
 	{
-		//rigid.constraints = movement.InputVec.x == 0
-		//	? RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation
-		//	: RigidbodyConstraints2D.FreezeRotation;
 		rigid.gravityScale = originalGravity;
 	}
 
-	// Input System 콜백
 	private void OnMove(InputValue val)
 	{
+		if (climb.isWallJump) return;	// 벽에서 점프 중일 경우 이동 X
 		if (dash.isDashing)
 		{
 			movement.inputVec = Vector2.zero;
 			return;
 		}
-		movement.inputVec = val.Get<Vector2>();
+
 		animator.Play(PlayerAnimName.run);
+		movement.inputVec = val.Get<Vector2>();
 		dash.TryDash();
 	}
 
@@ -67,14 +69,18 @@ public class PlayerController : MonoBehaviour
 	private void OnJump(InputValue val)
 	{
 		if (!groundChecker.isGrounded) return;
+		if (climb.isWall)
+		{
+			climb.WallJump();
+			return;
+		}
 		rigid.AddForce(Vector2.up * GameManager.Instance.playerStatsRuntime.jumpForce, ForceMode2D.Impulse);
-		groundChecker.SetGrounded(false);
+		groundChecker.isGrounded = false;
 	}
 
 	private void OnCrouch()
 	{
 		if (!groundChecker.isGrounded) return;
-
 		dash.isDashReady = true;
 		animator.Play(PlayerAnimName.landDown);
 		if (groundChecker.isGroundedSpecial)
@@ -98,18 +104,42 @@ public class PlayerController : MonoBehaviour
 
 	private void OnSlow(InputValue val)
 	{
-		if(val.isPressed)
+		// 플레이어 사망 시 슬로우 X
+		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)
+			return;
+
+		if (val.isPressed)
 			slowMode.EnterSlow();
 		else
 			slowMode.ExitSlow();
 	}
 
-	private void OnCollisionEnter2D(Collision2D col) => groundChecker.Check();
-	private void OnCollisionStay2D(Collision2D col) => groundChecker.Check();
+	private void OnCollisionEnter2D(Collision2D col)
+	{
+		groundChecker.Check();      // 땅 체크
+
+		// 문 열기
+		if (col.transform.CompareTag(TagName.door))
+		{
+			if (col.transform.TryGetComponent(out IInteractionObject door))
+			{
+				// 플레이어가 문에 붙어서 움직일 때 문 열기
+				if (movement.inputVec.x != 0)
+				{
+					door.OnInteract();
+				}
+			}
+		}
+	}
+	private void OnCollisionStay2D(Collision2D col)
+	{
+		groundChecker.Check();      // 땅 체크
+	}
+
 	private void OnCollisionExit2D(Collision2D col)
 	{
 		if (col.transform.CompareTag(TagName.ground))
-			groundChecker.SetGrounded(false);
+			groundChecker.isGrounded = false;
 	}
 
 	private void OnTriggerEnter2D(Collider2D col)

@@ -21,8 +21,6 @@ public class PlayerGroundChecker : MonoBehaviour
 		isGroundedSpecial = Physics2D.OverlapCircle(groundCheckObj.position, checkRadius, oneWayPlatformMask);
 	}
 
-	public void SetGrounded(bool val) => isGrounded = val;
-
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.blue;

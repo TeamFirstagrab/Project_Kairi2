@@ -22,6 +22,7 @@ namespace Globals
 		public static readonly string hook = "Hook";
 		// 배경 요소
 		public static readonly string ground = "Ground";
+		public static readonly string wall = "Wall";
 		public static readonly string oneWayPlatform = "OneWayPlatform";
 		public static readonly string trigger = "Trigger";
 		// NPC
@@ -55,6 +56,10 @@ namespace Globals
 		public static readonly string landing = "Landing";
 		public static readonly string landUp = "LandUp";
 		public static readonly string slide = "Slide";
+		public static readonly string roll = "Roll";
+		public static readonly string redgeClimb = "RedgeClimb";
+		public static readonly string climb = "Climb";
+		public static readonly string climbSlide = "ClimbSlide";
 	}
 
 	// 프리펩 이름 관련 클래스

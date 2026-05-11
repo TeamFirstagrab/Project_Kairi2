@@ -42,35 +42,38 @@ public class PlayerAttack : MonoBehaviour
 		Vector2 dir = (target - startPos).normalized;
 		movement.UpdateSprite(dir);
 
-		float dist = stats.dashDist * stats.dashDuration;
-		Vector2 endPos = startPos + dir * dist;
+		Vector2 endPos = startPos;
 
 		// CapsuleCast로 충돌 검사
 		CapsuleCollider2D col = GetComponent<CapsuleCollider2D>();
 		LayerMask mask = ~LayerMask.GetMask(LayerName.player);
 		RaycastHit2D hit = Physics2D.CapsuleCast(startPos, col.size,
-			CapsuleDirection2D.Vertical, 0f, dir, dist + 0.5f, mask);
+		CapsuleDirection2D.Vertical, 0f, dir, stats.attackDist + 0.5f, mask);
 
 		if (hit)
 		{
 			if (hit.transform.CompareTag(TagName.ground))
-				endPos = startPos + dir * (hit.distance - 0.5f);
+				endPos = startPos + dir * (hit.distance - 0.1f);
 			else if (hit.transform.CompareTag(TagName.crackObj)
 				  || hit.transform.CompareTag(TagName.expObj)
 				  || hit.transform.CompareTag(TagName.enemy))
 			{
-				GameManager.Instance.cameraShake.ShakeForSeconds(0.5f);
+				GameManager.Instance.cameraShake.ShakeForSeconds();
 				hit.transform.GetComponent<IDamageable>()?.TakeDamage(stats.attack);
-				endPos = startPos + dir * (dist + stats.attackDist);
 			}
 			else if (hit.transform.CompareTag(TagName.bullet))
 			{
 				hit.transform.GetComponent<EnemyBullet>()?.DeflectBullet();
-				endPos = startPos;
+			}
+			else if (hit.transform.CompareTag(TagName.door))
+			{
+				hit.transform.GetComponent<IInteractionObject>().OnInteract();
 			}
 		}
+		else
+			endPos = startPos + dir * stats.attackDist;
 
-		float time = 0f;
+			float time = 0f;
 		while (time < stats.dashDuration)
 		{
 			transform.position = Vector2.MoveTowards(

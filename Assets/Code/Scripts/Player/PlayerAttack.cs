@@ -8,6 +8,9 @@ public class PlayerAttack : MonoBehaviour
 	private Rigidbody2D rigid;
 	private PlayerStatsRuntime stats;
 	private Camera mainCam;
+	private float attackTimer;
+
+	public bool isAttack;
 
 	private void Awake()
 	{
@@ -50,12 +53,14 @@ public class PlayerAttack : MonoBehaviour
 		// 공격 거리만큼 대쉬
 		while (Vector2.Distance(transform.position, targetPos) > 0.1f)
 		{
-			transform.position = Vector3.Lerp(transform.position, targetPos, 0.5f);
+			attackTimer += Time.deltaTime;
+			float t = attackTimer;
+			transform.position = Vector3.Lerp(transform.position, targetPos, t);
 			yield return null;	// 다음 프레임까지 대기
 		}
 
 		yield return new WaitForSeconds(stats.attackCoolTime);
-
+		attackTimer = 0f;
 	}
 
 	private void OnDrawGizmos()

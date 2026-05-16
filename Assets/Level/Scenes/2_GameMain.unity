@@ -186,6 +186,52 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   isWallJump: 0
+--- !u!61 &58512568
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58512539}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.03160359, y: -0.09481096}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3, y: 3}
+    newSize: {x: 3, y: 3}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.9141607, y: 1.7990618}
+  m_EdgeRadius: 0
 --- !u!1 &71193433
 GameObject:
   m_ObjectHideFlags: 0
@@ -31035,6 +31081,7 @@ MonoBehaviour:
     attackDuration: 0
     attackDist: 0
     attackCoolTime: 0
+    attackSpeed: 0
     maxHP: 0
     currentHP: 0
     dashDist: 0
@@ -32572,7 +32619,7 @@ PrefabInstance:
       objectReference: {fileID: 1873965443}
     - target: {fileID: 1978394785461051679, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_DefaultActionMap
-      value: df70fa95-8a34-4494-b137-73ab6b9c7d37
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1978394785461051679, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_DefaultControlScheme
@@ -32646,13 +32693,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3795453094061142441, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 8408272120256278188, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 212099285}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1004635024995496750, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      insertIndex: 5
+      addedObject: {fileID: 58512568}
     - targetCorrespondingSourceObject: {fileID: 1004635024995496750, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 58512543}

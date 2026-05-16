@@ -100,8 +100,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnAttack(InputValue val)
 	{
-		Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		attack.TryAttack(mouseWorld);
+		attack.TryAttack();
 	}
 
 	private void OnSlow(InputValue val)
@@ -146,7 +145,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D col)
 	{
-		if (attack.CanDeflect() && col.CompareTag(TagName.bullet))
+		//if (attack.CanDeflect() && col.CompareTag(TagName.bullet))
 			col.GetComponent<EnemyBullet>().DeflectBullet();
 	}
 }

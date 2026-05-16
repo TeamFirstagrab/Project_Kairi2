@@ -16,9 +16,9 @@ public class PlayerStatsRuntime
     public float attackDist;
     [Header("공격 쿨타임")]
     public float attackCoolTime;
-    //[Header("공격 속도")]
-    //public float attackSpeed;
-    [Header("체력")]
+    [Header("공격 속도")]
+	public float attackSpeed;
+	[Header("체력")]
 	public float maxHP;
 	public float currentHP;
 	[Header("대쉬 사거리")]
@@ -43,7 +43,7 @@ public class PlayerStatsRuntime
         attackDuration = baseStats.attackDuration;
         attackDist = baseStats.attackDist;
 		attackCoolTime = baseStats.attackCoolTime;
-		//attackSpeed = baseStats.attackSpeed;
+		attackSpeed = baseStats.attackSpeed;
 		maxHP = baseStats.maxHP;
 		currentHP = maxHP;
 		dashDist = baseStats.dashDist;

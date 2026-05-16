@@ -16,8 +16,8 @@ public class PlayerStats : ScriptableObject
     public float attackDist;
     [Header("공격 쿨타임")]
 	public float attackCoolTime;
-	//[Header("공격 속도")]
-	//public float attackSpeed;
+	[Header("공격 속도")]
+	public float attackSpeed;
 	[Header("체력")]
 	public float maxHP;
 	[Header("대쉬 사거리")]

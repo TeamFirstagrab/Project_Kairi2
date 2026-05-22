@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 	private PlayerGroundChecker groundChecker;
 	private PlayerSlowMode slowMode;
 	private PlayerClimb climb;
+	private PlayerSkillAttack skillAttack;
 	private float originalGravity;
 
 	private void Awake()
@@ -25,7 +26,9 @@ public class PlayerController : MonoBehaviour
 		slowMode = GetComponent<PlayerSlowMode>();
 		climb = GetComponent<PlayerClimb>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
-	}
+		skillAttack = GetComponent<PlayerSkillAttack>();
+
+    }
 
 	private void Start()
 	{
@@ -101,6 +104,18 @@ public class PlayerController : MonoBehaviour
 	private void OnAttack(InputValue val)
 	{
 		attack.TryAttack();
+	}
+
+	private void OnSkillAttack(InputValue val)
+	{
+		if(val.isPressed)
+		{
+			skillAttack.EnterSkill();
+		}
+		else
+		{
+			skillAttack.ExitSkill();
+		}
 	}
 
 	private void OnSlow(InputValue val)

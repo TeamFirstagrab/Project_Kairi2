@@ -37,6 +37,7 @@ namespace Globals
 		public static readonly string oneWayPlatform = "OneWayPlatform";
 		public static readonly string player = "Player";
 		public static readonly string enemy = "Enemy";
+		public static readonly string wall = "Wall";
 	}
 
 	// 애니메이션 이름 관련 클래스

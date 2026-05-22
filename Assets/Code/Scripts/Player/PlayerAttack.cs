@@ -1,13 +1,14 @@
 using Globals;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerAttack : MonoBehaviour
 {
 	private Rigidbody2D rigid;
 	private PlayerStatsRuntime stats;
 	private Camera mainCam;
+	private Tweener tr;
 	private float attackTimer;
 
 	public bool isAttack;
@@ -17,20 +18,20 @@ public class PlayerAttack : MonoBehaviour
 		rigid = GetComponent<Rigidbody2D>();
 	}
 
-	private void Update()
-	{
-		mainCam = Camera.main;
-		stats = GameManager.Instance.playerStatsRuntime;
-	}
+    private void Start()
+    {
+        mainCam = Camera.main;
+    }
 
 	public void TryAttack()
-	{
-		StartCoroutine(Attack());
+    {
+        StartCoroutine(Attack());
 	}
 
 	private IEnumerator Attack()
-	{
-		Vector2 startPos = transform.position;
+    {
+        stats = GameManager.Instance.playerStatsRuntime;
+        Vector2 startPos = transform.position;
 		Vector2 currPos = startPos;
 		Vector2 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
 		Vector2 dir = (mousePos - startPos).normalized;
@@ -78,14 +79,15 @@ public class PlayerAttack : MonoBehaviour
 		}
 
 		// 공격 거리만큼 대쉬
-		while (Vector2.Distance(transform.position, targetPos) > 0.1f
-			&& stats.attackDuration > attackTimer)
-		{
-			attackTimer += Time.deltaTime;
-			float t = attackTimer;
-			transform.position = Vector3.Lerp(transform.position, targetPos, t);
-			yield return null;	// 다음 프레임까지 대기
-		}
+		//while (Vector2.Distance(transform.position, targetPos) > 0.1f
+		//	&& stats.attackDuration > attackTimer)
+		//{
+		//	attackTimer += Time.deltaTime;
+		//	float t = attackTimer / 0.5f;
+		//	transform.position = Vector3.Lerp(transform.position, targetPos, t);
+		//	yield return null;	// 다음 프레임까지 대기
+		//}
+		transform.DOMove(targetPos, stats.attackDuration);
 
 		yield return new WaitForSeconds(stats.attackCoolTime);
 		attackTimer = 0f;

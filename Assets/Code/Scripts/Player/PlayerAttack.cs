@@ -11,8 +11,6 @@ public class PlayerAttack : MonoBehaviour
 	private PlayerSlowMode slowMode;
 	private float attackTimer;
 
-	public bool isAttack;
-
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
@@ -50,9 +48,7 @@ public class PlayerAttack : MonoBehaviour
 			mask
 		);
 
-		isAttack = true;
-
-		// TODO: 공격 시 무언가가 맞으면 때리는 위치에서 딜레이 + 카메라 쉐이킹 있다가 
+		// TODO: 공격 시 무언가가 맞으면 때리는 위치에서 딜레이 + 카메라 쉐이킹 있음
 
 		if (hit)
 		{
@@ -86,17 +82,17 @@ public class PlayerAttack : MonoBehaviour
 		}
 
 		// 공격 거리만큼 대쉬
-		//while (Vector2.Distance(transform.position, targetPos) > 0.1f
-		//	&& stats.attackDuration > attackTimer)
-		//{
-		//	attackTimer += Time.deltaTime;
-		//	float t = attackTimer / 0.5f;
-		//	transform.position = Vector3.Lerp(transform.position, targetPos, t);
-		//	yield return null;	// 다음 프레임까지 대기
-		//}
-		//transform.DOMove(targetPos, stats.attackDuration);
+		while (Vector2.Distance(transform.position, targetPos) > 0.1f
+			&& stats.attackDuration > attackTimer)
+		{
+			attackTimer += Time.deltaTime;
+			float t = attackTimer;
+            transform.position = Vector2.MoveTowards(startPos, targetPos, stats.attackSpeed);
+            yield return null;  // 다음 프레임까지 대기
+        }
+        transform.position = targetPos;
 
-		yield return new WaitForSeconds(stats.attackCoolTime);
+        yield return new WaitForSeconds(stats.attackCoolTime);
 		attackTimer = 0f;
 	}
 

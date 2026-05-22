@@ -7,6 +7,7 @@ public class PlayerClimb : MonoBehaviour
 	private Animator animator;
 	private PlayerStatsRuntime playerStats;
 	private PlayerMovement movement;
+	private PlayerGroundChecker groundChk;
 
 	// 벽 체크
 	[Header("벽 체크")]
@@ -23,26 +24,29 @@ public class PlayerClimb : MonoBehaviour
 		rigid = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
 		movement = GetComponent<PlayerMovement>();
-	}
+        groundChk = GetComponent<PlayerGroundChecker>();
 
-	private void Update()
+    }
+
+    private void Update()
 	{
 		playerStats = GameManager.Instance.playerStatsRuntime;
 
-		if (transform.eulerAngles.y == 0)
+		if (movement.inputVec.x > 0)
 			isRight = 1;
-		else if (transform.eulerAngles.y == 180)
+		else if (movement.inputVec.x < 0)
 			isRight = -1;
 
-		isWall = Physics2D.Raycast(
-			wallChk.position, 
+        isWall = Physics2D.Raycast(
+			wallChk.position,
 			Vector2.right * isRight,
 			playerStats.wallChkDist, 
 			w_Layer
 		);
 	}
 
-	public void WallJump()
+
+    public void WallJump()
 	{
 		isWallJump = true;
 		Invoke("FreezeX", 0.3f);	// 0.3초 후에 FreezeX 함수 실행
@@ -62,7 +66,7 @@ public class PlayerClimb : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if(isWall)
+		if(isWall && !groundChk.isGrounded)
 		//if (isWall && !isWallJump)
 		{
 			isWallJump = false;

@@ -51,7 +51,7 @@ public class Silhouette : MonoBehaviour
 					sr.sortingOrder = 1;
 					SpriteCopy.gameObject.layer = 14;
 					SilhouetteList.Insert(i, SpriteCopy); // 한번에 관리하기 쉽도록 리스트에 넣는다.
-														  //오브젝트와 스프라이트 렌더를 생성하는 과정에서 성능저하가 있을 가능성이 있음.
+					//오브젝트와 스프라이트 렌더를 생성하는 과정에서 성능저하가 있을 가능성이 있음.
 				}
 			}
 		}
@@ -93,7 +93,7 @@ public class Silhouette : MonoBehaviour
 					SilhouetteList[Limit].transform.position = transform.position; // 실루엣을 실루엣의 주인에게 이동하되,
 					SilhouetteList[Limit].transform.position += new Vector3(0, 0, 1); // 한 레이어 뒤에서.
 					SilhouetteList[Limit].GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite; // 지금 주인의 스프라이트를 받아서 실루엣에게 적용.
-					SilhouetteList[Limit].transform.localScale = transform.localScale; // 좌우반전을 크기로 적용하기 때문에 크기도 받는다.
+					SilhouetteList[Limit].transform.eulerAngles = transform.eulerAngles; // 좌우반전을 크기로 적용하기 때문에 크기도 받는다.
 					SilhouetteList[Limit].GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
 
 					float R = Random.Range(RedMin, RedMax), G = Random.Range(GreenMin, GreenMax), B = Random.Range(BlueMin, BlueMax);

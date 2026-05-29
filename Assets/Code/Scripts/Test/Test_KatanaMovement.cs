@@ -600,12 +600,10 @@ public class Test_KatanaMovement : MonoBehaviour
     /// </summary>
     public void ChangeAnimationState(string newState, float crossFadeTime = 0.05f)
     {
-        // 💡 [실시간 뷰 교차 검증]
-        // C#이 기억하는 가상 상태(currentAnimState)와, 현재 애니메이터가 씬 상에서 실제로 돌리고 있는 진짜 애니메이션 이름이
-        // 일치하는지 실시간 비교하여, 메인 씬의 잔여 화살표(Mecanim) 오작동으로 인한 꼬임을 100% 원천 차단하고 강제 스위칭 복구합니다!
-        bool isActuallyPlaying = anim != null && anim.GetCurrentAnimatorStateInfo(0).IsName(newState);
-
-        if (currentAnimState == newState && isActuallyPlaying) return;
+        // 💡 [초정밀 1프레임 찌걱거림 차단 기법]
+        // 이미 해당 애니메이션 상태가 재생 중(currentAnimState == newState)이라면 즉시 리턴합니다.
+        // 만약 이 필터를 빼버리면 매 프레임마다 CrossFade나 Play가 연속 호출되어 첫 프레임에서 애니메이션이 영원히 굳어버리게 됩니다!
+        if (currentAnimState == newState) return;
 
         if (anim != null)
         {

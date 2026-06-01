@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db78c73a57a364c43bfdcc0e3f3b4086, type: 3}
+  m_Name: KimEnemyStats
+  m_EditorClassIdentifier: Assembly-CSharp::KimEnemyStats
+  EnemyName: Enemy
+  EnemyDescription: "\uAE30\uBCF8 \uBAAC\uC2A4\uD130(\uADFC)"
+  MoveSpeed: 1
+  PatrolSpeed: 1.5
+  ChaseSpeed: 8
+  SightRoundRange: 2
+  SightRange: 10
+  FindCoolTime: 1
+  Attack: 1
+  AttackRange: 2
+  HP: 1
+  SightAngle: 60
+  SightHeightLimit: 1.5

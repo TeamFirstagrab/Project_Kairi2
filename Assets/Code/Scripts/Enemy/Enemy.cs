@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class Enemy : MonoBehaviour, IDamageable
 {
 	[HideInInspector] public Rigidbody2D rb;
+	[HideInInspector] public Animator anim;
 	public Dictionary<EnemyState, IEnemyState> stateList;
 	private EnemyState enemyState;
 	private EnemyStatsRuntime enemyStatsRuntime;
@@ -13,6 +14,7 @@ public class Enemy : MonoBehaviour, IDamageable
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
+		anim = GetComponent<Animator>();
 	}
 
 	private void Start()
@@ -25,6 +27,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
 	private void Update()
 	{
+		print($"state: {enemyState}");
 		stateList[enemyState]?.UpdateState(this);
 	}
 

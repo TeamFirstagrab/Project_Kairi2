@@ -1,24 +1,33 @@
 using EnumType;
 using Globals;
 using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class EnemyLongRangeAttack : IEnemyState
 {
+	private float shootCoolTime = 0.2f;
 	private float shootTime = 1.0f;
 	private float shootTimer = 0f;
+	private float attackDuration = 0.8f; // 원거리 공격 모션 전체 수행 시간 (초)
+	private bool hasFired = false;       // 한 번의 공격 주기 동안 총알을 발사했는지 여부
+
 	public void EnterState(Enemy p_enemy)
 	{
 		Debug.Log("Enter Attack");
 
-		p_enemy.GetComponent<Animator>().Play(EnemyAnimName.attack);	// 애니메이션 플레이
+		p_enemy.anim.Play(EnemyAnimName.attack);    // 애니메이션 플레이
+
+		shootTimer = 0f;
+		hasFired = false;
 	}
 
 	public void UpdateState(Enemy p_enemy)
 	{
-        // 공격
-        shootTimer += Time.deltaTime;
-
+		// 공격
+		shootTimer += Time.deltaTime;
+		p_enemy.rb.linearVelocity = new Vector2(0f, p_enemy.rb.linearVelocity.y);
+		
 		if (shootTimer >= shootTime)
 		{
 			GameManager.Instance.poolManager.SpawnFromPool(
@@ -34,7 +43,7 @@ public class EnemyLongRangeAttack : IEnemyState
 		// 공격 끝났을 경우 (애니메이션 끝)
 		if (!stateInfo.IsName(EnemyAnimName.attack))
 		{
-			p_enemy.GetComponent<Animator>().Play(EnemyAnimName.recharge);	// 재장전 애니메이션
+			p_enemy.GetComponent<Animator>().Play(EnemyAnimName.recharge);  // 재장전 애니메이션
 
 			// 플레이어가 시야 내에 있을 경우 추적
 			if (p_enemy.GetComponent<EnemySight>().IsPlayerInRange())

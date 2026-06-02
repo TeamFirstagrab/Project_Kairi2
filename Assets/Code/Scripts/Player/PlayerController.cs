@@ -158,9 +158,9 @@ public class PlayerController : MonoBehaviour
 			groundChecker.isGrounded = false;
 	}
 
-	private void OnTriggerEnter2D(Collider2D col)
-	{
-		if (/*attack.CanDeflect() && */col.CompareTag(TagName.bullet))
-			col.GetComponent<EnemyBullet>().DeflectBullet();
-	}
+	//private void OnTriggerEnter2D(Collider2D col)
+	//{
+	//	if (col.CompareTag(TagName.bullet))
+	//		col.GetComponent<EnemyBullet>().DeflectBullet();
+	//}
 }

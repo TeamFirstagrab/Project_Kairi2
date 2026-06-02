@@ -80,7 +80,7 @@ public class PlayerSlowMode : MonoBehaviour
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;
 		//transform.Translate(Vector3.forward * GameManager.Instance.playerStats.speed * Time.deltaTime * 0.5f);
 		if (colorAdjustments != null)
-			colorAdjustments.contrast.value = -80f;
+			colorAdjustments.saturation.value = -100f;
 		if (bloom != null)
 			bloom.intensity.value = 3;
 		mixer.SetFloat("MasterCutoff", 1000f);   // ธิธิ

@@ -245,6 +245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillAttack
   slowFactor: 0.2
   skillMaxRadius: 50
+  Dot: {fileID: 5593872264793740822, guid: 9aa93511b1e687145a16f86b1bc7a0a3, type: 3}
 --- !u!1 &71193433
 GameObject:
   m_ObjectHideFlags: 0

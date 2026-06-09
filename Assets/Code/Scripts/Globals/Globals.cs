@@ -35,6 +35,7 @@ namespace Globals
 	{
 		public static readonly string ground = "Ground";
 		public static readonly string oneWayPlatform = "OneWayPlatform";
+		public static readonly string crackObj = "CrackObject";
 		public static readonly string player = "Player";
 		public static readonly string enemy = "Enemy";
 		public static readonly string wall = "Wall";

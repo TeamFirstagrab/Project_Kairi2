@@ -59,7 +59,7 @@ public class PlayerAttack : MonoBehaviour
 		Vector2 dir = (mousePos - startPos).normalized;
 		Vector2 targetPos = startPos + dir * stats.attackDist;
 
-		LayerMask mask = ~LayerMask.GetMask(LayerName.player);
+		LayerMask mask = ~LayerMask.GetMask(LayerName.player, LayerName.oneWayPlatform);
 		Vector2 boxSize = Vector2.Scale(GetComponent<BoxCollider2D>().size, transform.lossyScale);
 		RaycastHit2D hit = Physics2D.BoxCast(
 			transform.position,
@@ -69,8 +69,23 @@ public class PlayerAttack : MonoBehaviour
 			stats.attackDist,
 			mask
 		);
+		LayerMask crackMask = LayerMask.GetMask(LayerName.crackObj);
+		RaycastHit2D crackHit = Physics2D.Raycast(
+				transform.position,
+				dir,
+				stats.attackDist,
+				crackMask
+			);
+
+		Debug.DrawRay(transform.position, dir, Color.red, stats.attackDist);
 
 		// TODO: 공격 시 무언가가 맞으면 때리는 위치에서 딜레이 + 카메라 쉐이킹 있음
+
+		if (crackHit)
+		{
+			print($"hit obj: {crackHit.transform.name}");
+			GameManager.Instance.poolManager.ReturnToPool(crackHit.transform.gameObject);
+		}
 
 		if (hit)
 		{

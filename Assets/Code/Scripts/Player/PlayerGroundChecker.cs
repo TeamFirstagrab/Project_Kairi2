@@ -12,7 +12,7 @@ public class PlayerGroundChecker : MonoBehaviour
 	public float checkRadius = 0.1f;
 	private LayerMask groundMask;
 	private LayerMask oneWayPlatformMask;
-	private Collider2D collider;
+	private Collider2D coll;
 
 	// 바닥 체크
 	public bool isGrounded { get; set; }
@@ -31,7 +31,7 @@ public class PlayerGroundChecker : MonoBehaviour
 
 	private void Awake()
     {
-		collider = GetComponent<Collider2D>();
+		coll = GetComponent<Collider2D>();
 		groundMask = LayerMask.GetMask(LayerName.ground);
 		oneWayPlatformMask = LayerMask.GetMask(LayerName.oneWayPlatform);
 	}
@@ -41,16 +41,16 @@ public class PlayerGroundChecker : MonoBehaviour
 		//isGrounded = Physics2D.OverlapCircle(groundCheckObj.position, checkRadius, groundMask);
 		//isGroundedOneway = Physics2D.OverlapCircle(groundCheckObj.position, checkRadius, oneWayPlatformMask);
 
-		if(GlobalUtil.IsNullScript(collider)) return;
+		if(GlobalUtil.IsNullScript(coll)) return;
 
 		float offset = 0.05f;
 		float totalDistance = offset + checkDist;
 
 		// 세 개의 범위를 나눠서 체크
 		float sideMargin = 0.02f;
-		Vector2 centerOrigin = new Vector2(collider.bounds.center.x, collider.bounds.min.y + offset);
-		Vector2 leftOrigin = new Vector2(collider.bounds.min.x + sideMargin, collider.bounds.min.y + offset);
-		Vector2 rightOrigin = new Vector2(collider.bounds.max.x + sideMargin, collider.bounds.min.y + offset);
+		Vector2 centerOrigin = new Vector2(coll.bounds.center.x, coll.bounds.min.y + offset);
+		Vector2 leftOrigin = new Vector2(coll.bounds.min.x + sideMargin, coll.bounds.min.y + offset);
+		Vector2 rightOrigin = new Vector2(coll.bounds.max.x + sideMargin, coll.bounds.min.y + offset);
 
 		// 세 범위에 맞는 레이케스트 생성
 		RaycastHit2D hitCenter = Physics2D.Raycast(centerOrigin, Vector2.down, totalDistance, groundMask);

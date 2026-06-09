@@ -5,7 +5,7 @@ public class PlayerStatsRuntime
 {
 	[Header("플레이어 기본 스텟")]
     [Header("이동속도")]
-    public float speed;
+    public float moveSpeed;
     [Header("점프 높이")]
     public float jumpForce;
     [Header("공격력")]
@@ -21,12 +21,10 @@ public class PlayerStatsRuntime
 	[Header("체력")]
 	public float maxHP;
 	public float currentHP;
-	[Header("대쉬 사거리")]
-	public float dashDist;
 	[Header("대쉬 시간")]
 	public float dashDuration;
-	[Header("무적 시간")]
-	public float invincibilityDuration;
+	[Header("대쉬 속도")]
+	public float dashSpeed;
 	[Header("벽 체크 거리")]
 	public float wallChkDist;
 	[Header("벽에서 내려가는 속도")]
@@ -37,7 +35,7 @@ public class PlayerStatsRuntime
 	// 생성자
 	public PlayerStatsRuntime(PlayerStats baseStats)
 	{
-		speed = baseStats.speed;
+		moveSpeed = baseStats.speed;
 		jumpForce = baseStats.jumpForce;
 		attack = baseStats.attack;
         attackDuration = baseStats.attackDuration;
@@ -46,9 +44,8 @@ public class PlayerStatsRuntime
 		attackSpeed = baseStats.attackSpeed;
 		maxHP = baseStats.maxHP;
 		currentHP = maxHP;
-		dashDist = baseStats.dashDist;
 		dashDuration = baseStats.dashDuration;
-		invincibilityDuration = baseStats.invincibilityDuration;
+		dashSpeed = baseStats.dashSpeed;
 		wallChkDist = baseStats.wallChkDist;
 		climbSlidingSpeed = baseStats.climbSlidingSpeed;
 		wallJumpPower = baseStats.wallJumpPower;

@@ -20,12 +20,10 @@ public class PlayerStats : ScriptableObject
 	public float attackSpeed;
 	[Header("체력")]
 	public float maxHP;
-	[Header("대쉬 사거리")]
-	public float dashDist;
 	[Header("대쉬 시간")]
 	public float dashDuration;
-	[Header("무적 시간")]
-	public float invincibilityDuration;
+	[Header("대쉬 속도")]
+	public float dashSpeed;
 	[Header("벽 체크 거리")]
 	public float wallChkDist;
 	[Header("벽에서 내려가는 속도")]

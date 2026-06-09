@@ -48,17 +48,8 @@
                     "id": "27c5f898-bc57-4ee1-8800-db469aca5fe3",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Press(pressPoint=0.5)",
+                    "interactions": "Press(pressPoint=0.5,behavior=2)",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "ReleaseCrouch",
-                    "type": "Button",
-                    "id": "89136d63-4197-497e-a60a-b16b91e1054b",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "Press(pressPoint=0.5,behavior=1)",
-                    "initialStateCheck": false
                 },
                 {
                     "name": "Jump",
@@ -66,7 +57,7 @@
                     "id": "f1ba0d36-48eb-4cd5-b651-1c94a6531f70",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -430,28 +421,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Crouch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3cecc590-ca7d-45bf-a894-1a2194edfc10",
-                    "path": "<Keyboard>/downArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ReleaseCrouch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e184ee82-bfde-4aa9-9fbb-7509908271b3",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ReleaseCrouch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

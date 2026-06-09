@@ -108,29 +108,26 @@ public class Test_KatanaPlayerController : MonoBehaviour
         return false;
     }
 
-    /// <summary>
-    /// 🙇‍♂️ [이벤트 함수 - 키보드 S 키(쪼그려 앉기)를 누르거나 뗄 때 실행돼요!]
-    /// </summary>
-    public void OnCrouch(InputValue value)
+	/// <summary>
+	/// 🙇‍♂️ [이벤트 함수 - 키보드 S 키(쪼그려 앉기)를 누르거나 뗄 때 실행돼요!]
+	/// 🙇‍♂️ [세이프티 이벤트 함수 - S 키를 확실하게 뗐을 때의 안전장치!]
+	/// </summary>
+	public void OnCrouch(InputValue value)
     {
         bool isPressed = value.isPressed;
 
         if (movement != null)
         {
-            // 💡 S키 입력 상태(누름/뗌)를 몸통에 토스하여 캐릭터가 바닥에 수그리거나 일어나도록 명령합니다.
-            movement.SetCrouchInput(isPressed);
-        }
-    }
-
-    /// <summary>
-    /// 🙇‍♂️ [세이프티 이벤트 함수 - S 키를 확실하게 뗐을 때의 안전장치!]
-    /// </summary>
-    public void OnReleaseCrouch(InputValue value)
-    {
-        if (movement != null)
-        {
-            // 💡 키를 확실히 뗐으므로 몸통에 "이제 쪼그려 앉지 말고 일어서!"(false)라고 쏴줍니다.
-            movement.SetCrouchInput(false);
+			if(value.isPressed)
+			{ 
+				// 💡 S키 입력 상태(누름/뗌)를 몸통에 토스하여 캐릭터가 바닥에 수그리거나 일어나도록 명령합니다.
+				movement.SetCrouchInput(isPressed);
+			}
+			else
+			{
+				// 💡 키를 확실히 뗐으므로 몸통에 "이제 쪼그려 앉지 말고 일어서!"(false)라고 쏴줍니다.
+				movement.SetCrouchInput(false);
+			}
         }
     }
 }

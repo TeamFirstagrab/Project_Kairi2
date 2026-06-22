@@ -25,14 +25,13 @@ public class PlayerController : MonoBehaviour
 		climb = GetComponent<PlayerClimb>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 		skillAttack = GetComponent<PlayerSkillAttack>();
-
     }
 
-	//private void Start()
-	//{
-	//	originalGravity = rigid.gravityScale;
-	//	movement.Init();
-	//}
+	private void Start()
+	{
+		originalGravity = rigid.gravityScale;
+		//movement.Init();
+	}
 
 	private void OnMove(InputValue val)
 	{
@@ -107,9 +106,11 @@ public class PlayerController : MonoBehaviour
 		if (GlobalUtil.IsNullScript(attack)) return;
 		if(val.isPressed)
 		{
+			rigid.gravityScale = 1f;	// 중력값 조절
 			attack.TryAttack();
+			movement.SetJumpInput(val.isPressed);
+			rigid.gravityScale = originalGravity;	// 복구
 		}
-
 	}
 
 	private void OnSkillAttack(InputValue val)

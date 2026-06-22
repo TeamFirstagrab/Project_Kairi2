@@ -15,9 +15,9 @@ MonoBehaviour:
   speed: 8
   jumpForce: 10
   attack: 1
-  attackDuration: 0.3
-  attackDist: 3
-  attackCoolTime: 0.25
+  attackDuration: 0.7
+  attackDist: 7
+  attackCoolTime: 0.1
   attackSpeed: 7
   maxHP: 1
   dashDuration: 0.3

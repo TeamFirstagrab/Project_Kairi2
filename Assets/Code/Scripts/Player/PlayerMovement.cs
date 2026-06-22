@@ -226,12 +226,13 @@ public class PlayerMovement : MonoBehaviour
 				&& rigid.linearVelocityY <= 0.01f
 				&& slopeJumpProtectionTimer <= 0f)
 			{
-				rigid.gravityScale = 0f;
-				rigid.linearVelocity = Vector2.zero; // 물리 고정
+				// x축, z축 값 고정
+				rigid.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
 			}
 			else
 			{
-				rigid.gravityScale = defaultGravityScale;	// 움직일 때 원래 중력으로 복원
+				// z축 값 (기본값) 고정
+				rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 			}
 		}
 		// TODO: 벽 이동. 기본중력 X 벽에 붙어있을 경우 정해진 중력에 맞춰 떨어지기 (+ 애니메이션)

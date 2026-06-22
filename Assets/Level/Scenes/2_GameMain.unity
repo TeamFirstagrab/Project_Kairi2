@@ -48306,6 +48306,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 746145936281293607, guid: e45488ae22fe0064b9d2b55b4a154a90, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1188732759892492145, guid: e45488ae22fe0064b9d2b55b4a154a90, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -48313,6 +48317,14 @@ PrefabInstance:
     - target: {fileID: 1346481378446029615, guid: e45488ae22fe0064b9d2b55b4a154a90, type: 3}
       propertyPath: m_TagString
       value: CrackObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 4033551206972326152, guid: e45488ae22fe0064b9d2b55b4a154a90, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 4033551206972326152, guid: e45488ae22fe0064b9d2b55b4a154a90, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5936702662897040279, guid: e45488ae22fe0064b9d2b55b4a154a90, type: 3}
       propertyPath: m_Name
@@ -50564,6 +50576,22 @@ PrefabInstance:
     - target: {fileID: 4771072011827332892, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_Size.y
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527732655219672279, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: m_GravityScale
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6822659655701916194, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: enemyLayer.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 6822659655701916194, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: slashEffectPrefab
+      value: 
+      objectReference: {fileID: 1304077087432041841, guid: e37d5e2dded6cf240bf073cdc4d068a5, type: 3}
+    - target: {fileID: 6822659655701916194, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: bulletLayer.m_Bits
+      value: 1024
       objectReference: {fileID: 0}
     - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: lowJumpMultiplier

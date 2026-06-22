@@ -12,20 +12,20 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 	[SerializeField] private Vector2 spawnPoint;
 
 	private Rigidbody2D rigid;
-	private PlayerDash dash;
+	private PlayerMovement movement;
 	private PlayerSlowMode slowMode;
 
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
-		dash = GetComponent<PlayerDash>();
+		movement = GetComponent<PlayerMovement>();
 		slowMode = GetComponent<PlayerSlowMode>();
 	}
 
 	public void TakeDamage(int attack)
 	{
 		return;		// DEBUG
-		if (dash.isDashing) return;  // 대쉬 중 무적
+		if (movement.isDash) return;  // 대쉬 중 무적
 
 		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
 

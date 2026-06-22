@@ -54,8 +54,8 @@ public class Test_KatanaMovement : MonoBehaviour
 
     // 실시간 다리 제어 물리 변수
     private Vector2 inputVector;       // 뇌 조종사로부터 넘겨받은 방향키 축값
-    private bool isGrounded;           // 플레이어가 안정적으로 땅을 딛고 서 있는지 여부
-    private bool isJumpPressed;        // 점프 버튼이 지금 눌려 있는 상태인가?
+	private bool isGrounded;           // 플레이어가 안정적으로 땅을 딛고 서 있는지 여부
+	private bool isJumpPressed;        // 점프 버튼이 지금 눌려 있는 상태인가?
 
     // 경사로 방지 및 각도 보정용 코어 변수
     private bool isOnSlope;                     // 지금 서 있는 타일이 경사면 언덕인가?
@@ -407,6 +407,7 @@ public class Test_KatanaMovement : MonoBehaviour
         }
         else if (wallMovement != null && wallMovement.IsWallSliding)
         {
+			// TODO: 기본중력 X 벽에 붙어있을 경우 정해진 중력에 맞춰 떨어지기 (+ 애니메이션)
             rigid.gravityScale = defaultGravityScale; // 벽에 매달려 비벼 떨어질 때는 기본 중력 적용
         }
         else

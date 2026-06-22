@@ -12,17 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8068652c9115ba14db26c0dee5e1c1b0, type: 3}
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
-  speed: 10.5
-  jumpForce: 12
+  speed: 8
+  jumpForce: 10
   attack: 1
-  attackDuration: 0.3
-  attackDist: 3
-  attackCoolTime: 0.25
+  attackDuration: 0.7
+  attackDist: 7
+  attackCoolTime: 0.1
   attackSpeed: 7
   maxHP: 1
-  dashDist: 10
-  dashDuration: 0.5
-  invincibilityDuration: 0.5
+  dashDuration: 0.3
+  dashSpeed: 20
   wallChkDist: 0.2
   climbSlidingSpeed: 0.5
   wallJumpPower: 30

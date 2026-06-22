@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
 	private Rigidbody2D rigid;
-	private Animator animator;
 	private PlayerMovement movement;
 	private PlayerDash dash;
 	private PlayerAttack attack;
@@ -19,7 +18,6 @@ public class PlayerController : MonoBehaviour
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
-		animator = GetComponent<Animator>();
 		movement = GetComponent<PlayerMovement>();
 		dash = GetComponent<PlayerDash>();
 		attack = GetComponent<PlayerAttack>();
@@ -27,83 +25,92 @@ public class PlayerController : MonoBehaviour
 		climb = GetComponent<PlayerClimb>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 		skillAttack = GetComponent<PlayerSkillAttack>();
-
     }
 
 	private void Start()
 	{
 		originalGravity = rigid.gravityScale;
-		movement.Init();
-	}
-
-	private void FixedUpdate()
-	{
-		if (!dash.isDashing)
-			movement.HandleMovement();
-
-		if(!climb.isWallJump)
-			movement.UpdateSprite();
-	}
-
-	private void Update()
-	{
-		rigid.gravityScale = originalGravity;
+		//movement.Init();
 	}
 
 	private void OnMove(InputValue val)
 	{
-		if (climb.isWallJump) return;	// 벽에서 점프 중일 경우 이동 X
-		if (dash.isDashing)
+		if (GlobalUtil.IsNullScript(movement)) return;
+		//if (climb.isWallJump) return;	// 벽에서 점프 중일 경우 이동 X
+		//if (dash.isDashing)
+		//{
+		//	movement.inputVec = Vector2.zero;
+		//	return;
+		//}
+
+		//animator.Play(PlayerAnimName.run);
+		//movement.inputVec = val.Get<Vector2>();
+		//dash.TryDash();
+
+		Vector2 inputVec = val.Get<Vector2>();
+
+		bool hadNoHorizontal = Mathf.Abs(movement.inputVec.x) < 0.01f;
+		bool hasHorizontal = Mathf.Abs(inputVec.x) > 0.01f;
+
+		if (hadNoHorizontal && hasHorizontal && movement.isCrouchPressed)
 		{
-			movement.inputVec = Vector2.zero;
-			return;
+			movement.TriggerRollInput(); // 구르기 준비
 		}
 
-		animator.Play(PlayerAnimName.run);
-		movement.inputVec = val.Get<Vector2>();
-		dash.TryDash();
+		// Movement에 전달해서 플레이어가 수평 이동하도록 전달
+		movement.inputVec = inputVec;
 	}
 
-	private void OnReleaseMove(InputValue val)
-	{
-		if (dash.isDashing) return;
-		animator.Play(PlayerAnimName.idle);
-	}
+	//private void OnReleaseMove(InputValue val)
+	//{
+	//	if (IsNullScript(movement)) return;
+
+	//	if (dash.isDashing) return;
+	//	animator.Play(PlayerAnimName.idle);
+	//}
 
 	private void OnJump(InputValue val)
-    {
-        if (climb.isWall)
-        {
-            climb.WallJump();
-            return;
-        }
-        if (!groundChecker.isGrounded) return;
+	{
+		if (GlobalUtil.IsNullScript(movement)) return;
 
-		rigid.AddForce(Vector2.up * GameManager.Instance.playerStatsRuntime.jumpForce, ForceMode2D.Impulse);
-		groundChecker.isGrounded = false;
+		movement.SetJumpInput(val.isPressed);
 	}
 
-	private void OnCrouch()
+	private void OnCrouch(InputValue val)
 	{
-		if (!groundChecker.isGrounded) return;
-		dash.isDashReady = true;
-		animator.Play(PlayerAnimName.landDown);
-		if (groundChecker.isGroundedOneway)
-			transform.position += Vector3.down * 0.1f;
+		if (GlobalUtil.IsNullScript(movement)) return;
+
+		if(val.isPressed)
+		{
+			//if (!groundChecker.IsGrounded) return;
+			//dash.isDashReady = true;
+			//animator.Play(PlayerAnimName.landDown);
+			//if (groundChecker.IsGroundedOneway)
+			//	transform.position += Vector3.down * 0.1f;
+			//else
+			//	dash.TryDash();
+			movement.SetCrouchInput(val.isPressed);
+		}
 		else
-			dash.TryDash();
-	}
+		{
+			//if (dash.isDashing) return;
+			//dash.isDashReady = false;
+			//animator.Play(PlayerAnimName.landUp);
 
-	private void OnReleaseCrouch()
-	{
-		if (dash.isDashing) return;
-		dash.isDashReady = false;
-		animator.Play(PlayerAnimName.landUp);
+			movement.SetCrouchInput(false);
+		}
 	}
 
 	private void OnAttack(InputValue val)
 	{
-		attack.TryAttack();
+		if (GlobalUtil.IsNullScript(attack)) return;
+		if(val.isPressed)
+		{
+			rigid.gravityScale = 1f;	// 중력값 조절
+			attack.TryAttack();
+			movement.SetJumpInput(val.isPressed);
+			rigid.gravityScale = originalGravity;	// 복구
+		}
 	}
 
 	private void OnSkillAttack(InputValue val)

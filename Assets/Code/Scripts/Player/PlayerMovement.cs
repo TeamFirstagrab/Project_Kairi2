@@ -15,9 +15,9 @@ public class PlayerMovement : MonoBehaviour
 	[Tooltip("점프하고 땅에 닿기 전 점프 입력을 저장할 시간")]
 	[SerializeField] private float jumpBufferTime = 0.15f;
 	[Tooltip("점프하고 떨어질 때 가속도")]
-	[SerializeField] private float fallMultiplier = 8f;
+	[SerializeField] private float fallMultiplier = 3f;
 	[Tooltip("점프 키를 살짝만 눌렀을 때 점프할 중력값")]
-	[SerializeField] private float lowJumpMultiplier = 3f;
+	[SerializeField] private float lowJumpMultiplier = 2f;
 	private float jumpBufferCounter;	// 선입력된 잔여 점프 유효 시간 카운터
 	private float landingImpactTimer;   // 착지 모션 타이머
 

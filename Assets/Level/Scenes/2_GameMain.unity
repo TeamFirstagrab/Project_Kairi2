@@ -50579,7 +50579,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6527732655219672279, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_GravityScale
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6822659655701916194, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: enemyLayer.m_Bits
@@ -50594,8 +50594,12 @@ PrefabInstance:
       value: 1024
       objectReference: {fileID: 0}
     - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: fallMultiplier
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: lowJumpMultiplier
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8042885108204123329, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: blackCanvas

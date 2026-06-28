@@ -90,6 +90,7 @@ public class PlayerController : MonoBehaviour
 			//else
 			//	dash.TryDash();
 			movement.SetCrouchInput(val.isPressed);
+			movement.TriggerRollInput(); // 구르기 준비
 		}
 		else
 		{
@@ -108,7 +109,6 @@ public class PlayerController : MonoBehaviour
 		{
 			rigid.gravityScale = 1f;	// 중력값 조절
 			attack.TryAttack();
-			movement.SetJumpInput(val.isPressed);
 			rigid.gravityScale = originalGravity;	// 복구
 		}
 	}

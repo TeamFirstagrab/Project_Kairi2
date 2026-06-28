@@ -35,7 +35,7 @@ public class PlayerStatsRuntime
 	// »ý¼ºÀÚ
 	public PlayerStatsRuntime(PlayerStats baseStats)
 	{
-		moveSpeed = baseStats.speed;
+		moveSpeed = baseStats.moveSpeed;
 		jumpForce = baseStats.jumpForce;
 		attack = baseStats.attack;
         attackDuration = baseStats.attackDuration;

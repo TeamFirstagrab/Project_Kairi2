@@ -5,7 +5,7 @@ public class PlayerStats : ScriptableObject
 {
 	[Header("플레이어 기본 스탯")]
 	[Header("이동속도")]
-	public float speed;
+	public float moveSpeed;
 	[Header("점프 높이")]
 	public float jumpForce;
 	[Header("공격력")]

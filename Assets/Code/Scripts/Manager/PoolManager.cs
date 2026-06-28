@@ -87,6 +87,7 @@ public class PoolManager : MonoBehaviour
 		{
 			// 정상적인 풀 오브젝트면 다시 큐에 저장
 			poolDict[obj.name].Enqueue(obj);
+			print($"{obj.name} 삭제 완료");
 		}
 		else
 		{

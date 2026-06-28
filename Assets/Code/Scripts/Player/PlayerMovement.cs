@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
 	[Tooltip("점프하고 떨어질 때 가속도")]
 	[SerializeField] private float fallMultiplier = 3f;
 	[Tooltip("점프 키를 살짝만 눌렀을 때 점프할 중력값")]
-	[SerializeField] private float lowJumpMultiplier = 2f;
+	[SerializeField] private float lowJumpMultiplier = 8f;
 	private float jumpBufferCounter;	// 선입력된 잔여 점프 유효 시간 카운터
 	private float landingImpactTimer;   // 착지 모션 타이머
 
@@ -30,11 +30,16 @@ public class PlayerMovement : MonoBehaviour
 	private float defaultGravityScale = 3f;
 
 	// 대쉬
+	[Header("플레이어 대쉬 관련")]
+	[SerializeField] GameObject dashEffectPref;
+	[SerializeField] Vector3 dashEffectOffset = new Vector3(0f, -1f, 0f);
 	public bool isDash;		// 대쉬 여부
 	private float dashTimer;    // 대쉬 타이머
 	private Vector2 currDashVelocity;   // 대쉬 시작 시 경사면 대쉬 속도 벡터
 	private float dashDir;      // 대쉬 X축 방향 (-1: 왼쪽, 1: 오른쪽)
-	
+	[SerializeField] private float dashCooldown = 1f;   // 대쉬 쿨타임
+	private float dashCooldownTimer;                    // 남은 쿨타임
+
 	public Vector2 inputVec;
 
     private void Awake()
@@ -70,8 +75,13 @@ public class PlayerMovement : MonoBehaviour
 		{
 			jumpBufferCounter -= Time.deltaTime;
 		}
-		
-		if(slopeJumpProtectionTimer > 0f)
+
+		if (dashCooldownTimer > 0f)		// 대쉬 쿨타임
+		{
+			dashCooldownTimer -= Time.deltaTime;
+		}
+
+		if (slopeJumpProtectionTimer > 0f)
 		{
 			slopeJumpProtectionTimer -= Time.deltaTime;
 		}
@@ -130,10 +140,13 @@ public class PlayerMovement : MonoBehaviour
 			isDash = true;
 			dashTimer = stats.dashDuration;
 			dashDir = inputVec.x > 0f ? 1f : -1f;
-			dashRequested = false;	// 대쉬 예약 파괴
+			dashRequested = false;  // 대쉬 예약 파괴
 
 			// 대쉬하는 방향으로 오브젝트 회전
 			transform.eulerAngles = new Vector3(0f, dashDir > 0f ? 0f : 180f, 0f);
+
+			// 대쉬 이펙트
+			GameObject dashObj = Instantiate(dashEffectPref, (transform.position + dashEffectOffset), transform.rotation);
 
 			Vector2 dirVec = new Vector2(dashDir, 0f);  // 대쉬 방향 벡터 생성
 			Vector2 rayOrigin = (Vector2)coll.bounds.center;    // 발 아래 Raycast 방향
@@ -307,10 +320,10 @@ public class PlayerMovement : MonoBehaviour
         else if (inputVec.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
 
         // x축 고정
-        if (inputVec.x == 0)
-            rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-        else
-            rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+        //if (inputVec.x == 0)
+        //    rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+        //else
+        //    rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     public void UpdateSprite(Vector2 dir)

@@ -11,7 +11,6 @@ public class PlayerGroundChecker : MonoBehaviour
 
 	public float checkRadius = 0.1f;
 	private LayerMask groundMask;
-	private LayerMask oneWayPlatformMask;
 	private Collider2D coll;
 
 	// ¹Ù´Ú Ã¼Å©
@@ -32,8 +31,7 @@ public class PlayerGroundChecker : MonoBehaviour
 	private void Awake()
     {
 		coll = GetComponent<Collider2D>();
-		groundMask = LayerMask.GetMask(LayerName.ground);
-		oneWayPlatformMask = LayerMask.GetMask(LayerName.oneWayPlatform);
+		groundMask = LayerMask.GetMask(LayerName.ground, LayerName.oneWayPlatform);
 	}
 
 	public void CheckGround()

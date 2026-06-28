@@ -18,14 +18,19 @@ public class PlayerAttack : MonoBehaviour
 	[Tooltip("칼날이 쓸고 지나가는 타격 범위의 둥근 원(Radius) 반경 크기")]
 	[SerializeField] private float attackRadius = 1.8f;
 	[Header("패링 설정")]
-	private float lastAttackTime; // 마지막으로 공격한 시간 기록 장치 (연타 방지용)
 	private Animator anim;        // 캐릭터 팔다리 모션을 바꿀 애니메이터 컴포넌트
+
+	[Header("이펙트")]
+	[SerializeField]
+	private GameObject attackEffectPref;
 
 	private Rigidbody2D rigid;
 	private PlayerStatsRuntime stats;
 	private Camera mainCam;
 	private PlayerSlowMode slowMode;
+	private PlayerGroundChecker groundChk;
 	private float attackTimer;
+
 
 	public bool IsAttacking { get; private set; }
 
@@ -34,7 +39,7 @@ public class PlayerAttack : MonoBehaviour
 		rigid = GetComponent<Rigidbody2D>();
 		slowMode = GetComponent<PlayerSlowMode>();
 		anim = GetComponent<Animator>();
-
+		groundChk = GetComponent<PlayerGroundChecker>();
 	}
 
 	private void Start()
@@ -48,14 +53,13 @@ public class PlayerAttack : MonoBehaviour
 		//	StartCoroutine(Attack());
 
 		// 공격 중이거나 공격 쿨타임이 다 안 찼으면 리턴
-		if (IsAttacking/* || Time.time < lastAttackTime + attackCooldown*/)
+		if (IsAttacking)
 			return;
 
-		lastAttackTime = Time.time;
 		IsAttacking = true;
 
 		// 애니메이션 처리
-		if(anim != null)
+		if (anim != null)
 		{
 			anim.SetTrigger("attack");
 		}
@@ -67,16 +71,19 @@ public class PlayerAttack : MonoBehaviour
 	{
 		IsAttacking = true;
 		stats = GameManager.Instance.playerStatsRuntime;
-		Vector3 startPos = transform.position;
+		Vector3 startPos = rigid.position;
 		Vector3 currPos = startPos;
 		Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
 		Vector3 dir = (mousePos - startPos).normalized;
-		Vector3 targetPos = startPos + dir * stats.attackDist;
+		float targetDist = groundChk.isGrounded || groundChk.isSlope ? stats.attackDist : 1.5f;
+		Vector3 targetPos = startPos + dir * targetDist;
+		// -> 바닥이나 경사에 있을 경우에는 공격 거리만큼 이동
+		// -> 공격을 하거나 점프해서 떠 있을 경우 매우 짧은 거리로 이동
 
-		LayerMask mask = ~LayerMask.GetMask(LayerName.player, LayerName.oneWayPlatform);
+		LayerMask mask = ~LayerMask.GetMask(LayerName.player, LayerName.oneWayPlatform, LayerName.crackObj);
 		Vector2 boxSize = Vector2.Scale(GetComponent<BoxCollider2D>().size, transform.lossyScale);
 		RaycastHit2D hit = Physics2D.BoxCast(
-			transform.position,
+			rigid.position,
 			boxSize,
 			transform.eulerAngles.z,
 			dir,
@@ -85,41 +92,46 @@ public class PlayerAttack : MonoBehaviour
 		);
 		LayerMask crackMask = LayerMask.GetMask(LayerName.crackObj);
 		RaycastHit2D crackHit = Physics2D.Raycast(
-				transform.position,
+				rigid.position,
 				dir,
 				stats.attackDist,
 				crackMask
 			);
 
-		Debug.DrawRay(transform.position, dir, Color.red, stats.attackDist);
+		Debug.DrawRay(rigid.position, dir, Color.red, stats.attackDist);
 
 		// TODO: 공격 시 무언가가 맞으면 때리는 위치에서 딜레이 + 카메라 쉐이킹 있음
-
-		if (crackHit)
+		if (crackHit)	// 부서지는 오브젝트
 		{
-			print($"hit obj: {crackHit.transform.name}");
-			GameManager.Instance.poolManager.ReturnToPool(crackHit.transform.gameObject);
-		}
+			crackHit.collider.GetComponent<CrackObject>()?.TakeDamage(stats.attack);
 
+			GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
+		}
 		if (hit)
 		{
 			Collider2D hitCol = hit.collider;
-			if (hitCol.CompareTag(TagName.enemy)
-			|| hitCol.CompareTag(TagName.crackObj))
+
+			// 적
+			if (hitCol.CompareTag(TagName.enemy))
 			{
 				if (hitCol.TryGetComponent<IDamageable>(out IDamageable coll))
 				{
 					coll.TakeDamage(stats.attack);  // 공격력만큼 데미지 주기
-
-					// TODO: 공격 이펙트
-					print($"Attack to {hit.collider.tag}");
 				}
+				GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
+				targetDist = Vector2.Distance(rigid.position, hit.point) * 0.2f;
 			}
+			// 문
 			else if (hitCol.CompareTag(TagName.door))
 			{
-				hit.transform.GetComponent<IInteractionObject>()?.OnInteract();
-				print($"Interact {hit.collider.tag}");
+				if (hitCol.TryGetComponent<IInteractionObject>(out IInteractionObject coll))
+				{
+					coll.OnInteract();  // 상호작용
+				}
+				targetDist = 1f;
+				GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
 			}
+			// 총알
 			else if (hitCol.CompareTag(TagName.bullet))
 			{
 				// TODO: 총알 패링
@@ -127,51 +139,53 @@ public class PlayerAttack : MonoBehaviour
 				{
 					print($"Hit Bullet {bullet.ToString()}");
 					bullet.DeflectBullet(mousePos);     // 패링
+
+					targetDist = Vector2.Distance(rigid.position, hit.point) * 0.2f;
 				}
 			}
+
+			targetPos = startPos + dir * targetDist;
 		}
 
-		// 공격 이펙트 (임시)
-		SpawnAttackEffect(dir);
+		// 공격 이펙트
+		GameObject attackObj = SpawnAttackEffect(dir);
 
 		// 공격 거리만큼 대쉬
-		while (Vector2.Distance(transform.position, targetPos) > 0.1f
+		while (Vector2.Distance(rigid.position, targetPos) > 0.5f
 			&& stats.attackDuration > attackTimer)
 		{
 			attackTimer += Time.deltaTime;
-			float t = attackTimer;
-			transform.position = Vector3.Lerp(transform.position, targetPos, t);
+			float t = attackTimer / 0.5f;
+			rigid.MovePosition(Vector3.Lerp(rigid.position, targetPos, t));
+			if(attackObj != null) attackObj.transform.position = rigid.position;
 			yield return null;  // 다음 프레임까지 대기
 		}
-		transform.position = targetPos;
+		rigid.MovePosition(targetPos);
 
 		yield return new WaitForSeconds(stats.attackCoolTime);
 		attackTimer = 0f;
 
-		Invoke(nameof(ResetAttackState), stats.attackCoolTime);
+		ResetAttackState();
 	}
 
-	private void SpawnAttackEffect(Vector3 p_dir)
+	private GameObject SpawnAttackEffect(Vector3 p_dir)
 	{
 		// 삼각함수 Atan2 각도 변환
 		float angle = Mathf.Atan2(p_dir.y, p_dir.x) * Mathf.Rad2Deg;
 
-		// 이펙트 스폰 지점
-		float offsetDistance = effectOffset.x;
-		Vector3 spawnPosition = transform.position + p_dir * offsetDistance;
-
 		// 각도 주입 Quaternion 획득
 		Quaternion spawnRotation = Quaternion.Euler(0f, 0f, angle);
 
-		Instantiate(slashEffectPrefab, spawnPosition, spawnRotation);
+		return Instantiate(attackEffectPref, transform.position, spawnRotation);
 	}
 
-	private void ResetAttackState()
+	private void ResetAttackState()     // 공격 설정 초기화
 	{
 		IsAttacking = false;
 	}
 
-	private void OnDrawGizmos()
+#if UNITY_EDITOR
+	private void OnDrawGizmosSelected()
 	{
 		float maxDistance = 100f;
 
@@ -216,4 +230,5 @@ public class PlayerAttack : MonoBehaviour
 			);
 		}
 	}
+#endif
 }

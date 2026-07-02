@@ -16,7 +16,7 @@ MonoBehaviour:
   jumpForce: 10
   attack: 1
   attackDuration: 0.7
-  attackDist: 7
+  attackDist: 4
   attackCoolTime: 0.1
   attackSpeed: 7
   maxHP: 1

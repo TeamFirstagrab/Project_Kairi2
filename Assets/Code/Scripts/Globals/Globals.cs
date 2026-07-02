@@ -52,17 +52,17 @@ namespace Globals
 	}
 	public static class PlayerAnimName   // 플레이어
 	{
-		public static readonly string idle = "Idle";
-		public static readonly string run = "Run";
-		public static readonly string attack = "Attack";
-		public static readonly string landDown = "LandDown";
-		public static readonly string landing = "Landing";
-		public static readonly string landUp = "LandUp";
-		public static readonly string slide = "Slide";
-		public static readonly string roll = "Roll";
-		public static readonly string redgeClimb = "RedgeClimb";
-		public static readonly string climb = "Climb";
-		public static readonly string climbSlide = "ClimbSlide";
+		public static readonly string idle			= "Dragon_Idle";
+		public static readonly string run			= "Dragon_Run";
+		public static readonly string attack		= "Dragon_Attack";
+		public static readonly string landDown		= "Dragon_LandDown";
+		public static readonly string landing		= "Dragon_Landing";
+		public static readonly string landUp		= "Dragon_LandUp";
+		public static readonly string slide			= "Dragon_Slide";
+		public static readonly string roll			= "Dragon_Roll";
+		public static readonly string redgeClimb	= "Dragon_RedgeClimb";
+		public static readonly string climb			= "Dragon_Climb";
+		public static readonly string climbSlide	= "Dragon_ClimbSlide";
 	}
 
 	// 프리펩 이름 관련 클래스

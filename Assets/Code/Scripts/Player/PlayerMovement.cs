@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 	private Rigidbody2D rigid;
 	private Collider2D coll;
 	private PlayerGroundChecker groundChecker;
+	private PlayerAttack attack;
 	private bool isJump;    // 점프 여부
 	private PlayerStatsRuntime stats;
 
@@ -47,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
 		rigid = GetComponent<Rigidbody2D>();
 		coll = GetComponent<Collider2D>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
+		attack = GetComponent<PlayerAttack>();
 	}
 
 	private void Update()
@@ -237,7 +239,8 @@ public class PlayerMovement : MonoBehaviour
 			float targetSpeed = isCrouchPressed ? 0 : (inputVec.x * stats.moveSpeed);
 			if(groundChecker.isSlope && Mathf.Abs(targetSpeed) < 0.01f 
 				&& rigid.linearVelocityY <= 0.01f
-				&& slopeJumpProtectionTimer <= 0f)
+				&& slopeJumpProtectionTimer <= 0f
+				&& (attack == null || !attack.IsAttacking))
 			{
 				// x축, z축 값 고정
 				rigid.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;

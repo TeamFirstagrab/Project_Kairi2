@@ -78,54 +78,57 @@ public class PlayerAnimator : MonoBehaviour
 			return;
 		}
 
-		// 2. 벽 점프 / 벽 슬라이딩
-		if (movement != null && (movement.IsWallSliding || movement.IsWallJumping))
-		{
-			PlayAnimation(AnimationState.Wall);
-			return;
-		}
-
-		// 3. 공격 / 스킬 공격
+		// 2. 공격
 		if (attack != null && attack.IsAttacking)
 		{
 			PlayAnimation(AnimationState.Attack);
 			return;
 		}
+
+		// 3. 스킬 공격
 		if (skillAttack != null && skillAttack.IsSkillAttacking)
 		{
 			PlayAnimation(AnimationState.Skill);
 			return;
 		}
 
-		// 4. 구르기 (구르는 도중 모든 키를 떼도 구르는 시간이 지속되고 있을 때)
+		// 4. 벽 점프 / 벽 슬라이딩
+		if (movement != null && (movement.IsWallSliding || movement.IsWallJumping))
+		{
+			PlayAnimation(AnimationState.Wall);
+			return;
+		}
+
+		// 5. 구르기
 		if (movement != null && movement.isDash)
 		{
 			PlayAnimation(AnimationState.Roll);
 			return;
 		}
 
-		// 5. 웅크리기 (웅크리기를 유지하고 있을 때)
-		if (movement != null && movement.isCrouchPressed && groundChk != null && groundChk.isGrounded)
+		// 6. 웅크리기
+		if (movement != null && movement.isCrouchPressed &&
+			groundChk != null && groundChk.isGrounded)
 		{
 			PlayAnimation(AnimationState.Down);
 			return;
 		}
 
-		// 6. 공중 점프/낙하
+		// 7. 공중 점프 / 낙하
 		if (groundChk != null && !groundChk.isGrounded)
 		{
 			PlayAnimation(AnimationState.Jump);
 			return;
 		}
 
-		// 7. 달리기
+		// 8. 달리기
 		if (movement != null && Mathf.Abs(movement.inputVec.x) > 0.1f)
 		{
 			PlayAnimation(AnimationState.Run);
 			return;
 		}
 
-		// 8. 기본 (Idle)
+		// 9. 기본
 		PlayAnimation(AnimationState.Idle);
 	}
 

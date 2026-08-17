@@ -1,0 +1,399 @@
+fileFormatVersion: 2
+guid: a6613eea885d9cc48a78877380ae60f7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3191259759738172425
+    second: SkillCountBar2_0
+  - first:
+      213: -2432883106445092934
+    second: SkillCountBar2_1
+  - first:
+      213: -3277236133089416738
+    second: SkillCountBar2_2
+  - first:
+      213: 381522086043223718
+    second: SkillCountBar2_3
+  - first:
+      213: 2968318882669858139
+    second: SkillCountBar2_4
+  - first:
+      213: 8526480308091482671
+    second: SkillCountBar2_5
+  - first:
+      213: 1585469734166958266
+    second: SkillCountBar2_6
+  - first:
+      213: 4525664902946916295
+    second: SkillCountBar2_7
+  - first:
+      213: -4136173636554905115
+    second: SkillCountBar2_8
+  - first:
+      213: 3273456588463772505
+    second: SkillCountBar2_9
+  - first:
+      213: 7987836212626194192
+    second: SkillCountBar2_10
+  - first:
+      213: 7898566313865711139
+    second: SkillCountBar2_11
+  - first:
+      213: -5297435630250047986
+    second: SkillCountBar2_12
+  - first:
+      213: 8987938038268201486
+    second: SkillCountBar2_13
+  - first:
+      213: 8047739393840340829
+    second: SkillCountBar2_14
+  - first:
+      213: 3607101932096303380
+    second: SkillCountBar2_15
+  - first:
+      213: -8029260364767580583
+    second: SkillCountBar2_16
+  - first:
+      213: 2918024732063261307
+    second: SkillCountBar2_17
+  - first:
+      213: -3855374676455598611
+    second: SkillCountBar2_18
+  - first:
+      213: -9027194204209459406
+    second: SkillCountBar2_19
+  - first:
+      213: -80492864270510829
+    second: SkillCountBar2_20
+  - first:
+      213: -3376901077035022807
+    second: SkillCountBar2_21
+  - first:
+      213: 1974963768848337898
+    second: SkillCountBar2_22
+  - first:
+      213: 6734255046743789206
+    second: SkillCountBar2_23
+  - first:
+      213: 6436038603845900774
+    second: SkillCountBar2_24
+  - first:
+      213: 8763959554377681334
+    second: SkillCountBar2_25
+  - first:
+      213: 5590744226582396908
+    second: SkillCountBar2_26
+  - first:
+      213: 2539565473828979254
+    second: SkillCountBar2_27
+  - first:
+      213: 1219592756634856947
+    second: SkillCountBar2_28
+  - first:
+      213: -665938676233982038
+    second: SkillCountBar2_29
+  - first:
+      213: 5031946579850690754
+    second: SkillCountBar2_30
+  - first:
+      213: -1409288725804427339
+    second: SkillCountBar2_31
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SkillCountBar2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fbcec2182e56b3d0800000000000000
+      internalID: -3191259759738172425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkillCountBar2_1
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 0
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab79a4464b9ac3ed0800000000000000
+      internalID: -2432883106445092934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkillCountBar2_2
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 0
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed9612ab91be482d0800000000000000
+      internalID: -3277236133089416738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkillCountBar2_3
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 0
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a6829cd0507b4500800000000000000
+      internalID: 381522086043223718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkillCountBar2_4
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 0
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5d0f950c46913920800000000000000
+      internalID: 2968318882669858139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkillCountBar2_5
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 0
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f22f72c3aa4245670800000000000000
+      internalID: 8526480308091482671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkillCountBar2_6
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 0
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab09723b258b00610800000000000000
+      internalID: 1585469734166958266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkillCountBar2_7
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 0
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c78a9050446ece30800000000000000
+      internalID: 4525664902946916295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e447388ec24e84542afbed7b87eb61a6
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":8.0,"y":1.0},"gridSpriteSize":{"x":39.0,"y":39.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      SkillCountBar2_0: -3191259759738172425
+      SkillCountBar2_1: -2432883106445092934
+      SkillCountBar2_2: -3277236133089416738
+      SkillCountBar2_3: 381522086043223718
+      SkillCountBar2_4: 2968318882669858139
+      SkillCountBar2_5: 8526480308091482671
+      SkillCountBar2_6: 1585469734166958266
+      SkillCountBar2_7: 4525664902946916295
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

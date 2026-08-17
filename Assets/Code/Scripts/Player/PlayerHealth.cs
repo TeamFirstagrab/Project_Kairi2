@@ -1,0 +1,68 @@
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PlayerHealth : MonoBehaviour, IDamageable
+{
+	[Header("UI")]
+	public GameObject glitchGlobalVolume;
+	public GameObject tvGlobalVolume;
+	public Image blackCanvas;
+
+	[SerializeField] private Vector2 spawnPoint;
+
+	public bool isDead = false;
+
+	private Rigidbody2D rigid;
+	private PlayerMovement movement;
+	private PlayerSlowMode slowMode;
+
+	private void Awake()
+	{
+		rigid = GetComponent<Rigidbody2D>();
+		movement = GetComponent<PlayerMovement>();
+		slowMode = GetComponent<PlayerSlowMode>();
+	}
+
+	public void TakeDamage(int attack, Vector2 attackDirection)
+	{
+		return;		// DEBUG
+		if (movement.isDash) return;  // 대쉬 중 무적
+
+		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
+
+		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)
+		{
+			isDead = true;
+			slowMode.ExitSlow();
+			StartCoroutine(PlayerDie());
+		}
+	}
+
+	private IEnumerator PlayerDie()
+	{
+		if (glitchGlobalVolume && tvGlobalVolume)
+		{
+			glitchGlobalVolume.SetActive(true);
+			tvGlobalVolume.SetActive(true);
+			yield return new WaitForSeconds(0.3f);
+			Respawn();
+			blackCanvas.gameObject.SetActive(true);
+			GameManager.Instance.sceneReloader.Reload();
+			yield return new WaitForSeconds(0.3f);
+		}
+
+	}
+
+	private void Respawn()
+	{
+		rigid.linearVelocity = Vector2.zero;
+		transform.position = spawnPoint;
+		GameManager.Instance.playerStatsRuntime.currentHP =
+			GameManager.Instance.playerStats.maxHP;
+		blackCanvas.gameObject.SetActive(false);
+		glitchGlobalVolume.SetActive(false);
+		tvGlobalVolume.SetActive(false);
+		isDead = false;
+	}
+}

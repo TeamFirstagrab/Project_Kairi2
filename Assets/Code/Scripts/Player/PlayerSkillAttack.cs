@@ -177,7 +177,8 @@ public class PlayerSkillAttack : MonoBehaviour
 
 		LayerMask mask = LayerMask.GetMask(
 			LayerName.enemy,
-			LayerName.crackObj);
+			LayerName.crackObj,
+			LayerName.door);
 
 		float distance = Vector2.Distance(transform.position, targetPos);
 
@@ -190,6 +191,9 @@ public class PlayerSkillAttack : MonoBehaviour
 		// 공격 판정
 		foreach (RaycastHit2D hit in hits)
 		{
+			if (hit.transform.TryGetComponent<DoorController>(out var door))
+				door.OnOpen();
+
 			if (hit.transform.TryGetComponent<IDamageable>(out var damage))
 				damage.TakeDamage(GameManager.Instance.playerStatsRuntime.attack, dir);
 

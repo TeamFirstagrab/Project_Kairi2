@@ -49,7 +49,7 @@ public class PlayerSkillAttack : MonoBehaviour
 			}
 			if (cooldownTimer <= 0f && cooldownUI != null)
 			{
-				cooldownUI.ShowCooldown(false); // 쿨타임 끝나면 UI 숨김
+				cooldownUI.UpdateCooldown(0f, skillCooldown); // 쿨타임 끝나면 0 상태로 업데이트
 			}
 		}
 	}

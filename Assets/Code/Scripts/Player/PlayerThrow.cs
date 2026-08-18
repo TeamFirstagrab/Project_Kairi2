@@ -3,20 +3,35 @@ using EnumType;
 
 public class PlayerThrow : MonoBehaviour
 {
-    [Header("Åõ»çÃ¼ ¼³Á¤")]
-    [SerializeField] private float throwSpeed = 22f; // ³¯¾Æ°¡´Â ¼Óµµ
-    [SerializeField] private GameObject projectilePrefab; // ThrownProjectile ÇÁ¸®ÆÕ ¿¬°á
+    [Header("íˆ¬ì‚¬ì²´ ì„¤ì •")]
+    [SerializeField] private float throwSpeed = 22f; // ë‚ ì•„ê°€ëŠ” ì†ë„
+    [SerializeField] private GameObject projectilePrefab; // ThrownProjectile í”„ë¦¬íŒ¹ ì—°ê²°
+
+    [Header("íˆ¬ì²™ í‘œì‹œê¸°")]
+    [SerializeField] private GameObject throwIndicator; // ìºë¦­í„° ë¨¸ë¦¬ ìœ„ ë§ˆìš°ìŠ¤ ìš°í´ë¦­ í‘œì‹œê¸°
 
     private ThrowableType currentItem = ThrowableType.None;
-    private ThrowablePickup nearbyPickup; // °¨ÁöµÈ ¹Ù´ÚÀÇ ¿ÀºêÁ§Æ®
+    private ThrowablePickup nearbyPickup; // ê°ì§€ëœ ë°”ë‹¥ì˜ ì˜¤ë¸Œì íŠ¸
 
-    // ¿ÜºÎ(PlayerController)¿¡¼­ »óÅÂ Ã¼Å©¸¦ ÇÏ±â À§ÇÑ ÇÔ¼öµé
+    private void Start()
+    {
+        if (throwIndicator != null)
+        {
+            throwIndicator.SetActive(false);
+        }
+    }
+
+    // ì™¸ë¶€(PlayerController)ì—ì„œ ìƒíƒœ ì²´í¬ë¥¼ í•˜ê¸° ìœ„í•œ í•¨ìˆ˜ë“¤
     public bool HasItem() => currentItem != ThrowableType.None;
     public bool HasNearbyPickup() => nearbyPickup != null;
 
     public void SetNearbyPickup(ThrowablePickup pickup)
     {
         nearbyPickup = pickup;
+        if (throwIndicator != null)
+        {
+            throwIndicator.SetActive(true);
+        }
     }
 
     public void ClearNearbyPickup(ThrowablePickup pickup)
@@ -24,10 +39,14 @@ public class PlayerThrow : MonoBehaviour
         if (nearbyPickup == pickup)
         {
             nearbyPickup = null;
+            if (throwIndicator != null)
+            {
+                throwIndicator.SetActive(false);
+            }
         }
     }
 
-    // ¿ìÅ¬¸¯ ÀÔ·Â ½Ã ½ÇÇàÇÒ ¾×¼Ç
+    // ìš°í´ë¦­ ì…ë ¥ ì‹œ ì‹¤í–‰í•  ì•¡ì…˜
     public void ExecuteThrowAction()
     {
         if (currentItem == ThrowableType.None)
@@ -47,13 +66,19 @@ public class PlayerThrow : MonoBehaviour
     {
         currentItem = pickup.type;
 
-        // ¿ì»ó´Ü UI ¾÷µ¥ÀÌÆ®
+        // ìš°ìƒë‹¨ UI ì—…ë°ì´íŠ¸
         if (PlayerThrowUI.Instance != null)
         {
             PlayerThrowUI.Instance.UpdateUI(pickup.uiSprite);
         }
 
-        // ¸Ê¿¡ ÀÖ´Â ¾ÆÀÌÅÛ ÆÄ±«
+        // ì•„ì´í…œ íšë“ ì‹œ ë¨¸ë¦¬ ìœ„ í‘œì‹œê¸° ë„ê¸°
+        if (throwIndicator != null)
+        {
+            throwIndicator.SetActive(false);
+        }
+
+        // ë§µì— ìˆëŠ” ì•„ì´í…œ íŒŒê´´
         Destroy(pickup.gameObject);
         nearbyPickup = null;
     }
@@ -62,23 +87,23 @@ public class PlayerThrow : MonoBehaviour
     {
         if (projectilePrefab == null)
         {
-            Debug.LogWarning("[PlayerThrow] Åõ»çÃ¼ ÇÁ¸®ÆÕÀÌ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogWarning("[PlayerThrow] íˆ¬ì‚¬ì²´ í”„ë¦¬íŒ¹ì´ ì—°ê²°ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
             return;
         }
 
-        // ¸¶¿ì½º ¹æÇâ °è»ê
+        // ë§ˆìš°ìŠ¤ ë°©í–¥ ê³„ì‚°
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0f;
         Vector2 throwDirection = (mouseWorldPos - transform.position).normalized;
 
-        // Åõ»çÃ¼ »ı¼º ¹× ³¯·Áº¸³»±â
+        // íˆ¬ì‚¬ì²´ ìƒì„± ë° ë‚ ë ¤ë³´ë‚´ê¸°
         GameObject projObj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         if (projObj.TryGetComponent<ThrownProjectile>(out var projectile))
         {
             projectile.Launch(throwDirection, throwSpeed);
         }
 
-        // ÀÎº¥Åä¸® ºñ¿ì±â ¹× UI ¸®¼Â
+        // ì¸ë²¤í† ë¦¬ ë¹„ìš°ê¸° ë° UI ë¦¬ì…‹
         currentItem = ThrowableType.None;
         if (PlayerThrowUI.Instance != null)
         {

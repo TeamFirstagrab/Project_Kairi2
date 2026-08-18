@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 public class PlayerCooldownUI : MonoBehaviour
 {
-    [Header("ÄğÅ¸ÀÓ UI ¿ä¼Ò")]
-    [SerializeField] private Image cooldownImage; // ½ºÇÁ¶óÀÌÆ®°¡ ±³Ã¼µÉ UI Image
-    [SerializeField] private Sprite[] cooldownSprites; // Àß¶óµĞ 8°³ÀÇ ½ºÇÁ¶óÀÌÆ®¸¦ ´ãÀ» ¹è¿­
+    [Header("ì¿¨íƒ€ì„ UI ìš”ì†Œ")]
+    [SerializeField] private Image cooldownImage; // ìŠ¤í”„ë¼ì´íŠ¸ê°€ êµì²´ë  UI Image
+    [SerializeField] private Sprite[] cooldownSprites; // ì˜ë¼ë‘” 8ê°œì˜ ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ ë‹´ì„ ë°°ì—´
 
     private Canvas canvas;
     private Transform playerTransform;
@@ -14,16 +14,20 @@ public class PlayerCooldownUI : MonoBehaviour
     private void Awake()
     {
         canvas = GetComponent<Canvas>();
-        playerTransform = transform.parent; // ÇÃ·¹ÀÌ¾îÀÇ ÀÚ½ÄÀ¸·Î µé¾î°¥ ¿¹Á¤ÀÌ¹Ç·Î ºÎ¸ğ ÂüÁ¶
+        playerTransform = transform.parent; // í”Œë ˆì´ì–´ ìì‹ìœ¼ë¡œ ë“¤ì–´ê°ˆ í„°ì´ë¯€ë¡œ ë¶€ëª¨ ì°¸ì¡°
         initialScale = transform.localScale;
 
-        // ½ÃÀÛ ½Ã UI¸¦ ¼û±è
-        ShowCooldown(false);
+        // í•­ìƒ ë³´ì´ë„ë¡ ì„¤ì •í•˜ê³  ê¸°ë³¸ ìƒíƒœ(index 0)ë¡œ ì´ë¯¸ì§€ ì„¸íŒ…
+        ShowCooldown(true);
+        if (cooldownImage != null && cooldownSprites != null && cooldownSprites.Length > 0)
+        {
+            cooldownImage.sprite = cooldownSprites[0];
+        }
     }
 
     private void LateUpdate()
     {
-        // ÇÃ·¹ÀÌ¾î Ä³¸¯ÅÍ°¡ µÚÁıÈú ¶§ UI°¡ °°ÀÌ µÚÁıÈ÷Áö ¾Êµµ·Ï Ãà °íÁ¤
+        // í”Œë ˆì´ì–´ ìºë¦­í„°ê°€ ë’¤ì§‘í ë•Œ UIê°€ ê°™ì´ ë’¤ì§‘íˆì§€ ì•Šë„ë¡ ì¶• ê³ ì •
         if (playerTransform != null)
         {
             Vector3 parentScale = playerTransform.localScale;
@@ -35,7 +39,7 @@ public class PlayerCooldownUI : MonoBehaviour
         }
     }
 
-    // UI º¸ÀÌ±â / ¼û±â±â
+    // UI ë³´ì´ê¸° / ìˆ¨ê¸°ê¸°
     public void ShowCooldown(bool show)
     {
         if (canvas != null)
@@ -44,16 +48,16 @@ public class PlayerCooldownUI : MonoBehaviour
         }
     }
 
-    // ÄğÅ¸ÀÓ °ÔÀÌÁö ¾÷µ¥ÀÌÆ®
+    // ì¿¨íƒ€ì„ ê²Œì´ì§€ ì—…ë°ì´íŠ¸
     public void UpdateCooldown(float currentTimer, float maxCooldown)
     {
         if (cooldownImage != null && cooldownSprites != null && cooldownSprites.Length > 0 && maxCooldown > 0f)
         {
-            // ³²Àº ½Ã°£ ºñÀ² (0.0 ~ 1.0)
+            // ë‚¨ì€ ì‹œê°„ ë¹„ìœ¨ (0.0 ~ 1.0)
             float ratio = currentTimer / maxCooldown;
 
-            // ºñÀ²¿¡ ¸Â´Â ½ºÇÁ¶óÀÌÆ® ÀÎµ¦½º °è»ê (½Ã°£ÀÌ ´Ù µÇ¾î°¥¼ö·Ï ÀÎµ¦½º°¡ ³·¾ÆÁö°Å³ª ³ô¾ÆÁö°Ô ¼³Á¤)
-            // ¿¹: 8ÀåÀÇ ÀÌ¹ÌÁö°¡ ÀÖ´Ù¸é ratio¿¡ µû¶ó 0 ~ 7¹ø ÀÎµ¦½º ¼±ÅÃ
+            // ë¹„ìœ¨ì— ë§ëŠ” ìŠ¤í”„ë¼ì´íŠ¸ ì¸ë±ìŠ¤ ê³„ì‚° (ì‹œê°„ì´ ë‹¤ ë˜ì–´ê°ˆìˆ˜ë¡ ì¸ë±ìŠ¤ê°€ ë‚®ì•„ì§€ê±°ë‚˜ ë†’ì•„ì§€ê²Œ ì„¤ì •)
+            // ì˜ˆ: 8ì¥ì˜ ì´ë¯¸ì§€ê°€ ìˆë‹¤ë©´ ratioì— ë”°ë¼ 0 ~ 7ë²ˆ ì¸ë±ìŠ¤ ì„ íƒ
             int spriteIndex = Mathf.Clamp((int)(ratio * cooldownSprites.Length), 0, cooldownSprites.Length - 1);
 
             cooldownImage.sprite = cooldownSprites[spriteIndex];

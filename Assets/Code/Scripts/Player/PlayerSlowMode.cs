@@ -48,7 +48,7 @@ public class PlayerSlowMode : MonoBehaviour
 
 			if (cooldownTimer <= 0f && slowCooldownUI != null)
 			{
-				slowCooldownUI.ShowCooldown(false); // 쿨타임이 끝나면 UI 숨김
+				slowCooldownUI.UpdateCooldown(0f, slowCooldown); // 쿨타임 끝나면 0 상태로 업데이트
 			}
 		}
 	}

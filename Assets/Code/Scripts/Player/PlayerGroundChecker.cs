@@ -137,9 +137,9 @@ public class PlayerGroundChecker : MonoBehaviour
 		float margin;
 
 		if (checkSlope && slopeAngle > 5f)
-			margin = 0.35f;
+			margin = checkDist + 0.1f;
 		else
-			margin = 0.15f;
+			margin = checkDist;
 
 		float strictLandingDist = offset + margin;
 

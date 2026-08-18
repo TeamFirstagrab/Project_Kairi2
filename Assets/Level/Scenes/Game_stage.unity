@@ -12165,7 +12165,6 @@ GameObject:
   - component: {fileID: 228991454}
   - component: {fileID: 228991457}
   - component: {fileID: 228991456}
-  - component: {fileID: 228991455}
   m_Layer: 5
   m_Name: Throwable_Slot
   m_TagString: Untagged
@@ -12192,19 +12191,6 @@ RectTransform:
   m_AnchoredPosition: {x: 901, y: 484}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &228991455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 228991453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48386b6ad047bdf4083714c5371ebdf8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerThrowUI
-  itemIconImage: {fileID: 228991456}
 --- !u!114 &228991456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37054,6 +37040,10 @@ PrefabInstance:
       value: Door_0 (3)
       objectReference: {fileID: 0}
     - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_TagString
       value: Door
       objectReference: {fileID: 0}
@@ -49586,6 +49576,10 @@ PrefabInstance:
       value: Door (1)
       objectReference: {fileID: 0}
     - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_TagString
       value: Door
       objectReference: {fileID: 0}
@@ -49653,6 +49647,10 @@ PrefabInstance:
     - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_Name
       value: Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_TagString
@@ -50416,6 +50414,10 @@ PrefabInstance:
     - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_Name
       value: Door (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_TagString
@@ -51999,6 +52001,7 @@ GameObject:
   - component: {fileID: 2062185782}
   - component: {fileID: 2062185781}
   - component: {fileID: 2062185780}
+  - component: {fileID: 2062185783}
   m_Layer: 5
   m_Name: 'HUD_Canvas '
   m_TagString: Untagged
@@ -52089,6 +52092,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &2062185783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2062185778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48386b6ad047bdf4083714c5371ebdf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerThrowUI
+  itemIconImage: {fileID: 228991456}
 --- !u!1 &2069775471
 GameObject:
   m_ObjectHideFlags: 0
@@ -52255,6 +52271,10 @@ PrefabInstance:
       propertyPath: slowCooldownUI
       value: 
       objectReference: {fileID: 1538885747}
+    - target: {fileID: 6822659655701916194, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: afterAttackStopTime
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: dashCooldown
       value: 1.5

@@ -92,8 +92,8 @@ public class PlayerAnimator : MonoBehaviour
 			return;
 		}
 
-		// 4. 벽 점프 / 벽 슬라이딩
-		if (movement != null && (movement.IsWallSliding || movement.IsWallJumping))
+		// 4. 벽 슬라이딩
+		if (movement != null && movement.IsWallSliding)
 		{
 			PlayAnimation(AnimationState.Wall);
 			return;

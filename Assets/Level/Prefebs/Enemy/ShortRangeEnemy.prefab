@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6108653874425615390}
   - component: {fileID: 4619951583103331045}
   - component: {fileID: 6350917256886583718}
-  - component: {fileID: 2072742921979783755}
   - component: {fileID: 7552128689070584585}
   m_Layer: 8
   m_Name: ShortRangeEnemy
@@ -212,19 +211,6 @@ MonoBehaviour:
   bloodDist: 0
   bloodCount: 10
   activeTime: 0.5
---- !u!114 &2072742921979783755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6702859265878400548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b4fdd7d74bf30f43b6abe821445af11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BloodEffectTestScript
-  isActiveEffect: 0
 --- !u!114 &7552128689070584585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,4 +230,13 @@ MonoBehaviour:
   isRanged: 0
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
+  isPatrol: 1
+  enemyAvoidDistance: 1
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  avoidCooldown: 0.5
   killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}
+  bloodEffectPrefab: {fileID: 0}
+  bloodEffectOffset: 0.5
+  killSlashOffset: 200

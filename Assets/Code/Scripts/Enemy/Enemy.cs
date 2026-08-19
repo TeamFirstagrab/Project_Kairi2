@@ -108,6 +108,9 @@ public class Enemy : MonoBehaviour, IDamageable
 	[SerializeField]
 	private float bloodEffectOffset = 0.5f;
 
+	[SerializeField]
+	private float killSlashOffset = 200.0f;
+
 
 	// =========================================================
 	// Awake
@@ -123,6 +126,26 @@ public class Enemy : MonoBehaviour, IDamageable
 
 		// BloodEffect 캐싱
 		effect = GetComponent<BloodEffect>();
+	}
+
+
+	// =========================================================
+	// OnEnable
+	// =========================================================
+
+	private void OnEnable()
+	{
+		// 풀에서 부활할 때 콜라이더와 물리 상태를 초기화
+		if (rb != null)
+		{
+			rb.bodyType = RigidbodyType2D.Dynamic;
+		}
+
+		Collider2D col = GetComponent<Collider2D>();
+		if (col != null)
+		{
+			col.enabled = true;
+		}
 	}
 
 
@@ -210,6 +233,12 @@ public class Enemy : MonoBehaviour, IDamageable
 
 	public void ChangeState(EnemyState nextState)
 	{
+		// 이미 동일한 상태이면 상태 전환 생략
+		if (currentEnemyState == nextState)
+		{
+			return;
+		}
+
 		// 순찰이 비활성화되어 있는데 PATROL로 변경하려는 경우
 		if (nextState == EnemyState.PATROL && !isPatrol)
 		{
@@ -456,11 +485,15 @@ public class Enemy : MonoBehaviour, IDamageable
 			return;
 		}
 
+		// 공격 방향의 반대 방향(플레이어 쪽 뒤편)으로 오프셋을 주어 시작 위치 설정
+		Vector3 spawnPosition =
+			transform.position -
+			(Vector3)(dir.normalized * killSlashOffset);
 
 		GameObject effect =
 			Instantiate(
 				killSlashEffectPrefab,
-				transform.position,
+				spawnPosition,
 				Quaternion.identity
 			);
 
@@ -481,6 +514,13 @@ public class Enemy : MonoBehaviour, IDamageable
 
 	public void TakeDamage(int attackDamage)
 	{
+		// 이미 죽은 Enemy는 추가 공격을 받지 않음
+		if (currentHP <= 0 ||
+			currentEnemyState == EnemyState.DEAD)
+		{
+			return;
+		}
+
 		// 데미지 적용
 		currentHP -= attackDamage;
 

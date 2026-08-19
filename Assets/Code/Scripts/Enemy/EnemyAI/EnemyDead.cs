@@ -27,6 +27,7 @@ public class EnemyDead : IEnemyState
 		enemy.anim.Play(EnemyAnimName.dead);
 
         // 시체가 물리적으로 미끄러지거나 허공답보하지 않도록 수평/수직 속도를 완전 0으로 제동합니다.
+        enemy.rb.bodyType = RigidbodyType2D.Kinematic;
         enemy.rb.linearVelocity = Vector2.zero;
 
         // [시체 충돌체 비활성화 연산]

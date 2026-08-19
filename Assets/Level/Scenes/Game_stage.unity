@@ -37372,6 +37372,7 @@ MonoBehaviour:
   killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}
   bloodEffectPrefab: {fileID: 7746430976273538876, guid: 44957248983884049894c3a595c34432, type: 3}
   bloodEffectOffset: 0.5
+  killSlashOffset: 10
 --- !u!1 &656569148
 GameObject:
   m_ObjectHideFlags: 0
@@ -37732,6 +37733,7 @@ MonoBehaviour:
   killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}
   bloodEffectPrefab: {fileID: 7746430976273538876, guid: 44957248983884049894c3a595c34432, type: 3}
   bloodEffectOffset: 0.5
+  killSlashOffset: 10
 --- !u!1 &849926270
 GameObject:
   m_ObjectHideFlags: 0
@@ -49924,6 +49926,7 @@ MonoBehaviour:
   killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}
   bloodEffectPrefab: {fileID: 7746430976273538876, guid: 44957248983884049894c3a595c34432, type: 3}
   bloodEffectOffset: 0.5
+  killSlashOffset: 10
 --- !u!4 &1228869464 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 74315622514603887, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
@@ -50104,6 +50107,10 @@ PrefabInstance:
       propertyPath: bulletPrefab
       value: 
       objectReference: {fileID: 2163995999146336271, guid: b281d244a3b9c824ba6877d707e381ed, type: 3}
+    - target: {fileID: 426856875468442381, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
+      propertyPath: killSlashOffset
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 426856875468442381, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
       propertyPath: bloodEffectPrefab
       value: 
@@ -51334,6 +51341,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2163995999146336271, guid: b281d244a3b9c824ba6877d707e381ed, type: 3}
     - target: {fileID: 426856875468442381, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
+      propertyPath: killSlashOffset
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 426856875468442381, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
       propertyPath: bloodEffectPrefab
       value: 
       objectReference: {fileID: 7746430976273538876, guid: 44957248983884049894c3a595c34432, type: 3}
@@ -51715,6 +51726,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2163995999146336271, guid: b281d244a3b9c824ba6877d707e381ed, type: 3}
     - target: {fileID: 426856875468442381, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
+      propertyPath: killSlashOffset
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 426856875468442381, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
       propertyPath: bloodEffectPrefab
       value: 
       objectReference: {fileID: 7746430976273538876, guid: 44957248983884049894c3a595c34432, type: 3}
@@ -52067,6 +52082,7 @@ MonoBehaviour:
   killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}
   bloodEffectPrefab: {fileID: 7746430976273538876, guid: 44957248983884049894c3a595c34432, type: 3}
   bloodEffectOffset: 0.5
+  killSlashOffset: 10
 --- !u!1 &1774902311
 GameObject:
   m_ObjectHideFlags: 0
@@ -52171,6 +52187,10 @@ PrefabInstance:
       propertyPath: bulletPrefab
       value: 
       objectReference: {fileID: 2163995999146336271, guid: b281d244a3b9c824ba6877d707e381ed, type: 3}
+    - target: {fileID: 426856875468442381, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
+      propertyPath: killSlashOffset
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 426856875468442381, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
       propertyPath: bloodEffectPrefab
       value: 
@@ -61417,6 +61437,10 @@ PrefabInstance:
     - target: {fileID: 7552128689070584585, guid: 01d1ed153d46b3d49b4e4980c3ffc402, type: 3}
       propertyPath: isPatrol
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7552128689070584585, guid: 01d1ed153d46b3d49b4e4980c3ffc402, type: 3}
+      propertyPath: killSlashOffset
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7552128689070584585, guid: 01d1ed153d46b3d49b4e4980c3ffc402, type: 3}
       propertyPath: bloodEffectPrefab

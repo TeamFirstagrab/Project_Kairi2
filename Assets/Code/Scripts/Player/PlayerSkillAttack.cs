@@ -1,5 +1,6 @@
 using Globals;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
@@ -105,7 +106,7 @@ public class PlayerSkillAttack : MonoBehaviour
 		targetPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
 		targetPos.z = DotObj.transform.position.z;
 
-		// Dot 방향 전환
+		// Dot 방향 변환
 		Vector2 dir = (targetPos - transform.position).normalized;
 		Vector3 scale = DotObj.transform.localScale;
 
@@ -119,7 +120,7 @@ public class PlayerSkillAttack : MonoBehaviour
 		// 목표 거리 계산
 		float dotDist = Vector2.Distance(transform.position, targetPos);
 
-		if (dotDist < skillMinRadius)   // 최소거리 미만일 경우 숨김
+		if (dotDist < skillMinRadius)   // 최소거리 미만인 경우 숨김
 		{
 			HideAll();
 		}
@@ -130,9 +131,45 @@ public class PlayerSkillAttack : MonoBehaviour
 			ShowLine();
 		}
 
-		// 선 오브젝트 설정
+		// 라인오브젝트 보정
 		if (LineObj.transform.position != transform.position)
 			LineObj.transform.position = transform.position;
+
+		// 조준선 닿은 적 실시간 강조 처리
+		UpdateTargetEnemiesHighlight();
+	}
+
+	private void UpdateTargetEnemiesHighlight()
+	{
+		if (DotObj == null || !DotObj.activeSelf)
+		{
+			slowMode.UpdateDynamicHighlights(new HashSet<Enemy>());
+			return;
+		}
+
+		Vector2 startPos = transform.position;
+		Vector2 endPos = DotObj.transform.position;
+		Vector2 direction = (endPos - startPos).normalized;
+		float distance = Vector2.Distance(startPos, endPos);
+
+		LayerMask mask = LayerMask.GetMask(LayerName.enemy);
+
+		RaycastHit2D[] hits = Physics2D.RaycastAll(startPos, direction, distance, mask);
+		
+		HashSet<Enemy> targetEnemies = new HashSet<Enemy>();
+		foreach (var hit in hits)
+		{
+			if (hit.collider != null)
+			{
+				Enemy enemy = hit.collider.GetComponent<Enemy>();
+				if (enemy != null)
+				{
+					targetEnemies.Add(enemy);
+				}
+			}
+		}
+
+		slowMode.UpdateDynamicHighlights(targetEnemies);
 	}
 
 	private void ShowLine()
@@ -153,6 +190,7 @@ public class PlayerSkillAttack : MonoBehaviour
 			SetActiveObj(false);
 		}
 		canUseSkill = false;
+		slowMode.UpdateDynamicHighlights(new HashSet<Enemy>());
 	}
 
 	private void SetActiveObj(bool active)

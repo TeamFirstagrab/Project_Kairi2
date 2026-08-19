@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
@@ -25,16 +26,27 @@ public class PlayerSlowMode : MonoBehaviour
 	[Header("슬로우 상태 여부")]
 	private bool isPlayerSlow = false;
 
-	[Header("슬로우 쿨타임")]
+	[Header("슬로우 쿨다운")]
 	[SerializeField] private float slowCooldown = 5f; // 슬로우 재사용 대기시간 (5초)
-	private float cooldownTimer = 0f; // 남은 쿨타임 타이머
-	public bool IsCooldown => cooldownTimer > 0f; // 현재 쿨타임 중인지 여부
+	private float cooldownTimer = 0f; // 현재 쿨다운 타이머
+	public bool IsCooldown => cooldownTimer > 0f; // 현재 쿨다운 중인지 판단
 
-	[Header("슬로우 쿨타임 UI 연동")]
+	[Header("슬로우 쿨다운 UI 연동")]
 	[SerializeField] private PlayerSlowCooldownUI slowCooldownUI; // 슬로우 UI 스크립트 참조
+
+	[Header("슬로우 적 강조 색상")]
+	[SerializeField] private Color enemyHighlightColor = new Color(0f, 0f, 1f, 1f); // 유니티 에디터에서 설정 가능
 
 	private Silhouette solihoutte;  // 잔상효과
 	private float slowTime = 0.5f;  // 슬로우 지속 시간
+
+	private struct EnemyHighlightState
+	{
+		public SpriteRenderer spriteRenderer;
+		public Color originalColor;
+		public int originalSortingOrder;
+	}
+	private List<EnemyHighlightState> highlightedEnemies = new List<EnemyHighlightState>();
 
 	private void Update()
 	{
@@ -48,7 +60,7 @@ public class PlayerSlowMode : MonoBehaviour
 
 			if (cooldownTimer <= 0f && slowCooldownUI != null)
 			{
-				slowCooldownUI.UpdateCooldown(0f, slowCooldown); // 쿨타임 끝나면 0 상태로 업데이트
+				slowCooldownUI.UpdateCooldown(0f, slowCooldown); // 쿨다운이 끝나면 0 상태로 업데이트
 			}
 		}
 	}
@@ -65,7 +77,7 @@ public class PlayerSlowMode : MonoBehaviour
 
 		//if (globalVolume == null)
 		//{
-		//	Debug.LogError("Global Volume이 할당되지 않았음");
+		//	Debug.LogError("Global Volume이 할당되지 않음");
 		//	return;
 		//}
 
@@ -77,7 +89,7 @@ public class PlayerSlowMode : MonoBehaviour
 
 	public void EnterSlow(float factor = slowFactor)
 	{
-		// 쿨타임 중이면 슬로우 모드를 실행하지 않고 리턴
+		// 쿨다운 중이면 슬로우 모드를 실행하지 않고 리턴
 		if (IsCooldown) return;
 		print($"slow duration: {factor}");
 		if (!isPlayerSlow)
@@ -86,18 +98,20 @@ public class PlayerSlowMode : MonoBehaviour
 			panel?.SetActive(true);
 			StartSlow(factor);
 			solihoutte.Active = true;
+			HighlightEnemies();
 		}
 	}
 
 	public void EnterOnlySlow(float factor = slowFactor)
 	{
-		// 쿨타임 중이면 실행 차단
+		// 쿨다운 중이면 실행 차단
 		if (IsCooldown) return;
 		if (!isPlayerSlow)
 		{
 			isPlayerSlow = true;
 			StartSlow(factor);
 			solihoutte.Active = true;
+			HighlightEnemies();
 		}
 	}
 
@@ -109,12 +123,13 @@ public class PlayerSlowMode : MonoBehaviour
 			solihoutte.Active = false;
 			panel?.SetActive(false);
 			StopSlow();
+			RestoreEnemies();
 
 			if (triggerCooldown)
 			{
 				cooldownTimer = slowCooldown;
 
-				// [추가] 쿨타임 작동이 시작되었으므로 UI를 화면에 켭니다.
+				// [추가] 쿨다운 활동이 시작되었으니 UI를 켜면 됩니다.
 				if (slowCooldownUI != null)
 				{
 					slowCooldownUI.ShowCooldown(true);
@@ -150,6 +165,94 @@ public class PlayerSlowMode : MonoBehaviour
 	{
 		Time.timeScale = 1f;
 		Time.fixedDeltaTime = 1f;
+	}
+
+	private void HighlightEnemies()
+	{
+		// 기본 전체 강조는 수행하지 않고, 조준선 동적 강조만 수행합니다.
+		highlightedEnemies.Clear();
+	}
+
+	public void UpdateDynamicHighlights(HashSet<Enemy> targetEnemies)
+	{
+		if (!isPlayerSlow) return;
+
+		// 1. 더 이상 조준선에 닿지 않는 적들의 강조 해제 및 복구
+		for (int i = highlightedEnemies.Count - 1; i >= 0; i--)
+		{
+			var state = highlightedEnemies[i];
+			if (state.spriteRenderer == null)
+			{
+				highlightedEnemies.RemoveAt(i);
+				continue;
+			}
+
+			// 현재 닿은 타겟 목록에 존재하는지 확인
+			bool isStillTargeted = false;
+			foreach (var enemy in targetEnemies)
+			{
+				if (enemy != null && enemy.GetComponentInChildren<SpriteRenderer>() == state.spriteRenderer)
+				{
+					isStillTargeted = true;
+					break;
+				}
+			}
+
+			if (!isStillTargeted)
+			{
+				state.spriteRenderer.color = state.originalColor;
+				state.spriteRenderer.sortingOrder = state.originalSortingOrder;
+				highlightedEnemies.RemoveAt(i);
+			}
+		}
+
+		// 2. 새롭게 조준선에 닿은 적들 강조 적용
+		foreach (var enemy in targetEnemies)
+		{
+			if (enemy == null || enemy.currentHP <= 0) continue;
+
+			SpriteRenderer sr = enemy.GetComponentInChildren<SpriteRenderer>();
+			if (sr != null)
+			{
+				// 이미 강조된 적인지 확인
+				bool alreadyHighlighted = false;
+				foreach (var state in highlightedEnemies)
+				{
+					if (state.spriteRenderer == sr)
+					{
+						alreadyHighlighted = true;
+						break;
+					}
+				}
+
+				if (!alreadyHighlighted)
+				{
+					highlightedEnemies.Add(new EnemyHighlightState
+					{
+						spriteRenderer = sr,
+						originalColor = sr.color,
+						originalSortingOrder = sr.sortingOrder
+					});
+
+					sr.color = enemyHighlightColor;
+					sr.sortingOrder = 10;
+				}
+			}
+		}
+	}
+
+	private void RestoreEnemies()
+	{
+		foreach (var state in highlightedEnemies)
+		{
+			if (state.spriteRenderer != null)
+			{
+				// 원래 상태로 원복
+				state.spriteRenderer.color = state.originalColor;
+				state.spriteRenderer.sortingOrder = state.originalSortingOrder;
+			}
+		}
+		highlightedEnemies.Clear();
 	}
 
 	//void UpdateSlowGauge()      // 슬로우 게이지 업데이트

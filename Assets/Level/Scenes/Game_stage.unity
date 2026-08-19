@@ -49236,7 +49236,7 @@ Transform:
   m_GameObject: {fileID: 894788458}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 19.98, y: -8.02, z: -10.004748}
+  m_LocalPosition: {x: 17.42, y: -8.139999, z: -10.004748}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -51633,7 +51633,7 @@ Transform:
   m_GameObject: {fileID: 1661986849}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 19.98, y: -8.02, z: -10.004748}
+  m_LocalPosition: {x: 17.42, y: -8.139999, z: -10.004748}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -52624,11 +52624,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: wallJumpForce.x
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: wallJumpForce.y
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: wallJumpDuration
@@ -52636,7 +52636,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: wallPushJumpMultiplier
-      value: 2
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 8042885108204123329, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: blackCanvas
@@ -52652,11 +52652,11 @@ PrefabInstance:
       objectReference: {fileID: 1344293206}
     - target: {fileID: 8408272120256278188, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.5
+      value: 21.94
       objectReference: {fileID: 0}
     - target: {fileID: 8408272120256278188, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -15.64
+      value: -15.76
       objectReference: {fileID: 0}
     - target: {fileID: 8408272120256278188, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_LocalPosition.z

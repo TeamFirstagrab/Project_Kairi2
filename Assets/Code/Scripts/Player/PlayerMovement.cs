@@ -302,13 +302,28 @@ public class PlayerMovement : MonoBehaviour
 		// 이동 적용
 		rigid.linearVelocity = new Vector2(targetSpeed, velY);
 
-		if (inputVec.x > 0f)
+		// 벽 슬라이딩 중이면 벽 방향을 바라보도록 강제 전환
+		if (IsWallSliding && wallDetector != null)
 		{
-			transform.eulerAngles = Vector2.zero;
+			if (wallDetector.WallDirection > 0f)
+			{
+				transform.eulerAngles = Vector3.zero;
+			}
+			else if (wallDetector.WallDirection < 0f)
+			{
+				transform.eulerAngles = new Vector3(0f, 180f, 0f);
+			}
 		}
-		else if (inputVec.x < 0)
+		else
 		{
-			transform.eulerAngles = new Vector3(0f, 180f, 0f);
+			if (inputVec.x > 0f)
+			{
+				transform.eulerAngles = Vector3.zero;
+			}
+			else if (inputVec.x < 0)
+			{
+				transform.eulerAngles = new Vector3(0f, 180f, 0f);
+			}
 		}
 	}
 
@@ -439,36 +454,22 @@ public class PlayerMovement : MonoBehaviour
 		{
 			collPlatform = collision.transform;
 		}
-
-		// 문
-		if (collision.transform.TryGetComponent<DoorController>(out var door))
-		{
-			isTouchDoor = true;
-		}
 	}
 
-	private IEnumerator TryOpenDoorAfterDelay(DoorController door, Collision2D collision)
+	private void OnCollisionStay2D(Collision2D collision)
 	{
-		yield return new WaitForSeconds(0.05f);
-
-		if (door == null)
+		// 플레이어가 문을 밀어붙이고 있는 상태 감지
+		if (collision.transform.TryGetComponent<DoorController>(out var door))
 		{
-			doorOpenCoroutine = null;
-			yield break;
+			float directionToDoor = collision.transform.position.x - transform.position.x;
+			
+			// 입력 방향이 문이 있는 방향과 같은지 확인
+			bool isPushingDoor = (directionToDoor > 0f && inputVec.x > 0f) || (directionToDoor < 0f && inputVec.x < 0f);
+
+			if (isPushingDoor)
+			{
+				door.TryOpen(); // 지속적으로 문을 밀고 있으면 DoorController 내부 타이머(0.5초) 작동 후 문이 열림
+			}
 		}
-
-		// 문 방향으로 입력하고 있는지 확인
-		bool isInputTowardDoor = Mathf.Abs(inputVec.x) > 0.01f;
-
-		// 실제로 이동하고 있는지 확인
-		bool isMoving =
-			Mathf.Abs(rigid.linearVelocityX) > 0.1f;
-
-		if (isMoving && isInputTowardDoor)
-		{
-			door.OnOpen();
-		}
-
-		doorOpenCoroutine = null;
 	}
 }

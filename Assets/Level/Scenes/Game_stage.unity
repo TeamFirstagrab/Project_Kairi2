@@ -52623,6 +52623,18 @@ PrefabInstance:
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: wallJumpForce.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: wallJumpForce.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: wallJumpDuration
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: wallPushJumpMultiplier
       value: 2
       objectReference: {fileID: 0}

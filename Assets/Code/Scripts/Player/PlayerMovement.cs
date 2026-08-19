@@ -302,13 +302,28 @@ public class PlayerMovement : MonoBehaviour
 		// 이동 적용
 		rigid.linearVelocity = new Vector2(targetSpeed, velY);
 
-		if (inputVec.x > 0f)
+		// 벽 슬라이딩 중이면 벽 방향을 바라보도록 강제 전환
+		if (IsWallSliding && wallDetector != null)
 		{
-			transform.eulerAngles = Vector2.zero;
+			if (wallDetector.WallDirection > 0f)
+			{
+				transform.eulerAngles = Vector3.zero;
+			}
+			else if (wallDetector.WallDirection < 0f)
+			{
+				transform.eulerAngles = new Vector3(0f, 180f, 0f);
+			}
 		}
-		else if (inputVec.x < 0)
+		else
 		{
-			transform.eulerAngles = new Vector3(0f, 180f, 0f);
+			if (inputVec.x > 0f)
+			{
+				transform.eulerAngles = Vector3.zero;
+			}
+			else if (inputVec.x < 0)
+			{
+				transform.eulerAngles = new Vector3(0f, 180f, 0f);
+			}
 		}
 	}
 

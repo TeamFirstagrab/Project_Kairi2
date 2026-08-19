@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3112271947036693219}
   - component: {fileID: 9176327957730633535}
   - component: {fileID: 7206281418613248684}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bullet 2
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 2208703988740019828, guid: e7e92b0da7bf9d64cba2490cd4b53520, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -179,5 +179,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073f81da843210d488e241411f596ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBullet
-  speed: 20
+  speed: 25
   maxLifeTime: 5

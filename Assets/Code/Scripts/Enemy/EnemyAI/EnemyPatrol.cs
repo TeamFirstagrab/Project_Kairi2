@@ -57,7 +57,7 @@ public class EnemyPatrol : IEnemyState
                         LayerMask mask = ~LayerMask.GetMask(LayerName.enemy);
                         RaycastHit2D hit = Physics2D.Raycast(enemyPos, dirToPlayer, distance, mask);
 
-                        if (hit.collider == null || hit.collider.CompareTag(TagName.player))
+						if (hit.collider == null || hit.collider.CompareTag(TagName.player))
                         {
                             enemy.ChangeState(EnemyState.CHASE);
                             return; // 상태가 바뀌었으므로 즉시 업데이트 종료

@@ -511,7 +511,7 @@ public class PlayerSkillAttack : MonoBehaviour
 		}
 		else
 		{
-			anim.Play("Dragon_Skill");   // 애니메이션
+			anim.Play(PlayerAnimName.skill);   // 애니메이션
 			if (canUseSkill) StartCoroutine(SkillAttack());
 		}
 	}

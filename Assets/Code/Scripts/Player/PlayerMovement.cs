@@ -1,5 +1,6 @@
 using Globals;
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -22,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] private float fallMultiplier = 3f;
 	[Tooltip("점프 키를 살짝 뗐을 때 추가 중력값")]
 	[SerializeField] private float lowJumpMultiplier = 8f;
-	private float jumpBufferCounter;	// 입력된 잔여 선행 입력 시간 카운터
+	private float jumpBufferCounter;    // 입력된 잔여 선행 입력 시간 카운터
 	private float landingImpactTimer;   // 착지 타이머
 
 	// 벽 타기 (Wall Jump / Wall Slide)
@@ -53,14 +54,21 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField] GameObject dashEffectPref;
 	[SerializeField] Vector3 dashEffectOffset = new Vector3(0f, -1f, 0f);
 	[SerializeField] private float dashCooldown = 1f;   // 대시 쿨타임
-	public bool isDash;						// 대시 중
-	private float dashTimer;				// 대시 타이머
-	private Vector2 currDashVelocity;		// 대시 당시 수평 방향 대시 속도 벡터
-	private float dashDir;					// 대시 X방향 (-1: 좌, 1: 우)
+	public bool isDash;                     // 대시 중
+	private float dashTimer;                // 대시 타이머
+	private Vector2 currDashVelocity;       // 대시 당시 수평 방향 대시 속도 벡터
+	private float dashDir;                  // 대시 X방향 (-1: 좌, 1: 우)
 	private float dashCooldownTimer;        // 쿨타임 타이머
 	private Transform collPlatform;
 
 	public Vector2 inputVec;
+
+	// 문
+	[Header("플레이어 문 상호작용 설정")]
+	[Tooltip("문에 부딪힌 후 이 시간 동안 계속 이동하면 문이 열림")]
+	[SerializeField] private float doorOpenDelay = 0.05f;
+	private Coroutine doorOpenCoroutine;
+	private bool isTouchDoor = false;
 
 	private void Awake()
 	{
@@ -79,11 +87,11 @@ public class PlayerMovement : MonoBehaviour
 		groundChecker.CheckGround();
 
 		// 착지 (0.12초간)
-		if(!wasGrounded && groundChecker.isGrounded && rigid.linearVelocityY < -0.5f)
+		if (!wasGrounded && groundChecker.isGrounded && rigid.linearVelocityY < -0.5f)
 		{
 			landingImpactTimer = 0.12f;
 		}
-		if(landingImpactTimer > 0f)
+		if (landingImpactTimer > 0f)
 		{
 			landingImpactTimer -= Time.deltaTime;
 		}
@@ -119,7 +127,7 @@ public class PlayerMovement : MonoBehaviour
 			jumpBufferCounter -= Time.deltaTime;
 		}
 
-		if (dashCooldownTimer > 0f)		// 대시 쿨타임
+		if (dashCooldownTimer > 0f)     // 대시 쿨타임
 		{
 			dashCooldownTimer -= Time.deltaTime;
 		}
@@ -135,19 +143,19 @@ public class PlayerMovement : MonoBehaviour
 		if (!canMove) return;
 
 		// 대시
-		if(isDash)
+		if (isDash)
 		{
 			dashTimer -= Time.fixedDeltaTime;
 			rigid.gravityScale = 0f;
 			rigid.linearVelocity = currDashVelocity;
 
-			if(dashTimer <= 0f)
+			if (dashTimer <= 0f)
 			{
 				EndDash();
 			}
 			return;
 		}
-		else if(rigid.gravityScale == 0f)
+		else if (rigid.gravityScale == 0f)
 		{
 			rigid.gravityScale = defaultGravityScale;
 		}
@@ -209,7 +217,7 @@ public class PlayerMovement : MonoBehaviour
 		bool hasHorizontalInput = Mathf.Abs(inputVec.x) > 0.1f;
 
 		// 대시 이동
-		if(dashRequested && isCrouching && hasHorizontalInput && !isDash)
+		if (dashRequested && isCrouching && hasHorizontalInput && !isDash)
 		{
 			isDash = true;
 			dashTimer = stats.dashDuration;
@@ -231,10 +239,10 @@ public class PlayerMovement : MonoBehaviour
 			Color rayColor = hit ? Color.cyan : Color.magenta;
 			Debug.DrawRay(rayOrigin, Vector2.down * sniffDist, rayColor, 1.5f);
 
-			if(hit)
+			if (hit)
 			{
 				float slopeAngle = Vector2.Angle(Vector2.up, hit.normal);
-				if(slopeAngle > 2f && groundChecker.CheckMaxSlope(slopeAngle))
+				if (slopeAngle > 2f && groundChecker.CheckMaxSlope(slopeAngle))
 				{
 					// 경사에 맞춰 이동
 					Vector2 normal = hit.normal;
@@ -257,7 +265,7 @@ public class PlayerMovement : MonoBehaviour
 		float velY = rigid.linearVelocityY;
 
 		// 경사로 미끄러짐 방지 (이동속도 0일 때)
-		if(groundChecker.isGrounded && groundChecker.isSlope && Mathf.Abs(inputVec.x) < 0.01f 
+		if (groundChecker.isGrounded && groundChecker.isSlope && Mathf.Abs(inputVec.x) < 0.01f
 			&& rigid.linearVelocityY <= 0.01f && slopeJumpProtectionTimer <= 0f)
 		{
 			targetSpeed = 0f;
@@ -265,7 +273,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 
 		// 경사로 이동 처리
-		else if(groundChecker.isGrounded && groundChecker.isSlope && velY > 0.05f)
+		else if (groundChecker.isGrounded && groundChecker.isSlope && velY > 0.05f)
 		{
 			bool isChangingDir = (inputVec.x > 0.01f && rigid.linearVelocityX < -0.01f) ||
 								 (inputVec.x < -0.01f && rigid.linearVelocityX > 0.01f);
@@ -277,7 +285,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 
 		// 평지 올라갈 때 Y속도 튀는 현상 방지
-		else if(groundChecker.isGrounded && !groundChecker.isSlope && velY > 0.05f)
+		else if (groundChecker.isGrounded && !groundChecker.isSlope && velY > 0.05f)
 		{
 			velY = 0f;
 		}
@@ -285,17 +293,17 @@ public class PlayerMovement : MonoBehaviour
 		// 이동 적용
 		rigid.linearVelocity = new Vector2(targetSpeed, velY);
 
-		if(inputVec.x > 0f)
+		if (inputVec.x > 0f)
 		{
 			transform.eulerAngles = Vector2.zero;
 		}
-		else if(inputVec.x < 0)
+		else if (inputVec.x < 0)
 		{
 			transform.eulerAngles = new Vector3(0f, 180f, 0f);
 		}
 	}
 
-	private void Jump()	// 플레이어 점프
+	private void Jump() // 플레이어 점프
 	{
 		rigid.linearVelocity = new Vector2(rigid.linearVelocityX, stats.jumpForce);
 		slopeJumpProtectionTimer = 0.2f;
@@ -335,11 +343,11 @@ public class PlayerMovement : MonoBehaviour
 	// 중력 추가 및 속도 제어
 	private void ApplyGravityModifiers()
 	{
-		if(groundChecker.isGrounded)
+		if (groundChecker.isGrounded)
 		{
 			// 경사로 + 수평 이동 안할 때 중력 잠금
 			float targetSpeed = isCrouchPressed ? 0 : (inputVec.x * stats.moveSpeed);
-			if(groundChecker.isSlope && Mathf.Abs(targetSpeed) < 0.01f 
+			if (groundChecker.isSlope && Mathf.Abs(targetSpeed) < 0.01f
 				&& rigid.linearVelocityY <= 0.01f
 				&& slopeJumpProtectionTimer <= 0f
 				&& (attack == null || !attack.IsAttacking))
@@ -360,11 +368,11 @@ public class PlayerMovement : MonoBehaviour
 		else
 		{
 			// 공중 중력
-			if(rigid.linearVelocityY < 0f)
+			if (rigid.linearVelocityY < 0f)
 			{
 				rigid.gravityScale = fallMultiplier;
 			}
-			else if(rigid.linearVelocityY > 0f && !isJump)
+			else if (rigid.linearVelocityY > 0f && !isJump)
 			{
 				rigid.gravityScale = lowJumpMultiplier;
 			}
@@ -375,13 +383,13 @@ public class PlayerMovement : MonoBehaviour
 	{
 		isJump = isPressed;
 
-		if(isJump)
+		if (isJump)
 		{
 			jumpBufferCounter = jumpBufferTime;
 		}
 		else
 		{
-			jumpBufferCounter = 0;		// 손뗴면 바로 0으로
+			jumpBufferCounter = 0;      // 손뗴면 바로 0으로
 		}
 	}
 
@@ -418,9 +426,40 @@ public class PlayerMovement : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if(collision.transform.CompareTag(TagName.oneWayPlatform))
+		if (collision.transform.CompareTag(TagName.oneWayPlatform))
 		{
 			collPlatform = collision.transform;
 		}
+
+		// 문
+		if (collision.transform.TryGetComponent<DoorController>(out var door))
+		{
+			isTouchDoor = true;
+		}
+	}
+
+	private IEnumerator TryOpenDoorAfterDelay(DoorController door, Collision2D collision)
+	{
+		yield return new WaitForSeconds(0.05f);
+
+		if (door == null)
+		{
+			doorOpenCoroutine = null;
+			yield break;
+		}
+
+		// 문 방향으로 입력하고 있는지 확인
+		bool isInputTowardDoor = Mathf.Abs(inputVec.x) > 0.01f;
+
+		// 실제로 이동하고 있는지 확인
+		bool isMoving =
+			Mathf.Abs(rigid.linearVelocityX) > 0.1f;
+
+		if (isMoving && isInputTowardDoor)
+		{
+			door.OnOpen();
+		}
+
+		doorOpenCoroutine = null;
 	}
 }

@@ -193,7 +193,8 @@ public class PlayerMovement : MonoBehaviour
 			// 벽 점프 및 벽 타기 (벽에 닿아 있거나 슬라이딩 중일 때)
 			if (wallDetector != null && (wallDetector.IsTouchingWall || IsWallSliding))
 			{
-				if (canWallClimb)
+				// 발이 땅에 붙어있던 상태(grounded)에서 첫 점프를 해야만 미끄러지듯 수직 상승 적용
+				if (canWallClimb && groundChecker.isGrounded)
 				{
 					print($"wall climb (slide up)");
 					ExecuteWallPushJump();

@@ -5,36 +5,169 @@ public class DoorController : MonoBehaviour
 {
 	private Animator animator;
 
-	// afterTouchDurationÀÌ Áö³­ ÈÄ true
+	// afterTouchDurationì´ ì§€ë‚œ í›„ true
 	private bool canOpen = false;
 
-	[Tooltip("Ã¹ ¹øÂ° »óÈ£ÀÛ¿ë ÈÄ, ÀÌ ½Ã°£ÀÌ Áö³ª¸é µÎ ¹øÂ° »óÈ£ÀÛ¿ëÀ¸·Î ¹®À» ¿­ ¼ö ÀÖÀ½")]
+	[Tooltip("ì²« ë²ˆì§¸ ìƒí˜¸ì‘ìš© í›„, ì´ ì‹œê°„ì´ ì§€ë‚˜ë©´ ë‘ ë²ˆì§¸ ìƒí˜¸ì‘ìš©ìœ¼ë¡œ ë¬¸ì„ ì—´ ìˆ˜ ìˆìŒ")]
 	[SerializeField] private float afterTouchDuration = 0.5f;
 
-	[Tooltip("¹®À» ¿­ ¼ö ÀÖ´Â »óÅÂ°¡ µÈ ÈÄ, ÀÌ ½Ã°£ µ¿¾È »óÈ£ÀÛ¿ëÇÏÁö ¾ÊÀ¸¸é ÃÊ±âÈ­")]
+	[Tooltip("ë¬¸ì„ ì—´ ìˆ˜ ìˆëŠ” ìƒíƒœê°€ ëœ í›„, ì´ ì‹œê°„ ë™ì•ˆ ìƒí˜¸ì‘ìš©í•˜ì§€ ì•Šìœ¼ë©´ ì´ˆê¸°í™”")]
 	[SerializeField] private float deleteTouchDuration = 1f;
+
+	[Header("ë¬¸ ê°•ì¡° ì„¤ì •")]
+	[SerializeField] private float highlightDistance = 4.5f; // ê°ì§€ ë²”ìœ„
+	[SerializeField] private Color highlightColor = new Color(0f, 1f, 1f, 1f); // í…Œë‘ë¦¬ ìƒ‰ìƒ (ë¯¼íŠ¸/ì‹œì•ˆìƒ‰)
+	[SerializeField] private float outlineThickness = 0.05f; // í…Œë‘ë¦¬ ë‘ê»˜ (ê¸°ë³¸ê°’ 0.05)
+	[SerializeField] private int sortingOrderOffset = -1; // -1: ë¬¸ ë’¤ë¡œ ë°°ì¹˜(ê¸°ë³¸ê°’)
+	private SpriteRenderer spriteRenderer;
+	private Color originalColor;
+	private Transform playerTransform;
+	private GameObject[] outlineObjs;
+	private SpriteRenderer[] outlineSrs;
+	private bool isHighlighted = false; // ì‹¤ì‹œê°„ ìƒíƒœ ì¶”ì ìš© ë³€ìˆ˜
 
 	private Coroutine touchCoroutine;
 
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		if (spriteRenderer != null)
+		{
+			originalColor = spriteRenderer.color;
+			CreateOutline();
+		}
+	}
+
+	private void CreateOutline()
+	{
+		// 4ë°©í–¥ ë¯¸ì„¸ ì˜¤í”„ì…‹ì„ ì‚¬ìš©í•œ ì•„ì›ƒë¼ì¸ ìƒì„± (í”¼ë²— ì •ë ¬ ë¬¸ì œë¥¼ ì™„ë²½í•˜ê²Œ íšŒí”¼í•˜ê³  ìˆœìˆ˜ í…Œë‘ë¦¬ë§Œ ê·¸ë¦¬ëŠ” ê¸°ë²•)
+		outlineObjs = new GameObject[4];
+		outlineSrs = new SpriteRenderer[4];
+
+		Vector3[] offsets = new Vector3[]
+		{
+			new Vector3(-outlineThickness, 0f, 0.05f), // ì¢Œ
+			new Vector3(outlineThickness, 0f, 0.05f),  // ìš°
+			new Vector3(0f, -outlineThickness, 0.05f), // í•˜
+			new Vector3(0f, outlineThickness, 0.05f)   // ìƒ
+		};
+
+		string[] directions = new string[] { "Left", "Right", "Down", "Up" };
+
+		for (int i = 0; i < 4; i++)
+		{
+			outlineObjs[i] = new GameObject("DoorOutline_" + directions[i]);
+			outlineObjs[i].transform.SetParent(transform);
+			outlineObjs[i].transform.localPosition = offsets[i];
+			outlineObjs[i].transform.localRotation = Quaternion.identity;
+			outlineObjs[i].transform.localScale = Vector3.one; // ìŠ¤ì¼€ì¼ì„ 1ë¡œ ê³ ì •í•˜ì—¬ í”¼ë²— ì™œê³¡ ì°¨ë‹¨
+
+			SpriteRenderer sr = outlineObjs[i].AddComponent<SpriteRenderer>();
+			sr.sprite = spriteRenderer.sprite;
+			sr.color = highlightColor;
+			sr.sortingLayerID = spriteRenderer.sortingLayerID;
+			sr.sortingOrder = spriteRenderer.sortingOrder + sortingOrderOffset;
+			sr.flipX = spriteRenderer.flipX;
+			sr.flipY = spriteRenderer.flipY;
+
+			// ê²€ì€ìƒ‰ ì™¸ê³½ì„ ë„ ê°•ì œë¡œ ì„¤ì •í•œ ê°•ì¡° ìƒ‰ìƒìœ¼ë¡œ ì¹ í•˜ê¸° ìœ„í•´ GUI/Text Shader(ë‹¨ìƒ‰ ì‹¤ë£¨ì—£) ì ìš©
+			Shader solidShader = Shader.Find("GUI/Text Shader");
+			if (solidShader != null)
+			{
+				sr.material = new Material(solidShader);
+			}
+
+			outlineSrs[i] = sr;
+			outlineObjs[i].SetActive(false);
+		}
+	}
+
+	private void Start()
+	{
+		// ì”¬ ë‚´ì˜ Player ì°¾ê¸°
+		var player = FindAnyObjectByType<PlayerController>();
+		if (player != null)
+		{
+			playerTransform = player.transform;
+		}
+	}
+
+	private void Update()
+	{
+		if (playerTransform == null)
+		{
+			var player = FindAnyObjectByType<PlayerController>();
+			if (player != null)
+			{
+				playerTransform = player.transform;
+			}
+			return;
+		}
+
+		if (spriteRenderer != null && outlineObjs != null)
+		{
+			float distance = Vector2.Distance(transform.position, playerTransform.position);
+			bool shouldHighlight = distance <= highlightDistance;
+
+			if (shouldHighlight != isHighlighted)
+			{
+				isHighlighted = shouldHighlight;
+				foreach (var obj in outlineObjs)
+				{
+					if (obj != null) obj.SetActive(shouldHighlight);
+				}
+
+				if (shouldHighlight)
+				{
+					Debug.Log($"[DoorController] Highlight ON: Player is close to {gameObject.name} (Distance: {distance:F2}m / Threshold: {highlightDistance}m)");
+				}
+				else
+				{
+					Debug.Log($"[DoorController] Highlight OFF: Player walked away from {gameObject.name}");
+				}
+			}
+
+			// ì‹¤ì‹œê°„ ì´ë¯¸ì§€ ìƒíƒœ ë™ê¸°í™” ë° ë‘ê»˜(ë‘ê»˜ ì¡°ì ˆ ì‹œ ë°˜ì˜) ì—…ë°ì´íŠ¸
+			if (shouldHighlight)
+			{
+				Vector3[] offsets = new Vector3[]
+				{
+					new Vector3(-outlineThickness, 0f, 0.05f),
+					new Vector3(outlineThickness, 0f, 0.05f),
+					new Vector3(0f, -outlineThickness, 0.05f),
+					new Vector3(0f, outlineThickness, 0.05f)
+				};
+
+				for (int i = 0; i < 4; i++)
+				{
+					if (outlineSrs[i] != null && outlineObjs[i] != null)
+					{
+						outlineSrs[i].sprite = spriteRenderer.sprite;
+						outlineSrs[i].color = highlightColor; // ì¸ìŠ¤í™í„°ì—ì„œ ì‹¤ì‹œê°„ìœ¼ë¡œ ìƒ‰ìƒ ì¡°ì ˆì´ ê°€ëŠ¥í•˜ë„ë¡ ì¶”ê°€ ë™ê¸°í™”
+						outlineSrs[i].flipX = spriteRenderer.flipX;
+						outlineSrs[i].flipY = spriteRenderer.flipY;
+						outlineObjs[i].transform.localPosition = offsets[i];
+					}
+				}
+			}
+		}
 	}
 
 	/// <summary>
-	/// ÇÃ·¹ÀÌ¾îÀÇ »óÈ£ÀÛ¿ë ¿äÃ»À» Ã³¸®ÇÑ´Ù.
+	/// í”Œë ˆì´ì–´ì˜ ìƒí˜¸ì‘ìš© ìš”ì²­ì„ ì²˜ë¦¬í•œë‹¤.
 	/// </summary>
 	public bool TryOpen()
 	{
-		// µÎ ¹øÂ° »óÈ£ÀÛ¿ëÀÌ °¡´ÉÇÑ »óÅÂ
+		// ë‘ ë²ˆì§¸ ìƒí˜¸ì‘ìš©ì´ ê°€ëŠ¥í•œ ìƒíƒœ
 		if (canOpen)
 		{
 			OnOpen();
 			return true;
 		}
 
-		// ¾ÆÁ÷ Å¸ÀÌ¸Ó°¡ ½ÃÀÛµÇÁö ¾Ê¾Ò´Ù¸é
-		// Ã¹ ¹øÂ° »óÈ£ÀÛ¿ëÀ¸·Î Å¸ÀÌ¸Ó ½ÃÀÛ
+		// ì•„ì§ íƒ€ì´ë¨¸ê°€ ì‹œì‘ë˜ì§€ ì•Šì•˜ë‹¤ë©´
+		// ì²« ë²ˆì§¸ ìƒí˜¸ì‘ìš©ìœ¼ë¡œ íƒ€ì´ë¨¸ ì‹œì‘
 		if (touchCoroutine == null)
 		{
 			StartFirstTouchTimer();
@@ -44,11 +177,11 @@ public class DoorController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Ã¹ ¹øÂ° »óÈ£ÀÛ¿ë Å¸ÀÌ¸Ó¸¦ ½ÃÀÛÇÑ´Ù.
+	/// ì²« ë²ˆì§¸ ìƒí˜¸ì‘ìš© íƒ€ì´ë¨¸ë¥¼ ì‹œì‘í•œë‹¤.
 	/// </summary>
 	private void StartFirstTouchTimer()
 	{
-		// ÀÌ¹Ì ½ÇÇà ÁßÀÎ ÄÚ·çÆ¾ÀÌ ÀÖ´Ù¸é ´Ù½Ã ½ÃÀÛÇÏÁö ¾Ê´Â´Ù.
+		// ì´ë¯¸ ì‹¤í–‰ ì¤‘ì¸ ì½”ë£¨í‹´ì´ ìˆë‹¤ë©´ ë‹¤ì‹œ ì‹œì‘í•˜ì§€ ì•ŠëŠ”ë‹¤.
 		if (touchCoroutine != null)
 		{
 			return;
@@ -58,20 +191,29 @@ public class DoorController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ½ÇÁ¦·Î ¹®À» ¿©´Â Ã³¸®.
+	/// ì‹¤ì œë¡œ ë¬¸ì„ ì—¬ëŠ” ì²˜ë¦¬.
 	/// </summary>
 	public void OnOpen()
 	{
 		canOpen = false;
 
-		// Å¸ÀÌ¸Ó Á¾·á
+		// íƒ€ì´ë¨¸ ì¢…ë£Œ
 		if (touchCoroutine != null)
 		{
 			StopCoroutine(touchCoroutine);
 			touchCoroutine = null;
 		}
 
-		// ¹® ¿­±â ¿¬Ãâ
+		// ë¬¸ ê°•ì¡° ì•„ì›ƒë¼ì¸ë“¤ ì‚­ì œ
+		if (outlineObjs != null)
+		{
+			foreach (var obj in outlineObjs)
+			{
+				if (obj != null) Destroy(obj);
+			}
+		}
+
+		// ë¬¸ ì—´ê¸° ì—°ì¶œ
 		GameManager.Instance.cameraShake.ShakeForSeconds();
 
 		animator.Play("Door_Open");
@@ -89,17 +231,17 @@ public class DoorController : MonoBehaviour
 	{
 		Debug.Log("Start FirstTouch CoolTime");
 
-		// Ã¹ ¹øÂ° »óÈ£ÀÛ¿ë ÈÄ ´ë±â
+		// ì²« ë²ˆì§¸ ìƒí˜¸ì‘ìš© í›„ ëŒ€ê¸°
 		yield return new WaitForSecondsRealtime(afterTouchDuration);
 
 		Debug.Log("Can Open Door");
 
-		// ÀÌÁ¦ µÎ ¹øÂ° »óÈ£ÀÛ¿ë °¡´É
+		// ì´ì œ ë‘ ë²ˆì§¸ ìƒí˜¸ì‘ìš© ê°€ëŠ¥
 		canOpen = true;
 
 		float elapsedTime = 0f;
 
-		// ¹®À» ¿­ ¼ö ÀÖ´Â »óÅÂ¿¡¼­ ÀÏÁ¤ ½Ã°£ µ¿¾È ±â´Ù¸²
+		// ë¬¸ì„ ì—´ ìˆ˜ ìˆëŠ” ìƒíƒœì—ì„œ ì¼ì • ì‹œê°„ ë™ì•ˆ ê¸°ë‹¤ë¦¼
 		while (elapsedTime < deleteTouchDuration)
 		{
 			elapsedTime += Time.unscaledDeltaTime;
@@ -107,7 +249,7 @@ public class DoorController : MonoBehaviour
 			yield return null;
 		}
 
-		// ÀÏÁ¤ ½Ã°£ µ¿¾È TryOpenÀÌ È£ÃâµÇÁö ¾Ê¾Ò´Ù¸é ÃÊ±âÈ­
+		// ì¼ì • ì‹œê°„ ë™ì•ˆ TryOpenì´ í˜¸ì¶œë˜ì§€ ì•Šì•˜ë‹¤ë©´ ì´ˆê¸°í™”
 		canOpen = false;
 		touchCoroutine = null;
 

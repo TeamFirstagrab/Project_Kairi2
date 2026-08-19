@@ -45,6 +45,7 @@ public class PlayerSlowMode : MonoBehaviour
 		public SpriteRenderer spriteRenderer;
 		public Color originalColor;
 		public int originalSortingOrder;
+		public Material originalMaterial;
 	}
 	private List<EnemyHighlightState> highlightedEnemies = new List<EnemyHighlightState>();
 
@@ -202,6 +203,7 @@ public class PlayerSlowMode : MonoBehaviour
 			{
 				state.spriteRenderer.color = state.originalColor;
 				state.spriteRenderer.sortingOrder = state.originalSortingOrder;
+				state.spriteRenderer.material = state.originalMaterial;
 				highlightedEnemies.RemoveAt(i);
 			}
 		}
@@ -231,11 +233,20 @@ public class PlayerSlowMode : MonoBehaviour
 					{
 						spriteRenderer = sr,
 						originalColor = sr.color,
-						originalSortingOrder = sr.sortingOrder
+						originalSortingOrder = sr.sortingOrder,
+						originalMaterial = sr.material
 					});
 
+					// 완전히 단색 실루엣으로 덮어 강렬하게 강조 처리
 					sr.color = enemyHighlightColor;
 					sr.sortingOrder = 10;
+
+					// 검은색 외곽선까지 덮어버리는 GUI/Text Shader(단색 실루엣) 동적 적용
+					Shader solidShader = Shader.Find("GUI/Text Shader");
+					if (solidShader != null)
+					{
+						sr.material = new Material(solidShader);
+					}
 				}
 			}
 		}
@@ -250,6 +261,7 @@ public class PlayerSlowMode : MonoBehaviour
 				// 원래 상태로 원복
 				state.spriteRenderer.color = state.originalColor;
 				state.spriteRenderer.sortingOrder = state.originalSortingOrder;
+				state.spriteRenderer.material = state.originalMaterial;
 			}
 		}
 		highlightedEnemies.Clear();

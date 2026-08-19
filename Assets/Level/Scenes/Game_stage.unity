@@ -49674,12 +49674,40 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: highlightColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: highlightColor.b
+      value: 0.05936718
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: highlightColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: highlightColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: highlightScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: highlightScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: afterTouchDuration
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: deleteTouchDuration
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: m_EditorClassIdentifier
+      value: Assembly-CSharp::DoorController
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -52248,6 +52276,18 @@ PrefabInstance:
       propertyPath: slowCooldownUI
       value: 
       objectReference: {fileID: 1538885747}
+    - target: {fileID: 5672697747878628885, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: enemyHighlightColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5672697747878628885, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: enemyHighlightColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5672697747878628885, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: enemyHighlightColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6822659655701916194, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: afterAttackStopTime
       value: 0.2

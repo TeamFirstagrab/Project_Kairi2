@@ -1,25 +1,19 @@
 fileFormatVersion: 2
-guid: c0df8ba0baf8ee24a83792edb71250ec
+guid: 49151a16c7f35d843a1f94640a7976f9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2565898361405630547
-    second: Recharge_0
+      213: 2649847697073447219
+    second: Dead_0
   - first:
-      213: -7071882625791699072
-    second: Recharge_1
+      213: -8293461521501190705
+    second: Dead_1
   - first:
-      213: 1979633482553230243
-    second: Recharge_2
+      213: -1631342717326862633
+    second: Dead_2
   - first:
-      213: -9190982306758379406
-    second: Recharge_3
-  - first:
-      213: -6105737783497256329
-    second: Recharge_4
-  - first:
-      213: -7911385633233392658
-    second: Recharge_5
+      213: -3927913518680497933
+    second: Dead_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -66,7 +60,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -115,133 +109,221 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Recharge_0
+      name: Enemy_Death_0
       rect:
         serializedVersion: 2
-        x: 10
+        x: 0
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 358e65907f6eb9320800000000000000
-      internalID: 2565898361405630547
+      spriteID: 86e1c0c2da2132a48ba96c91b4a588c7
+      internalID: -347604722
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Recharge_1
+      name: Enemy_Death_1
       rect:
         serializedVersion: 2
-        x: 138
+        x: 48
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 087dd646830abdd90800000000000000
-      internalID: -7071882625791699072
+      spriteID: 2c7447bbea1f09145a5d06b08b011fdf
+      internalID: -623630219
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Recharge_2
+      name: Enemy_Death_2
       rect:
         serializedVersion: 2
-        x: 266
+        x: 96
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 3a30e01f922197b10800000000000000
-      internalID: 1979633482553230243
+      spriteID: 35dc5441fef2ff941bba5ed90c7fa296
+      internalID: 1214556021
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Recharge_3
+      name: Enemy_Death_3
       rect:
         serializedVersion: 2
-        x: 394
+        x: 144
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 27834c4b942137080800000000000000
-      internalID: -9190982306758379406
+      spriteID: a5e72ea3e0fa21a4ca575af06ca1169e
+      internalID: 1474045830
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Recharge_4
+      name: Enemy_Death_4
       rect:
         serializedVersion: 2
-        x: 522
+        x: 192
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 77217f2e5df044ba0800000000000000
-      internalID: -6105737783497256329
+      spriteID: 6fee2c224e67c0d43b43af988189c571
+      internalID: -109146763
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Recharge_5
+      name: Enemy_Death_5
       rect:
         serializedVersion: 2
-        x: 650
+        x: 240
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: eebaef1deac153290800000000000000
-      internalID: -7911385633233392658
+      spriteID: 6e116a90d0151fc45800b465afe4ad22
+      internalID: 1792478368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_Death_6
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7951f9e78ae6a4c4893eca61e3475c43
+      internalID: -761450739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_Death_7
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d87f786317eb164ab520244781b723e
+      internalID: 721831894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_Death_8
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 268fd3e72f4b15144bc035bef46bccf8
+      internalID: -1462655389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_Death_9
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5a013da63f65e0459a700dfd2f1b52e
+      internalID: -1379741130
       vertices: []
       indices: 
       edges: []
@@ -250,7 +332,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: fe379181eaffbf14ba8289603bcc017a
+    spriteID: 0b84bff212f94cb488da6ba83f6ea0c1
     internalID: 0
     vertices: []
     indices: 
@@ -258,14 +340,20 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":10.0,"y":1.0},"gridSpriteSize":{"x":48.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Recharge_0: 2565898361405630547
-      Recharge_1: -7071882625791699072
-      Recharge_2: 1979633482553230243
-      Recharge_3: -9190982306758379406
-      Recharge_4: -6105737783497256329
-      Recharge_5: -7911385633233392658
+      Enemy_Death_0: -347604722
+      Enemy_Death_1: -623630219
+      Enemy_Death_2: 1214556021
+      Enemy_Death_3: 1474045830
+      Enemy_Death_4: -109146763
+      Enemy_Death_5: 1792478368
+      Enemy_Death_6: -761450739
+      Enemy_Death_7: 721831894
+      Enemy_Death_8: -1462655389
+      Enemy_Death_9: -1379741130
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

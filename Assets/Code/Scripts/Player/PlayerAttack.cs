@@ -195,6 +195,22 @@ public class PlayerAttack : MonoBehaviour
 					door = hit.collider.GetComponent<DoorController>();
 				}
 			}
+
+			// --------------------------------------------------------
+			// Bullet
+			// --------------------------------------------------------
+
+			if (hit.collider.CompareTag(TagName.bullet))
+			{
+				print($"총알 패링 시도");
+				if(hit.collider.TryGetComponent<EnemyBullet>(out var bullet))
+				{
+					bullet.Deflect(dir);
+					print($"총알 패링 성공");
+				}
+
+				continue;
+			}
 		}
 
 

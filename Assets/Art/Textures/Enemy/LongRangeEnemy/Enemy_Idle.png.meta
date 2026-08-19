@@ -1,37 +1,28 @@
 fileFormatVersion: 2
-guid: 77dd5f13648270e4691330cd791d46a5
+guid: 690d306acfd82be4fb59af4a283be4b0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7460046300004610927
-    second: Jump_0
+      213: 4723107735738678597
+    second: Idle_0
   - first:
-      213: 7034338576483803127
-    second: Jump_1
+      213: -7385789195546760866
+    second: Idle_1
   - first:
-      213: 6054277451648750542
-    second: Jump_2
+      213: 3234629978573100161
+    second: Idle_2
   - first:
-      213: 6937500446539429301
-    second: Jump_3
+      213: 6373048116405451881
+    second: Idle_3
   - first:
-      213: 3580086529375993838
-    second: Jump_4
+      213: 7264182050183361747
+    second: Idle_4
   - first:
-      213: 3630178267427638470
-    second: Jump_5
+      213: -2834552850196481573
+    second: Idle_5
   - first:
-      213: 3900142949445631465
-    second: Jump_6
-  - first:
-      213: 3967418731061993063
-    second: Jump_7
-  - first:
-      213: 3330681223243198311
-    second: Jump_8
-  - first:
-      213: -5679318689324892672
-    second: Jump_9
+      213: 3278449094680734212
+    second: Idle_6
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -78,7 +69,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -127,221 +118,221 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Jump_0
+      name: Enemy_Idle_0
       rect:
         serializedVersion: 2
-        x: 10
+        x: 0
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: f63fdb7b598678760800000000000000
-      internalID: 7460046300004610927
+      spriteID: 05015dc43b4e2ad4396d225993594597
+      internalID: -678020739
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jump_1
+      name: Enemy_Idle_1
       rect:
         serializedVersion: 2
-        x: 138
+        x: 48
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7ffd4217aadfe9160800000000000000
-      internalID: 7034338576483803127
+      spriteID: 0f65a590beb749545b2a6f8e9e634a68
+      internalID: -1087457845
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jump_2
+      name: Enemy_Idle_2
       rect:
         serializedVersion: 2
-        x: 266
+        x: 96
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: ec35e2de34d150450800000000000000
-      internalID: 6054277451648750542
+      spriteID: adeff9ae25c6d52438338aedcf7f2940
+      internalID: 379667867
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jump_3
+      name: Enemy_Idle_3
       rect:
         serializedVersion: 2
-        x: 394
+        x: 144
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 5b5b81156e3f64060800000000000000
-      internalID: 6937500446539429301
+      spriteID: 1c3ec1057b6fbd942bc3ad2ca4316821
+      internalID: 1459838026
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jump_4
+      name: Enemy_Idle_4
       rect:
         serializedVersion: 2
-        x: 522
+        x: 192
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: eeffd98fab50fa130800000000000000
-      internalID: 3580086529375993838
+      spriteID: 7ff1522c5d5a9e946946b8b1e3e32d8a
+      internalID: 283763630
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jump_5
+      name: Enemy_Idle_5
       rect:
         serializedVersion: 2
-        x: 650
+        x: 240
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6cc0e5596ebf06230800000000000000
-      internalID: 3630178267427638470
+      spriteID: efa692db9fd2d84408962d4bd69ba489
+      internalID: 1770616730
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jump_6
+      name: Enemy_Idle_6
       rect:
         serializedVersion: 2
-        x: 778
+        x: 288
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 9ed73f24957102630800000000000000
-      internalID: 3900142949445631465
+      spriteID: b0eae0cd6a721814c9614bd2c17365b3
+      internalID: -1444588695
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jump_7
+      name: Enemy_Idle_7
       rect:
         serializedVersion: 2
-        x: 906
+        x: 336
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 76e5e2cc05a1f0730800000000000000
-      internalID: 3967418731061993063
+      spriteID: c0908a6a0a45ea6499d8f92dc75533e7
+      internalID: -1227916947
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jump_8
+      name: Enemy_Idle_8
       rect:
         serializedVersion: 2
-        x: 1034
+        x: 384
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 76f69730de4f83e20800000000000000
-      internalID: 3330681223243198311
+      spriteID: 9beeb641eab925045abc517f57c1bc54
+      internalID: -1299658089
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jump_9
+      name: Enemy_Idle_9
       rect:
         serializedVersion: 2
-        x: 1162
+        x: 432
         y: 0
-        width: 108
-        height: 108
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 00e7d8c0eb10f21b0800000000000000
-      internalID: -5679318689324892672
+      spriteID: e3a407a3b8397c34bb4b3ea260992bc6
+      internalID: 1013352780
       vertices: []
       indices: 
       edges: []
@@ -350,7 +341,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e042a232ebdbee4f8bf2d7a031bbf14
+    spriteID: 860bf5790d3e70b42bf6a3f6fe8cda02
     internalID: 0
     vertices: []
     indices: 
@@ -358,18 +349,20 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":10.0,"y":1.0},"gridSpriteSize":{"x":48.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Jump_0: 7460046300004610927
-      Jump_1: 7034338576483803127
-      Jump_2: 6054277451648750542
-      Jump_3: 6937500446539429301
-      Jump_4: 3580086529375993838
-      Jump_5: 3630178267427638470
-      Jump_6: 3900142949445631465
-      Jump_7: 3967418731061993063
-      Jump_8: 3330681223243198311
-      Jump_9: -5679318689324892672
+      Enemy_Idle_0: -678020739
+      Enemy_Idle_1: -1087457845
+      Enemy_Idle_2: 379667867
+      Enemy_Idle_3: 1459838026
+      Enemy_Idle_4: 283763630
+      Enemy_Idle_5: 1770616730
+      Enemy_Idle_6: -1444588695
+      Enemy_Idle_7: -1227916947
+      Enemy_Idle_8: -1299658089
+      Enemy_Idle_9: 1013352780
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

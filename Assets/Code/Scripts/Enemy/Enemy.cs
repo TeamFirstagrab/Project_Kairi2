@@ -25,10 +25,10 @@ public class Enemy : MonoBehaviour, IDamageable
     [HideInInspector] public Animator anim;
 
     // FSM 상태들을 열거형 키값으로 저장하고 관리하는 딕셔너리입니다. (상태 클래스들을 재사용하여 가비지 컬렉터 부담을 낮춥니다.)
-    public Dictionary<KimEnemyState, IEnemyState> stateList;
+    public Dictionary<EnemyState, IEnemyState> stateList;
 
     // FSM에서 현재 적이 어떤 행동 상태(대기, 순찰, 추적 등)에 있는지를 저장하는 제어용 상태 변수입니다.
-    private KimEnemyState currentEnemyState;
+    private EnemyState currentEnemyState;
 
     // 실시간으로 변동하는 현재 체력 수치입니다. 다른 클래스(피격 판정부 등)에서 접근할 수 있도록 public으로 두되,
     // 인스펙터 창이 지저분해지거나 에셋 밸런스 설정과 혼동되는 것을 방지하기 위해 [HideInInspector]로 숨겨둡니다.
@@ -102,27 +102,27 @@ public class Enemy : MonoBehaviour, IDamageable
     /// </summary>
     private void InitStateList()
     {
-        stateList = new Dictionary<KimEnemyState, IEnemyState>();
+        stateList = new Dictionary<EnemyState, IEnemyState>();
         
         // 공통 기본 상태 객체들을 할당합니다.
-        stateList[KimEnemyState.IDLE] = new EnemyIdle();
-        stateList[KimEnemyState.PATROL] = new EnemyPatrol();
-        stateList[KimEnemyState.CHASE] = new EnemyChase();
-        stateList[KimEnemyState.DEAD] = new EnemyDead();
+        stateList[EnemyState.IDLE] = new EnemyIdle();
+        stateList[EnemyState.PATROL] = new EnemyPatrol();
+        stateList[EnemyState.CHASE] = new EnemyChase();
+        stateList[EnemyState.DEAD] = new EnemyDead();
         
         
         // 기획/에디터 설정 상 원거리 적인지 근거리 적인지에 따라 공격 상태의 구체 클래스를 다르게 결정(의존성 분기 주입)합니다.
         if (isRanged)
         {
-            stateList[KimEnemyState.ATTACK] = new EnemyRangedAttack();
+            stateList[EnemyState.ATTACK] = new EnemyRangedAttack();
         }
         else
         {
-            stateList[KimEnemyState.ATTACK] = new EnemyAttack();
+            stateList[EnemyState.ATTACK] = new EnemyAttack();
         }
         
         // 적이 스폰되었을 때 시작할 기본 상태를 IDLE(대기) 상태로 할당하고 EnterState를 트리거합니다.
-        currentEnemyState = KimEnemyState.IDLE;
+        currentEnemyState = EnemyState.IDLE;
         ChangeState(currentEnemyState);
     }
 
@@ -131,7 +131,7 @@ public class Enemy : MonoBehaviour, IDamageable
     /// 이전 상태의 퇴장(ExitState) 처리를 수행하고 새 상태로 교체한 뒤, 새 상태의 입장(EnterState)을 실행합니다.
     /// </summary>
     /// <param name="nextState">전환하고자 하는 다음 KimEnemyState 열거형 값</param>
-    public void ChangeState(KimEnemyState nextState)
+    public void ChangeState(EnemyState nextState)
     {
         // 1. 현재 수행 중이던 이전 상태 클래스가 있다면, 퇴장 로직(애니메이션 파라미터 리셋, 속도 정지 등)을 안전하게 실행합니다.
         if (stateList.ContainsKey(currentEnemyState))
@@ -174,19 +174,28 @@ public class Enemy : MonoBehaviour, IDamageable
         GameObject effect = Instantiate(killSlashEffectPrefab, transform.position, Quaternion.identity);
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         effect.transform.rotation = Quaternion.Euler(0, 0, angle);
-    }
+	}
+	public void TakeDamage(int attackDamage)	// 플레이어에 의한 죽음이 아닐 경우
+	{
+		currentHP -= attackDamage;
+		if (currentHP <= 0)
+		{
+			currentHP = 0;
+			ChangeState(EnemyState.DEAD);
+		}
+	}
 
-    public void TakeDamage(int attackDamage, Vector2 attackDirection)
+	public void TakeDamage(int attackDamage, Vector2 attackDirection)
     {
         TakeDamage(attackDamage, attackDirection, true);
-    }
+	}
 
-    public void TakeDamage(int attackDamage, Vector2 attackDirection, bool isSlash)
+	public void TakeDamage(int attackDamage, Vector2 attackDirection, bool isSlash)
     {
         // 1. [이미 사망한 상태에서의 중복 타격 방지 장치]
         // 적이 이미 죽어가거나 체력이 없는 상태에서 공격을 연속으로 받을 때 피격 사운드가 겹치거나 
         // 사망 애니메이션이 중복으로 재생되는 등 오작동을 차단하기 위한 예외 방어코드입니다.
-        if (currentHP <= 0 || currentEnemyState == KimEnemyState.DEAD) return;
+        if (currentHP <= 0 || currentEnemyState == EnemyState.DEAD) return;
 
         // 2. 체력을 대미지 크기만큼 차감합니다.
         currentHP -= attackDamage;
@@ -200,7 +209,7 @@ public class Enemy : MonoBehaviour, IDamageable
                 SpawnKillSlash(attackDirection);
             }
             SpawnBloodEffect(attackDirection); 
-            ChangeState(KimEnemyState.DEAD);
+            ChangeState(EnemyState.DEAD);
 
             effect?.ActiveBloodEffect(Random.insideUnitCircle.normalized);
 
@@ -218,11 +227,12 @@ public class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-    /// <summary>
-    /// [에디터 디버깅용 범위 시각화 기능]
-    /// 이 객체가 선택(Select)되어 있을 때 씬 뷰(Scene View) 창에 시안성을 높여줄 디버그 가이드를 그려줍니다.
-    /// </summary>
-    private void OnDrawGizmosSelected()
+
+	/// <summary>
+	/// [에디터 디버깅용 범위 시각화 기능]
+	/// 이 객체가 선택(Select)되어 있을 때 씬 뷰(Scene View) 창에 시안성을 높여줄 디버그 가이드를 그려줍니다.
+	/// </summary>
+	private void OnDrawGizmosSelected()
     {
         // 기획 데이터 에셋이 연결되어 있지 않으면 사거리를 계산할 수 없으므로 바로 반환(종료)합니다.
         if (enemyStats == null) return;

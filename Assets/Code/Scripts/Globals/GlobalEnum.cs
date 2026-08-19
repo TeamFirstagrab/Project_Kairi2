@@ -22,16 +22,6 @@ namespace EnumType
 		DOWN
 	}
 
-	public enum EnemyState
-	{
-		IDLE = 0,
-		CHASE,
-		ATTACK,
-		PATROL,
-
-		MAX,
-	}
-
 	// 오브젝트 타입
 	public enum ObjectType
 	{
@@ -44,7 +34,7 @@ namespace EnumType
 	///  - C# 스크립트 코드 내부에서 적이 "지금 멈춰서 쉴까? 순찰을 돌까? 쫓아갈까?"를 스스로 생각하고 비교할 때 사용해요!
 	///  - 겉보기에는 IDLE, PATROL 같은 영어 단어로 보이지만, 컴퓨터 내부적으로는 숫자인 0, 1, 2, 3으로 변환되어 처리됩니다.
 	///  - 컴퓨터는 글자보다 숫자를 수백 배 더 빠르게 비교할 수 있기 때문에, 이 Enum을 사용하면 게임에 렉이 걸리지 않고 엄청나게 가볍게 작동합니다!
-	public enum KimEnemyState
+	public enum EnemyState
 	{
 		// 💡 IDLE은 대기 상태를 뜻하며, 내부적으로 숫자 0으로 취급됩니다.
 		IDLE = 0,

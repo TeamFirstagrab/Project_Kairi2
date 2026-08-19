@@ -24,9 +24,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 		slowMode = GetComponent<PlayerSlowMode>();
 	}
 
-	public void TakeDamage(int attack, Vector2 attackDirection)
+	public void TakeDamage(int attack)
 	{
-		return;		// DEBUG
+		//return;		// DEBUG
 		if (movement.isDash) return;  // 대쉬 중 무적
 
 		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
@@ -43,6 +43,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 	{
 		if (glitchGlobalVolume && tvGlobalVolume)
 		{
+			GameManager.Instance.cameraShake.ShakeForSeconds();
 			glitchGlobalVolume.SetActive(true);
 			tvGlobalVolume.SetActive(true);
 			yield return new WaitForSeconds(0.3f);

@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 	private PlayerGroundChecker groundChecker;
 	private PlayerSlowMode slowMode;
 	private PlayerSkillAttack skillAttack;
+	private PlayerHealth health;
 	private float originalGravity;
 
 	private Collision2D collidedObj;     // 플레이어와 상호작용 할 오브젝트
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
 		slowMode = GetComponent<PlayerSlowMode>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 		skillAttack = GetComponent<PlayerSkillAttack>();
+		health = GetComponent<PlayerHealth>();
 
 		throwModule = GetComponent<PlayerThrow>();
 	}
@@ -56,6 +58,12 @@ public class PlayerController : MonoBehaviour
 
 	private void OnMove(InputValue val)
 	{
+		if (health.isDead)  // 플레이어가 사망했을 경우
+		{
+			rigid.linearVelocity = Vector2.zero;
+			movement.inputVec = Vector2.zero;
+			return;
+		}
 		if (GlobalUtil.IsNullScript(movement)) return;
 
 		Vector2 inputVec = val.Get<Vector2>();

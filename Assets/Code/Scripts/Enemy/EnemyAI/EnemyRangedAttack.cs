@@ -38,7 +38,7 @@ public class EnemyRangedAttack : IEnemyState
         // 공격 전체 시간이 완료되면 다시 플레이어를 쫓아다니는 CHASE 상태로 강제 복귀합니다.
         if (attackTimer >= attackDuration)
         {
-            enemy.ChangeState(KimEnemyState.CHASE);
+            enemy.ChangeState(EnemyState.CHASE);
         }
     }
 

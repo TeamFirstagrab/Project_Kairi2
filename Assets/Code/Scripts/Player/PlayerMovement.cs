@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
 	private PlayerGroundChecker groundChecker;
 	private PlayerWallDetector wallDetector;
 	private PlayerAttack attack;
+	private PlayerHealth health;
 	private bool isJump;    // 점프 중
 	private PlayerStatsRuntime stats;
 	[HideInInspector] public bool canMove = true;
@@ -68,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
 		groundChecker = GetComponent<PlayerGroundChecker>();
 		wallDetector = GetComponent<PlayerWallDetector>();
 		attack = GetComponent<PlayerAttack>();
+		health = GetComponent<PlayerHealth>();
 	}
 
 	private void Update()
@@ -201,7 +203,7 @@ public class PlayerMovement : MonoBehaviour
 		ApplyGravityModifiers();
 	}
 
-	private void Move()	// 플레이어 이동
+	private void Move() // 플레이어 이동
 	{
 		bool isCrouching = groundChecker.isGrounded && isCrouchPressed;
 		bool hasHorizontalInput = Mathf.Abs(inputVec.x) > 0.1f;

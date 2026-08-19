@@ -60,7 +60,7 @@ public class EnemyIdle : IEnemyState
 
                         if (hit.collider == null || hit.collider.CompareTag(TagName.player))
                         {
-                            enemy.ChangeState(KimEnemyState.CHASE);
+                            enemy.ChangeState(EnemyState.CHASE);
                             return; // 상태 전환 시 즉시 Update 종료
                         }
                     }
@@ -75,7 +75,7 @@ public class EnemyIdle : IEnemyState
         // 시간이 다 차면 순찰(PATROL) 상태로 돌입해 주변 지형을 정찰하도록 명령을 토스합니다.
         if (waitTimer >= waitTime)
         {
-            enemy.ChangeState(KimEnemyState.PATROL);
+            enemy.ChangeState(EnemyState.PATROL);
         }
     }
 

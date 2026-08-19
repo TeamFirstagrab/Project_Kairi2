@@ -1,4 +1,4 @@
-﻿using UnityEngine; // 유니티 엔진의 기본 기능(MonoBehaviour, GameObject, Transform 등)을 사용하기 위한 네임스페이스입니다.
+using UnityEngine; // 유니티 엔진의 기본 기능(MonoBehaviour, GameObject, Transform 등)을 사용하기 위한 네임스페이스입니다.
 using EnumType;    // 프로젝트 내 정의된 공용 열거형(예: KimEnemyState 등)을 참조하기 위한 네임스페이스입니다.
 using System.Collections.Generic; // FSM 상태 관리를 위해 Dictionary, List 등의 컬렉션을 사용하기 위한 네임스페이스입니다.
 
@@ -200,10 +200,22 @@ public class Enemy : MonoBehaviour, IDamageable
                 SpawnKillSlash(attackDirection);
             }
             SpawnBloodEffect(attackDirection); 
-			ChangeState(KimEnemyState.DEAD);
+            ChangeState(KimEnemyState.DEAD);
 
-			effect?.ActiveBloodEffect(Random.insideUnitCircle.normalized);
-		}
+            effect?.ActiveBloodEffect(Random.insideUnitCircle.normalized);
+
+            // 적 처치 시 플레이어 우클릭 스킬 공격(PlayerSkillAttack) 쿨타임 25% 단축 알림
+            Debug.Log($"[Enemy] {gameObject.name} died! HP: {currentHP}. Notifying PlayerSkillAttack...");
+            var playerSkillAttack = FindAnyObjectByType<PlayerSkillAttack>();
+            if (playerSkillAttack != null)
+            {
+                playerSkillAttack.ReduceCooldownOnKill();
+            }
+            else
+            {
+                Debug.LogWarning("[Enemy] PlayerSkillAttack component not found in scene!");
+            }
+        }
     }
 
     /// <summary>

@@ -25,6 +25,7 @@ public class PlayerSkillAttack : MonoBehaviour
 	[Header("스킬 쿨타임")]
 	[SerializeField] private float skillCooldown = 3f; // 쿨타임 설정 시간
 	[SerializeField] private PlayerCooldownUI cooldownUI; // 머리 위 UI 스크립트 연결용
+	[SerializeField] private bool recoverTimeBased = false; // 시간 경과에 따른 자동 회복 여부 (기본값: false, 처치로만 차도록 설정)
 	private float cooldownTimer = 0f; // 현재 남은 쿨타임 계산용
 	public bool IsCooldown => cooldownTimer > 0f; // 쿨타임 중인지 판단
 
@@ -43,7 +44,10 @@ public class PlayerSkillAttack : MonoBehaviour
 	{
 		if (cooldownTimer > 0f)
 		{
-			cooldownTimer -= Time.deltaTime;
+			if (recoverTimeBased)
+			{
+				cooldownTimer -= Time.deltaTime;
+			}
 			if (cooldownUI != null)
 			{
 				cooldownUI.UpdateCooldown(cooldownTimer, skillCooldown);
@@ -252,10 +256,10 @@ public class PlayerSkillAttack : MonoBehaviour
 
 			slowMode.EnterOnlySlow();
 
-			// 히트스톱(잠시 멈춤)
+			// 히트스톱(일시 멈춤)
 			yield return new WaitForSecondsRealtime(hitStopTime);
 
-			slowMode.ExitSlow();
+			slowMode.ExitSlow(false); // Shift 슬로우 쿨타임 작동 방지 (false 전달)
 		}
 
 		IsSkillAttacking = false;
@@ -318,6 +322,25 @@ public class PlayerSkillAttack : MonoBehaviour
 
 		// 벽이 없으면 최대거리 또는 마우스 위치
 		return startPos + dir * castDist;
+	}
+
+	/// <summary>
+	/// 적 처치 시 호출되어 스킬 공격 쿨타임을 25% (4칸 중 1칸)만큼 즉시 충전합니다.
+	/// </summary>
+	public void ReduceCooldownOnKill()
+	{
+		if (cooldownTimer > 0f)
+		{
+			float reduction = skillCooldown * 0.25f; // 25% 단축
+			cooldownTimer = Mathf.Max(0f, cooldownTimer - reduction);
+
+			if (cooldownUI != null)
+			{
+				cooldownUI.UpdateCooldown(cooldownTimer, skillCooldown);
+			}
+
+			Debug.Log($"[PlayerSkillAttack] Enemy Killed! Cooldown reduced by {reduction:F2}s. Remaining Cooldown: {cooldownTimer:F2}s");
+		}
 	}
 
 	// 마우스 뗌과 동시에 스킬 나가기 및 사용

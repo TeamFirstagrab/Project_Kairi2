@@ -48,12 +48,14 @@ public class PlayerSlowCooldownUI : MonoBehaviour
         }
     }
 
-    // 쿨타임 게이지 업데이트
+    // 쿨다운 게이지 업데이트
     public void UpdateCooldown(float currentTimer, float maxCooldown)
     {
         if (cooldownImage != null && cooldownSprites != null && cooldownSprites.Length > 0 && maxCooldown > 0f)
         {
             float ratio = currentTimer / maxCooldown;
+            
+            // 비율에 맞는 스프라이트 인덱스 계산
             int spriteIndex = Mathf.Clamp((int)(ratio * cooldownSprites.Length), 0, cooldownSprites.Length - 1);
             cooldownImage.sprite = cooldownSprites[spriteIndex];
         }

@@ -294,7 +294,7 @@ public class PlayerAttack : MonoBehaviour
 				afterAttackStopTime
 			);
 
-			slowMode.ExitSlow();
+			slowMode.ExitSlow(false); // Shift 슬로우 쿨타임 작동 방지 (false 전달)
 
 			// 적을 공격했을 때 카메라 흔들림 + 슬로우
 			GameManager.Instance.cameraShake.ShakeForSeconds();

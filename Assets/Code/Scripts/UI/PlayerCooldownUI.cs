@@ -48,16 +48,15 @@ public class PlayerCooldownUI : MonoBehaviour
         }
     }
 
-    // 쿨타임 게이지 업데이트
+    // 쿨다운 게이지 업데이트
     public void UpdateCooldown(float currentTimer, float maxCooldown)
     {
         if (cooldownImage != null && cooldownSprites != null && cooldownSprites.Length > 0 && maxCooldown > 0f)
         {
-            // 남은 시간 비율 (0.0 ~ 1.0)
+            // 남은 시간 비율 (0.0: 완충됨 ~ 1.0: 사용 직후 비어있음)
             float ratio = currentTimer / maxCooldown;
 
-            // 비율에 맞는 스프라이트 인덱스 계산 (시간이 다 되어갈수록 인덱스가 낮아지거나 높아지게 설정)
-            // 예: 8장의 이미지가 있다면 ratio에 따라 0 ~ 7번 인덱스 선택
+            // 비율에 맞는 스프라이트 인덱스 계산
             int spriteIndex = Mathf.Clamp((int)(ratio * cooldownSprites.Length), 0, cooldownSprites.Length - 1);
 
             cooldownImage.sprite = cooldownSprites[spriteIndex];

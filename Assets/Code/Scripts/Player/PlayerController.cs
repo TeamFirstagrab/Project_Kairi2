@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
 		{
 			// 쿨타임 중이면 아예 슬로우 시도를 막음
 			if (slowMode.IsCooldown) return;
-			slowMode.EnterSlow();
+			slowMode.EnterSlow(0.5f);
 		}
 		else
 		{

@@ -39,6 +39,7 @@ namespace Globals
 		public const string player = "Player";
 		public const string enemy = "Enemy";
 		public const string wall = "Wall";
+		public const string door = "Door";
 	}
 
 	// 애니메이션 이름 관련 클래스

@@ -44,16 +44,20 @@ public class Enemy : MonoBehaviour, IDamageable
     [Tooltip("총알이 생성되어 날아갈 기준점(발사구 위치) 오브젝트의 Transform 컴포넌트를 등록합니다.")]
     public Transform firePoint;
 
-    /// <summary>
-    /// Awake는 게임 오브젝트가 생성되고 스크립트가 로드될 때 '최초 1회' 가장 먼저 호출되는 생명주기 함수입니다.
-    /// 주로 다른 컴포넌트 참조를 가져오거나 내부 변수를 안전하게 캐싱(초기화)하는 데 사용됩니다.
-    /// </summary>
-    private void Awake()
+	// 피 이펙트
+	private BloodEffect effect;
+
+	/// <summary>
+	/// Awake는 게임 오브젝트가 생성되고 스크립트가 로드될 때 '최초 1회' 가장 먼저 호출되는 생명주기 함수입니다.
+	/// 주로 다른 컴포넌트 참조를 가져오거나 내부 변수를 안전하게 캐싱(초기화)하는 데 사용됩니다.
+	/// </summary>
+	private void Awake()
     {
         // 런타임 중에 매번 GetComponent를 실행하면 성능 저하(비용이 큼)가 발생하므로, 
         // 씬 시작 시점에 본체 오브젝트에 부착된 Rigidbody2D와 Animator 컴포넌트를 미리 변수에 할당(캐싱)해 둡니다.
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+		effect = GetComponent<BloodEffect>();
     }
 
     /// <summary>
@@ -195,8 +199,11 @@ public class Enemy : MonoBehaviour, IDamageable
             {
                 SpawnKillSlash(attackDirection);
             }
-            SpawnBloodEffect(attackDirection); ChangeState(KimEnemyState.DEAD);
-        }
+            SpawnBloodEffect(attackDirection); 
+			ChangeState(KimEnemyState.DEAD);
+
+			effect?.ActiveBloodEffect(Random.insideUnitCircle.normalized);
+		}
     }
 
     /// <summary>

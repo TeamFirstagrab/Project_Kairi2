@@ -2,23 +2,30 @@ using UnityEngine;
 using EnumType;
 using Globals;
 
+/// <summary>
+/// [Kim ì—ë„ˆë¯¸ ì›ê±°ë¦¬ ê³µê²©(Ranged Attack) ìƒíƒœ í´ë˜ìŠ¤]
+/// í”Œë ˆì´ì–´ê°€ ê³µê²© ì‚¬ì •ê±°ë¦¬ ì•ˆìœ¼ë¡œ ë“¤ì–´ì˜¤ë©´ 0.5ì´ˆ ë™ì•ˆ ë©ˆì¶° ì„  ë’¤ ì´ì•Œì„ ë°œì‚¬í•©ë‹ˆë‹¤.
+/// </summary>
 public class EnemyRangedAttack : IEnemyState
 {
-    private float attackDuration = 0.8f; // ¿ø°Å¸® °ø°İ ¸ğ¼Ç ÀüÃ¼ ¼öÇà ½Ã°£ (ÃÊ)
-    private float attackTimer = 0f;      // ½Ã°£ °è»ê¿ë Å¸ÀÌ¸Ó
-    private bool hasFired = false;       // ÇÑ ¹øÀÇ °ø°İ ÁÖ±â µ¿¾È ÃÑ¾ËÀ» ¹ß»çÇß´ÂÁö ¿©ºÎ
+    private float attackDelay = 0.5f;     // í”Œë ˆì´ì–´ ì•ì— ì„œì„œ ë©ˆì¶”ëŠ” ëŒ€ê¸° ì‹œê°„ (0.5ì´ˆ)
+    private float attackDuration = 0.8f;  // ê³µê²© ì „ì²´ ìœ ì§€ ì‹œê°„
+    private float attackTimer = 0f;       // ìƒíƒœ ì§„ì… í›„ ëˆ„ì  ì‹œê°„
+    private bool isAttacking = false;     // 0.5ì´ˆ ëŒ€ê¸° í›„ ì‹¤ì œ ê³µê²© ëª¨ì…˜ ì‹œì‘ ì—¬ë¶€
+    private bool hasFired = false;        // ì´ì•Œ ë°œì‚¬ ì—¬ë¶€
 
     public void EnterState(Enemy enemy)
     {
-        Debug.Log("Kim ¿¡³Ê¹Ì°¡ ¿ø°Å¸® °ø°İ »óÅÂ¿¡ µ¹ÀÔÇß½À´Ï´Ù.");
+        Debug.Log("Kim ì›ê±°ë¦¬ ì—ë„ˆë¯¸ê°€ í”Œë ˆì´ì–´ë¥¼ ë°œê²¬í•˜ì—¬ ê³µê²© ìœ„ì¹˜ì—ì„œ 0.5ì´ˆ ëŒ€ê¸°í•©ë‹ˆë‹¤.");
 
-        // ¿¡³Ê¹ÌÀÇ °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı (¿ø°İ °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌ¸§À¸·Î ±³Ã¼ °¡´É)
-        enemy.anim.Play(EnemyAnimName.attack);
-
-        // °ø°İÇÏ´Â µ¿¾ÈÀº Á¦ÀÚ¸®¿¡ °íÁ¤µÇµµ·Ï °­Á¦ ¼Óµµ 0 ¼³Á¤
+        // í”Œë ˆì´ì–´ ì•ì—ì„œ ë©ˆì¶¤
         enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);
 
+        // 0.5ì´ˆ ëŒ€ê¸° ë™ì•ˆ Idle ìƒíƒœ ëª¨ì…˜ ì¬ìƒ
+        enemy.anim.Play(EnemyAnimName.idle);
+
         attackTimer = 0f;
+        isAttacking = false;
         hasFired = false;
     }
 
@@ -27,59 +34,82 @@ public class EnemyRangedAttack : IEnemyState
         attackTimer += Time.deltaTime;
         enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);
 
-        // ¿ø¸® ¼³¸í: °ø°İ ¸ğ¼ÇÀÌ ½ÇÇàµÈ ÈÄ, ÇÁ·¹ÀÓÀÌ ÀÏÁ¤ ½Ã°£(¿¹: 0.2ÃÊ) Èê·¶À» ¶§ ÃÑ¾ËÀ» ¼ÒÈ¯ÇÕ´Ï´Ù.
-        // ÀÌ·¸°Ô ÇÔÀ¸·Î½á ¸ğ¼Ç°ú ¹ß»ç Å¸ÀÌ¹ÖÀ» ÀÚ¿¬½º·´°Ô ½ÌÅ©½ÃÅ³ ¼ö ÀÖ½À´Ï´Ù.
-        if (!hasFired && attackTimer >= 0.2f)
+        // í”Œë ˆì´ì–´ë¥¼ í–¥í•´ ë°”ë¼ë³´ëŠ” ë°©í–¥ ì¡°ì ˆ
+        GameObject playerObj = GameObject.FindWithTag(TagName.player);
+        if (playerObj != null)
         {
-            FireBullet(enemy);
-            hasFired = true;
+            float directionX = playerObj.transform.position.x - enemy.transform.position.x;
+            if (directionX > 0f)
+            {
+                enemy.transform.eulerAngles = Vector3.zero;
+            }
+            else if (directionX < 0f)
+            {
+                enemy.transform.eulerAngles = new Vector3(0f, 180f, 0f);
+            }
         }
 
-        // °ø°İ ÀüÃ¼ ½Ã°£ÀÌ ¿Ï·áµÇ¸é ´Ù½Ã ÇÃ·¹ÀÌ¾î¸¦ ÂÑ¾Æ´Ù´Ï´Â CHASE »óÅÂ·Î °­Á¦ º¹±ÍÇÕ´Ï´Ù.
-        if (attackTimer >= attackDuration)
+        // 0.5ì´ˆ ë©ˆì¶° ì„  í›„ ì‹¤ì œ ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ê°œì‹œ
+        if (!isAttacking && attackTimer >= attackDelay)
         {
-            enemy.ChangeState(EnemyState.CHASE);
+            isAttacking = true;
+            enemy.anim.Play(EnemyAnimName.attack);
+        }
+
+        // ê³µê²© ë™ì‘ ì¤‘ ì´ì•Œ ë°œì‚¬ ë° ìƒíƒœ ì¢…ë£Œ
+        if (isAttacking)
+        {
+            // ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘ í›„ 0.2ì´ˆ ì‹œì ì— ì´ì•Œ ë°œì‚¬
+            if (!hasFired && attackTimer >= attackDelay + 0.2f)
+            {
+                FireBullet(enemy);
+                hasFired = true;
+            }
+
+            // ê³µê²© ìœ ì§€ ì‹œê°„ ì¢…ë£Œ ì‹œ ì¶”ê²© ìƒíƒœë¡œ ë³µê·€
+            if (attackTimer >= attackDelay + attackDuration)
+            {
+                enemy.ChangeState(EnemyState.CHASE);
+            }
         }
     }
 
     public void ExitState(Enemy enemy)
     {
-        Debug.Log("Kim ¿¡³Ê¹Ì°¡ ¿ø°Å¸® °ø°İ »óÅÂ¸¦ Á¾·áÇÕ´Ï´Ù.");
+        Debug.Log("Kim ì›ê±°ë¦¬ ì—ë„ˆë¯¸ê°€ ê³µê²© ìƒíƒœë¥¼ ì¢…ë£Œí•©ë‹ˆë‹¤.");
         attackTimer = 0f;
+        isAttacking = false;
         hasFired = false;
     }
 
     /// <summary>
-    /// ½ÇÁ¦ ÃÑ¾ËÀ» ¼ÒÈ¯ÇÏ°í ¹æÇâÀ» Áö½ÃÇÏ´Â ÇÙ½É ¹°¸® ÇÔ¼öÀÔ´Ï´Ù.
+    /// ì§€ì •ëœ ë°œì‚¬ ìœ„ì¹˜ì—ì„œ ì´ì•Œì„ ìƒì„±í•˜ê³  í”Œë ˆì´ì–´ ë°©í–¥ìœ¼ë¡œ ë°œì‚¬í•©ë‹ˆë‹¤.
     /// </summary>
     private void FireBullet(Enemy enemy)
     {
         if (enemy.bulletPrefab == null)
         {
-            Debug.LogError($"{enemy.gameObject.name}: ¹ß»çÇÒ ÃÑ¾Ë ÇÁ¸®ÆÕÀÌ µî·ÏµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError($"{enemy.gameObject.name}: ì—ë„ˆë¯¸ì— ì´ì•Œ í”„ë¦¬íŒ¹ì´ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
             return;
         }
 
-        // ¹ß»ç±¸ À§Ä¡ ¼³Á¤ (ÁöÁ¤µÈ firePoint°¡ ¾ø´Ù¸é ¿¡³Ê¹Ì º»Ã¼ÀÇ Áß½ÉÁ¡¿¡¼­ ¹ß»ç)
+        // ë°œì‚¬ ìœ„ì¹˜ ì„¤ì • (ì„¤ì •ëœ firePointê°€ ì—†ìœ¼ë©´ ì—ë„ˆë¯¸ ìœ„ì¹˜ ì‚¬ìš©)
         Vector3 spawnPosition = enemy.firePoint != null ? enemy.firePoint.position : enemy.transform.position;
 
-        // ÃÑ¾Ë ½Ç½Ã°£ »ı¼º
+        // ì´ì•Œ í”„ë¦¬íŒ¹ ìƒì„±
         GameObject bulletObj = Object.Instantiate(enemy.bulletPrefab, spawnPosition, Quaternion.identity);
 
-        // »ı¼ºµÈ ÃÑ¾Ë ÄÄÆ÷³ÍÆ®¿¡ ÇÃ·¹ÀÌ¾î Á¶ÁØ Á¤º¸ ÁÖÀÔ
+        // ìƒì„±ëœ ì´ì•Œì˜ ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì™€ í”Œë ˆì´ì–´ ë°©í–¥ìœ¼ë¡œ ì¡°ì¤€ ë°œì‚¬
         EnemyBullet bullet = bulletObj.GetComponent<EnemyBullet>();
         if (bullet != null)
         {
-            // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡¸¦ Ã£¾Æ ÃÑ¾Ë¿¡ ´ë»óÀ» Àü´ŞÇÕ´Ï´Ù.
             GameObject player = GameObject.FindWithTag(TagName.player);
             if (player != null)
             {
-                // ÇÃ·¹ÀÌ¾îÀÇ Áß¾ÓÀ» Á¶ÁØÇÏµµ·Ï Å¸°Ù º¤ÅÍ Àü´Ş
                 bullet.Launch(player.transform.position, enemy.enemyStats.Attack);
             }
             else
             {
-                // ÇÃ·¹ÀÌ¾î°¡ ¾ø´Ù¸é ÀÚ½ÅÀÌ ¹Ù¶óº¸´Â ¹æÇâÀ¸·Î Á÷Áø ¹ß»ç
                 Vector3 facingDir = enemy.transform.eulerAngles.y > 90f ? Vector3.left : Vector3.right;
                 bullet.Launch(enemy.transform.position + facingDir, enemy.enemyStats.Attack);
             }

@@ -1,3 +1,4 @@
+using Globals;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -41,45 +42,37 @@ public class EnemyBullet : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
-    /// <summary>
-    /// 플레이어의 칼 공격에 맞았을 때, 플레이어 스크립트로부터 강제 호출되는 반사 연산 함수입니다.
-    /// </summary>
-    /// <param name="mousePosition">현재 플레이어의 마우스 월드 좌표</param>
-    public void Deflect(Vector3 mousePosition)
-    {
-        // 1. 튕겨 나간 상태로 속성을 전환합니다.
-        isDeflected = true;
+	/// <summary>
+	/// 플레이어의 칼 공격에 맞았을 때, 플레이어 스크립트로부터 강제 호출되는 반사 연산 함수입니다.
+	/// </summary>
+	/// <param name="mousePosition">현재 플레이어의 마우스 월드 좌표</param>
+	public void Deflect(Vector2 dir)
+	{
+		isDeflected = true;
 
-        // 2. 조준된 마우스 방향으로 날아가도록 새로운 비행 방향 벡터를 연산합니다.
-        Vector2 deflectDirection = (Vector2)(mousePosition - transform.position);
-        deflectDirection.Normalize();
+		// 기존 진행 방향의 정확히 반대 방향
+		Vector2 deflectDirection = -dir.normalized;
 
-        // 3. 패링의 쾌감을 높이기 위해 비행 속도를 기존 속도보다 1.5배 빠르게 향상시킵니다.
-        rb.linearVelocity = deflectDirection * (speed * 1.5f);
+		// 반사된 총알 속도 설정
+		rb.linearVelocity = deflectDirection * (speed * 1.5f);
 
-        // 4. 새로운 비행 벡터에 부합하게 총알의 2D 회전각을 재설정합니다.
-        float angle = Mathf.Atan2(deflectDirection.y, deflectDirection.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+		// 총알 스프라이트가 날아가는 방향을 바라보도록 회전
+		float angle = Mathf.Atan2(deflectDirection.y, deflectDirection.x) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(0f, 0f, angle);
+	}
 
-        // 5. 패링되었음을 시각적으로 알려주기 위해 총알의 색상을 연한 푸른색(하늘색)으로 변경합니다.
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
-        {
-            sr.color = Color.cyan;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
+	private void OnTriggerEnter2D(Collider2D collision)
     {
         // 상황 A: 정상 상황 (적군이 발사하여 아직 플레이어 칼에 맞기 전)
         if (!isDeflected)
         {
-            if (collision.CompareTag("Player"))
+            if (collision.CompareTag(TagName.player))
             {
                 IDamageable playerDamageable = collision.GetComponent<IDamageable>();
                 if (playerDamageable != null)
                 {
-                    playerDamageable.TakeDamage(damageValue, rb.linearVelocity.normalized);
+					print($"player IDamageable takeDamage 호출");
+                    playerDamageable.TakeDamage(damageValue);
                 }
                 Destroy(gameObject);
             }
@@ -87,7 +80,7 @@ public class EnemyBullet : MonoBehaviour
         // 상황 B: 패링 반사 상황 (플레이어가 쳐내어 적을 향해 역으로 날아가는 상태)
         else
         {
-            if (collision.CompareTag("Enemy"))
+            if (collision.CompareTag(TagName.enemy))
             {
                 IDamageable enemyDamageable = collision.GetComponent<IDamageable>();
                 if (enemyDamageable != null)

@@ -21,13 +21,15 @@ public class EnemyDead : IEnemyState
     // 적이 플레이어 칼에 맞아 숨을 거두는 첫 프레임 순간에 딱 한 번 작동합니다.
     public void EnterState(Enemy enemy)
     {
+		enemy.currentHP = 0;	// 적 피를 0으로 변경
         Debug.Log("Kim 적 캐릭터의 목숨이 끊어져 사망 처리 및 사망 연출을 집행합니다.");
 
 		// 1단계 Globals에 등록해 둔 오타 없는 정답 죽음 글자("Enemy_Die")를 호출해 애니메이터 엔진에게 쓰러지는 모션을 재생시킵니다.
 		enemy.anim.Play(EnemyAnimName.dead);
 
         // 시체가 물리적으로 미끄러지거나 허공답보하지 않도록 수평/수직 속도를 완전 0으로 제동합니다.
-        enemy.rb.bodyType = RigidbodyType2D.Kinematic;
+        enemy.rb.bodyType = RigidbodyType2D.Kinematic;
+
         enemy.rb.linearVelocity = Vector2.zero;
 
         // [시체 충돌체 비활성화 연산]

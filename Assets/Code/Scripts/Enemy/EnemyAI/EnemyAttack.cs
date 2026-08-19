@@ -1,64 +1,121 @@
 using UnityEngine;
-using EnumType; // 1´Ü°è¿¡¼­ ÀÛ¼ºÇÑ KimEnemyState ¿­°ÅÇü ÀÌ¸§Ç¥¸¦ ¾²±â À§ÇØ ¿¬°áÇÕ´Ï´Ù.
-using Globals;   // 1´Ü°è¿¡¼­ ÀÛ¼ºÇÑ KimEnemyAnimName ¹× TagName ÀÌ¸§Ç¥µéÀ» ¾²±â À§ÇØ ¿¬°áÇÕ´Ï´Ù.
+using EnumType;
+using Globals;
 
 /// <summary>
-/// ±è Àü¿ë Àû Ä³¸¯ÅÍÀÇ °ø°İ(Attack) »óÅÂ Çàµ¿À» ÁöÈÖÇÏ´Â Å¬·¡½ºÀÔ´Ï´Ù.
-/// 
-/// ÀÛµ¿ ¿ø¸® ¼³¸í:
-///  - 2´Ü°è ÀÎÅÍÆäÀÌ½º ¾à¼Ó(IKimEnemyState)¿¡ ¸ÂÃç Àû Ä³¸¯ÅÍ°¡ Á¦ÀÚ¸®¿¡ ¸ØÃç ¼­¼­ °­·ÂÇÑ °ø°İ ¸ğ¼ÇÀ» ¿¬ÃâÇÕ´Ï´Ù.
-///  - 1´Ü°è Globals¿¡ µî·ÏÇØ µĞ ¿ÀÅ¸ ¾ø´Â Á¤´ä °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ¹®ÀÚ¿­("Enemy_Shot1")À» À¯´ÏÆ¼ ¿£Áø¿¡ ÁÖÀÔÇÏ¿© ¸ğ¼ÇÀ» Æ²¾îÁİ´Ï´Ù.
-///  - °ø°İ µ¿ÀÛ ½Ã°£(0.6ÃÊ) µ¿¾ÈÀº ÀÚ¸®¿¡ ¹ßÀÌ ¿ÏÀüÈ÷ ´Ş¶óºÙµµ·Ï ¼öÆò ÀÌµ¿ ¼Óµµ¸¦ 0À¸·Î ¿ÏÀüÈ÷ Àá±İÇÕ´Ï´Ù.
-///  - °ø°İÀÌ ¼º°øÀûÀ¸·Î ´Ù ¼öÇàµÈ Á÷ÈÄ(0.6ÃÊ µÚ), ¸¸¾à ÇÃ·¹ÀÌ¾î°¡ ¿©ÀüÈ÷ ¸Ê¿¡ »ì¾ÆÀÖ´Ù¸é Áï½Ã ´Ù½Ã ¸Í·ÄÇÑ Ãß°İ(CHASE) »óÅÂ·Î »óÈ² ÆÇÀ» È´ º¯°æÇÕ´Ï´Ù.
+/// [Kim ì—ë„ˆë¯¸ ê·¼ê±°ë¦¬ ê³µê²©(Attack) ìƒíƒœ í´ë˜ìŠ¤]
+/// í”Œë ˆì´ì–´ê°€ ê³µê²© ì‚¬ì •ê±°ë¦¬ì— ë„ë‹¬í•˜ë©´ 0.5ì´ˆ ë™ì•ˆ ë©ˆì¶° ì„  ë’¤ ê·¼ê±°ë¦¬ ê³µê²©ì„ ì‹œë„í•©ë‹ˆë‹¤.
 /// </summary>
 public class EnemyAttack : IEnemyState
 {
-    private float attackDuration = 0.6f; // ÇÑ ¹ø Ä®À» Å©°Ô ÈÖµÎ¸£´Â ÁøÂ¥ ¸ğ¼Ç µ¿ÀÛ ½Ã°£À» 0.6ÃÊ·Î ¼³Á¤ÇÕ´Ï´Ù.
-    private float attackTimer = 0f;      // ½Ç½Ã°£À¸·Î ÈÖµÎ¸£¸ç °æ°úÇÑ °ø°İ ½Ã°£À» ´©Àû ÃøÁ¤ÇÏ´Â Ä«¿îÅÍ Å¸ÀÌ¸ÓÀÔ´Ï´Ù.
+	private float attackDelay = 0.5f;    // í”Œë ˆì´ì–´ ì•ì— ì„œì„œ ê³µê²© ì „ ë©ˆì¶”ëŠ” ëŒ€ê¸° ì‹œê°„ (0.5ì´ˆ)
+	private float attackDuration = 0.6f; // ì‹¤ì œ ê³µê²© ì• ë‹ˆë©”ì´ì…˜/íŒì • ìœ ì§€ ì‹œê°„
+	private float attackTimer = 0f;      // ìƒíƒœ ì§„ì… í›„ ëˆ„ì  ì‹œê°„
+	private bool isAttacking = false;    // 0.5ì´ˆ ëŒ€ê¸° í›„ ì‹¤ì œ ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘ ì—¬ë¶€
 
-    // [»óÅÂ ÀÔÀå ±ÔÄ¢ ±¸Çö]
-    // 3´Ü°è º»Ã¼ »ç·ÉÅ¾ÀÌ ³ª¸¦ °ø°İ »óÅÂ(ATTACK)·Î ÀüÀÌ½ÃÅ°´Â Ã¹ ¼ø°£¿¡ µü ÇÑ ¹ø ÀÛµ¿ÇÕ´Ï´Ù.
-    public void EnterState(Enemy enemy)
-    {
-        Debug.Log("Kim Àû Ä³¸¯ÅÍ°¡ ÇÃ·¹ÀÌ¾î¿¡°Ô ±ÙÁ¢ °ø°İÀ» °³½ÃÇÕ´Ï´Ù!");
+	// í”Œë ˆì´ì–´ê°€ ì†í•œ ë ˆì´ì–´
+	private LayerMask playerLayer;
 
-        // 1´Ü°è Globals¿¡ µî·ÏÇÑ Á¤´ä °ø°İ ±ÛÀÚ("Enemy_Shot1")¸¦ ²¨³» À¯´ÏÆ¼ ¾Ö´Ï¸ŞÀÌÅÍ ÄÄÆ÷³ÍÆ®¿¡°Ô °ø°İ µ¿ÀÛ Àç»ıÀ» Áö½ÃÇÕ´Ï´Ù.
-        // ÀÌ¸§À» ¹Ù²Ù¸é ±ÙÁ¢°ø°İÀÌ ³ª°©´Ï´Ù~
-        enemy.anim.Play(EnemyAnimName.attack);// ÀÌºÎºĞÀ» ¹Ù²Ù¸é µÊ 
+	// ì´ë¯¸ ë°ë¯¸ì§€ë¥¼ ì…í˜”ëŠ”ì§€ ì—¬ë¶€
+	private bool hasDealtDamage = false;
 
-        // °ø°İÇÏ´Â Âû³ª µ¿¾È µÚ·Î ¹Ì²ô·¯ÁöÁö ¾Êµµ·Ï, ¹ß¹Ù´ÚÀ» º»µå·Î ºÙÀÌµíÀÌ ¼öÆò ÀÌµ¿ ¼Óµµ¸¦ Áï°¢ 0À¸·Î °­Á¦ ¿øº¹ÇÕ´Ï´Ù.
-        enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);
+	public void EnterState(Enemy enemy)
+	{
+		if (enemy.currentHP <= 0) return; // ì´ë¯¸ ì‚¬ë§í•œ ê²½ìš° ì œì™¸
+		Debug.Log("Kim ì—ë„ˆë¯¸ê°€ í”Œë ˆì´ì–´ë¥¼ ë°œê²¬í•˜ì—¬ ê³µê²© ìœ„ì¹˜ì—ì„œ 0.5ì´ˆ ëŒ€ê¸°í•©ë‹ˆë‹¤!");
 
-        // ½Ç½Ã°£ °ø°İ °æ°ú ½Ã°£À» 0ÃÊ·Î ÃÊ±âÈ­ÇÕ´Ï´Ù.
-        attackTimer = 0f;
-    }
+		// í”Œë ˆì´ì–´ ì•ì— ì„œì„œ ì´ë™ ë©ˆì¶¤
+		enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);
 
-    // [»óÅÂ À¯Áö ±ÔÄ¢ ±¸Çö]
-    // °ø°İ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» ¼öÇàÇÏ°í ÀÖ´Â 0.6ÃÊÀÇ ½Ã°£ µ¿¾È ¸Å ÇÁ·¹ÀÓ ½Ç½Ã°£ ¹«ÇÑ ¹İº¹µË´Ï´Ù.
-    public void UpdateState(Enemy enemy)
-    {
-        // ½Ç½Ã°£ °æ°ú ½Ã°£ Å¸ÀÌ¸Ó¸¦ Çö½Ç ½Ã°£ ¼Óµµ(Time.deltaTime)¸¸Å­ µ¡¼ÀÇØ ³ª°©´Ï´Ù.
-        attackTimer += Time.deltaTime;
+		// 0.5ì´ˆ ë©ˆì¶¤ ëŒ€ê¸° ë™ì•ˆ Idle ìƒíƒœ ëª¨ì…˜ ì¬ìƒ
+		enemy.anim.Play(EnemyAnimName.idle);
 
-        // °ø°İÇÏ´Â µ¿ÀÛÀ» ¼öÇàÇÏ°í ÀÖ´Â µµÁß¿¡µµ ¹Ì²ô·¯ÁöÁö ¾Ê°Ô ¼öÆò ¹°¸® ¼Óµµ¸¦ ¸Å ÇÁ·¹ÀÓ 0À¸·Î ²Ë ¹­¾îÁİ´Ï´Ù.
-        enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);
+		attackTimer = 0f;
+		isAttacking = false;
+		hasDealtDamage = false;
 
-        // [°ø°İ ¿Ï·á ¹× Ãß°İ Àç°³ ºĞ±â Á¶°Ç½Ä]
-        // ¿ì¸®°¡ ¾à¼ÓÇÑ ÇÑ ¹øÀÇ Ä®Áú µ¿ÀÛ ½Ã°£(0.6ÃÊ)ÀÌ ¸¶Ä§³» ÀüºÎ Á¾·á ¿Ï·áµÇ¾ú´Ù¸é!
-        if (attackTimer >= attackDuration)
-        {
-            // °ø°İÀ» ¹«»çÈ÷ ¸¶ÃÆÀ¸¹Ç·Î, ´Ù½Ã Àû º»Ã¼ »ç·ÉÅ¾(enemy)¿¡°Ô "»ó´ë°¡ ¾ÆÁ÷ »ì¾ÆÀÖ´Ù¸é ÂÑ¾Æ°¥ ¼ö ÀÖ°Ô Áï½Ã Ãß°İ(CHASE) »óÅÂ·Î ±³È¯ÇØ¶ó!" ÇÏ°í ¸í·ÉÀ» Àü¼ÛÇÕ´Ï´Ù.
-            enemy.ChangeState(EnemyState.CHASE);
-        }
-    }
+		// Player ë ˆì´ì–´ ê°€ì ¸ì˜¤ê¸°
+		playerLayer = LayerMask.GetMask(LayerName.player);
+	}
 
-    // [»óÅÂ ÅğÀå ±ÔÄ¢ ±¸Çö]
-    // ÇÑ ¹øÀÇ Ä®Áú °ø°İÀÌ ³¡³ª°í ÀÌ »óÅÂ¸¦ ¿ÏÀüÈ÷ ºüÁ®³ª°¡±â Á÷Àü ¸¶Áö¸· ¼ø°£¿¡ ´Ü ÇÑ ¹ø ÀÛµ¿ÇÕ´Ï´Ù.
-    public void ExitState(Enemy enemy)
-    {
-        Debug.Log("Kim Àû Ä³¸¯ÅÍ°¡ °ø°İÀ» ¿Ï¼öÇÏ°í »óÅÂ¸¦ ¾ÈÀüÇÏ°Ô Á¾·áÇÕ´Ï´Ù.");
+	public void UpdateState(Enemy enemy)
+	{
+		if (enemy.currentHP <= 0) return; // ì´ë¯¸ ì‚¬ë§í•œ ê²½ìš° ì œì™¸
+		attackTimer += Time.deltaTime;
 
-        // »ç¿ëÇÑ ÀÓ½Ã °ø°İ Å¸ÀÌ¸Ó º¯¼ö¸¦ 0À¸·Î ±ú²ıÀÌ Á¤¸® Á¤µ·ÇÕ´Ï´Ù.
-        attackTimer = 0f;
-    }
+		// ë©ˆì¶¤ ìƒíƒœ ìœ ì§€
+		enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);
+
+		// í”Œë ˆì´ì–´ë¥¼ í–¥í•´ ë°”ë¼ë³´ëŠ” ë°©í–¥ ì¡°ì ˆ
+		GameObject playerObj = GameObject.FindWithTag(TagName.player);
+		if (playerObj != null)
+		{
+			float directionX = playerObj.transform.position.x - enemy.transform.position.x;
+			if (directionX > 0f)
+			{
+				enemy.transform.eulerAngles = Vector3.zero;
+			}
+			else if (directionX < 0f)
+			{
+				enemy.transform.eulerAngles = new Vector3(0f, 180f, 0f);
+			}
+		}
+
+		// 0.5ì´ˆ ë©ˆì¶° ì„  í›„ ì‹¤ì œ ê³µê²© ë™ì‘ ê°œì‹œ
+		if (!isAttacking && attackTimer >= attackDelay)
+		{
+			isAttacking = true;
+			enemy.anim.Play(EnemyAnimName.attack);
+		}
+
+		// ê³µê²© ë™ì‘ ì§„í–‰ ì¤‘ íƒ€ê²© íŒì • ë° ì¢…ë£Œ ì²˜ë¦¬
+		if (isAttacking)
+		{
+			if (!hasDealtDamage)
+			{
+				CheckAttackHit(enemy);
+			}
+
+			// ê³µê²© ì‹œê°„ ì¢…ë£Œ í›„ ë‹¤ì‹œ ì¶”ê²©(CHASE) ìƒíƒœë¡œ ì „í™˜
+			if (attackTimer >= attackDelay + attackDuration)
+			{
+				enemy.ChangeState(EnemyState.CHASE);
+			}
+		}
+	}
+
+	private void CheckAttackHit(Enemy enemy)
+	{
+		if (enemy.currentHP <= 0) return; // ì´ë¯¸ ì‚¬ë§í•œ ê²½ìš° ì œì™¸
+		
+		// ê³µê²© ì‚¬ì •ê±°ë¦¬ ë²”ìœ„ ë‚´ í”Œë ˆì´ì–´ ê²€ì‚¬
+		Collider2D hitPlayer = Physics2D.OverlapCircle(
+			enemy.transform.position,
+			enemy.enemyStats.AttackRange,
+			playerLayer
+		);
+
+		// í”Œë ˆì´ì–´ê°€ ê³µê²© ë²”ìœ„ ë‚´ì— ìˆìœ¼ë©´ ë°ë¯¸ì§€ ì „ë‹¬
+		if (hitPlayer != null)
+		{
+			PlayerHealth playerHealth = hitPlayer.GetComponent<PlayerHealth>();
+
+			if (playerHealth != null)
+			{
+				playerHealth.TakeDamage(enemy.enemyStats.Attack);
+
+				// í•œ ë²ˆ ê³µê²© ì‹œ ì¤‘ë³µ ë°ë¯¸ì§€ ë°©ì§€
+				hasDealtDamage = true;
+			}
+		}
+	}
+
+	public void ExitState(Enemy enemy)
+	{
+		Debug.Log("Kim ì—ë„ˆë¯¸ê°€ ê³µê²© ìƒíƒœë¥¼ ì¢…ë£Œí•©ë‹ˆë‹¤.");
+
+		attackTimer = 0f;
+		isAttacking = false;
+		hasDealtDamage = false;
+	}
 }

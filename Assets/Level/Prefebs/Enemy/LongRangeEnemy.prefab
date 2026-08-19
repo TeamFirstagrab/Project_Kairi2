@@ -181,7 +181,7 @@ Animator:
   m_GameObject: {fileID: 3370538431175618199}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c3d092eedd5b5444e8802999f82704a8, type: 2}
+  m_Controller: {fileID: 9100000, guid: 54a0f42cbd2a90c4bb3b30b9fe11863e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -221,6 +221,7 @@ MonoBehaviour:
   killSlashEffectPrefab: {fileID: 0}
   bloodEffectPrefab: {fileID: 0}
   bloodEffectOffset: 0.5
+  killSlashOffset: 200
 --- !u!114 &6878194989974110664
 MonoBehaviour:
   m_ObjectHideFlags: 0

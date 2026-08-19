@@ -40,6 +40,7 @@ namespace Globals
 		public const string enemy = "Enemy";
 		public const string wall = "Wall";
 		public const string door = "Door";
+		public const string cameraColl = "CameraCollider";
 	}
 
 	// 애니메이션 이름 관련 클래스

@@ -184,17 +184,10 @@ public class PlayerMovement : MonoBehaviour
 		// 점프 또는 벽 점프 실행
 		if (jumpBufferCounter > 0f)
 		{
-			// 벽 점프
-			if (wallDetector != null && wallDetector.IsTouchingWall && inputVec.x != 0f)
+			// 벽 점프 (벽에 닿아 있거나 슬라이딩 중일 때 반대 방향으로 점프)
+			if (wallDetector != null && (wallDetector.IsTouchingWall || IsWallSliding))
 			{
-				print($"push wall");
-				ExecuteWallPushJump();
-				jumpBufferCounter = 0f;
-			}
-			// 벽 슬라이딩
-			else if (IsWallSliding)
-			{
-				print($"sliding");
+				print($"wall jump (opposite side)");
 				ExecuteWallJump();
 				jumpBufferCounter = 0f;
 			}

@@ -158,9 +158,6 @@ MonoBehaviour:
   - {fileID: -3277236133089416738, guid: a6613eea885d9cc48a78877380ae60f7, type: 3}
   - {fileID: 381522086043223718, guid: a6613eea885d9cc48a78877380ae60f7, type: 3}
   - {fileID: 2968318882669858139, guid: a6613eea885d9cc48a78877380ae60f7, type: 3}
-  - {fileID: 8526480308091482671, guid: a6613eea885d9cc48a78877380ae60f7, type: 3}
-  - {fileID: 1585469734166958266, guid: a6613eea885d9cc48a78877380ae60f7, type: 3}
-  - {fileID: 4525664902946916295, guid: a6613eea885d9cc48a78877380ae60f7, type: 3}
 --- !u!224 &13850985
 RectTransform:
   m_ObjectHideFlags: 0
@@ -37355,7 +37352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b4fdd7d74bf30f43b6abe821445af11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BloodEffectTestScript
-  isActiveEffect: 0
 --- !u!114 &512002136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37723,7 +37719,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b4fdd7d74bf30f43b6abe821445af11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BloodEffectTestScript
-  isActiveEffect: 0
 --- !u!114 &761551480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50057,7 +50052,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b4fdd7d74bf30f43b6abe821445af11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BloodEffectTestScript
-  isActiveEffect: 0
 --- !u!114 &1081083115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51813,7 +51807,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b4fdd7d74bf30f43b6abe821445af11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BloodEffectTestScript
-  isActiveEffect: 0
 --- !u!114 &1763710997
 MonoBehaviour:
   m_ObjectHideFlags: 0

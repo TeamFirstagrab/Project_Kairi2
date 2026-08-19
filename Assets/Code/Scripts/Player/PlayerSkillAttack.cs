@@ -29,6 +29,10 @@ public class PlayerSkillAttack : MonoBehaviour
 	private float cooldownTimer = 0f; // 현재 남은 쿨타임 계산용
 	public bool IsCooldown => cooldownTimer > 0f; // 쿨타임 중인지 판단
 
+	private float aimTimer = 0f; // 현재 조준 시간 계산용
+	private const float maxAimTime = 3f; // 최대 조준 제한 시간 (3초)
+	private bool isFailCooldown = false; // 현재 쿨타임이 2초 패널티(시간 충전) 쿨타임인지 여부
+
 	private Animator anim;
 	private GameObject DotObj;
 	private GameObject LineObj;
@@ -40,21 +44,105 @@ public class PlayerSkillAttack : MonoBehaviour
 	public bool canUseSkill = true;
 	public bool IsSkillAttacking { get; private set; }
 
+	private SpriteRenderer playerSpriteRenderer;
+	private GameObject[] outlineObjs;
+
 	private void Update()
 	{
+		// 1. 조준 시간 제한 체크 (3초)
+		if (isActive)
+		{
+			aimTimer -= Time.unscaledDeltaTime; // 슬로우 중에도 3초 정상 감산을 위해 unscaled 사용
+			if (aimTimer <= 0f)
+			{
+				Debug.Log("[PlayerSkillAttack] Aim time limit exceeded (3s)! Auto-canceling skill...");
+				ExitSkill(true); // 자동 취소 강제 호출 (isTimeout = true)
+			}
+		}
+
+		// 2. 쿨타임 감산 처리
 		if (cooldownTimer > 0f)
 		{
-			if (recoverTimeBased)
+			// 패널티 쿨타임이거나(isFailCooldown == true), 시간 충전 설정이 켜져 있을 때만 시간 경과로 충전
+			if (recoverTimeBased || isFailCooldown)
 			{
-				cooldownTimer -= Time.deltaTime;
+				cooldownTimer -= Time.unscaledDeltaTime;
 			}
 			if (cooldownUI != null)
 			{
-				cooldownUI.UpdateCooldown(cooldownTimer, skillCooldown);
+				cooldownUI.UpdateCooldown(cooldownTimer, isFailCooldown ? 2f : skillCooldown);
 			}
 			if (cooldownTimer <= 0f && cooldownUI != null)
 			{
+				isFailCooldown = false; // 패널티 쿨타임 종료
 				cooldownUI.UpdateCooldown(0f, skillCooldown); // 쿨타임 끝나면 0 상태로 업데이트
+			}
+		}
+	}
+
+	private void LateUpdate()
+	{
+		UpdateOutline();
+	}
+
+	private void UpdateOutline()
+	{
+		bool showOutline = cooldownTimer <= 0f && !isActive && !IsSkillAttacking;
+
+		if (showOutline)
+		{
+			if (playerSpriteRenderer == null) return;
+
+			if (outlineObjs == null)
+			{
+				outlineObjs = new GameObject[4];
+				string[] directions = { "Left", "Right", "Down", "Up" };
+				Vector3[] offsets = { Vector3.left * 0.05f, Vector3.right * 0.05f, Vector3.down * 0.05f, Vector3.up * 0.05f };
+
+				for (int i = 0; i < 4; i++)
+				{
+					GameObject outlineObj = new GameObject("PlayerOutline_" + directions[i]);
+					outlineObj.transform.SetParent(transform);
+					outlineObj.transform.localPosition = offsets[i];
+					outlineObj.transform.localScale = Vector3.one;
+					outlineObj.transform.localRotation = Quaternion.identity;
+
+					SpriteRenderer sr = outlineObj.AddComponent<SpriteRenderer>();
+					sr.sortingLayerName = playerSpriteRenderer.sortingLayerName;
+					sr.sortingOrder = playerSpriteRenderer.sortingOrder - 1;
+
+					Shader textShader = Shader.Find("GUI/Text Shader");
+					if (textShader != null)
+					{
+						sr.material = new Material(textShader);
+						sr.material.color = Color.red; // 빨간색 테두리
+					}
+					outlineObjs[i] = outlineObj;
+				}
+			}
+
+			// 실시간 스프라이트 애니메이션 동기화
+			foreach (var obj in outlineObjs)
+			{
+				if (obj != null)
+				{
+					obj.SetActive(true);
+					SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+					sr.sprite = playerSpriteRenderer.sprite;
+					sr.flipX = playerSpriteRenderer.flipX;
+					sr.flipY = playerSpriteRenderer.flipY;
+					sr.sortingOrder = playerSpriteRenderer.sortingOrder - 1;
+				}
+			}
+		}
+		else
+		{
+			if (outlineObjs != null)
+			{
+				foreach (var obj in outlineObjs)
+				{
+					if (obj != null) obj.SetActive(false);
+				}
 			}
 		}
 	}
@@ -63,6 +151,7 @@ public class PlayerSkillAttack : MonoBehaviour
 	{
 		slowMode = GetComponent<PlayerSlowMode>();
 		anim = GetComponent<Animator>();
+		playerSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
 	}
 
 	private void Start()
@@ -98,6 +187,7 @@ public class PlayerSkillAttack : MonoBehaviour
 			return;
 		}
 		isActive = true;
+		aimTimer = maxAimTime; // 조준 제한 시간 설정 (3초)
 		line.enabled = true;
 		slowMode.EnterSlow();
 		SetActiveObj(true);
@@ -135,7 +225,7 @@ public class PlayerSkillAttack : MonoBehaviour
 			ShowLine();
 		}
 
-		// 라인오브젝트 보정
+		// -라인오브젝트 보정
 		if (LineObj.transform.position != transform.position)
 			LineObj.transform.position = transform.position;
 
@@ -206,12 +296,6 @@ public class PlayerSkillAttack : MonoBehaviour
 	// 스킬 사용
 	private IEnumerator SkillAttack()
 	{
-		// 스킬 쿨타임 작동 및 UI 활성화
-		cooldownTimer = skillCooldown;
-		if (cooldownUI != null)
-		{
-			cooldownUI.ShowCooldown(true);
-		}
 		IsSkillAttacking = true;
 
 		Vector2 targetPos = GetSkillTargetPosition(DotObj.transform.position);	// Dot 위치를 목표 위치로
@@ -230,36 +314,93 @@ public class PlayerSkillAttack : MonoBehaviour
 			distance,
 			mask);
 
-		// 공격 판정
+		// 적 처치 성공 여부 계산 (현재 체력이 내 공격력 이하인 적이 1명이라도 있는지)
+		int killCount = 0;
+		int playerAttack = GameManager.Instance.playerStatsRuntime.attack;
+
 		foreach (RaycastHit2D hit in hits)
 		{
-			if (hit.transform.TryGetComponent<DoorController>(out var door))
-				door.OnOpen();
-
-			if (hit.transform.TryGetComponent<IDamageable>(out var damage))
-				damage.TakeDamage(GameManager.Instance.playerStatsRuntime.attack, dir);
-
-			if (hit.transform.TryGetComponent<CrackObject>(out var obj))
-				obj.Crack();
+			if (hit.transform.TryGetComponent<Enemy>(out var enemy))
+			{
+				if (enemy.currentHP > 0 && enemy.currentHP <= playerAttack)
+				{
+					killCount++;
+				}
+			}
 		}
 
-		slowMode.panel?.SetActive(false);   // 슬로우 화면 제거
-
-		// 이동 완료까지 기다림
-		yield return StartCoroutine(MoveTargetPos(targetPos));
-
-		// 슬로우 + 카메라 쉐이크
-		if(hits.Length > 0f)
+		if (killCount > 0)
 		{
-			// 쉐이크
-			GameManager.Instance.cameraShake.ShakeForSeconds();
+			// 성공: 정식 쿨타임(3초) 설정 및 차감 없음 알림
+			isFailCooldown = false;
+			cooldownTimer = skillCooldown;
+			if (cooldownUI != null)
+			{
+				cooldownUI.ShowCooldown(true);
+				cooldownUI.UpdateCooldown(cooldownTimer, skillCooldown);
+			}
 
-			slowMode.EnterOnlySlow();
+			// 공격 판정
+			foreach (RaycastHit2D hit in hits)
+			{
+				if (hit.transform.TryGetComponent<DoorController>(out var door))
+					door.OnOpen();
 
-			// 히트스톱(일시 멈춤)
-			yield return new WaitForSecondsRealtime(hitStopTime);
+				if (hit.transform.TryGetComponent<IDamageable>(out var damage))
+					damage.TakeDamage(playerAttack, dir);
 
-			slowMode.ExitSlow(false); // Shift 슬로우 쿨타임 작동 방지 (false 전달)
+				if (hit.transform.TryGetComponent<CrackObject>(out var obj))
+					obj.Crack();
+			}
+
+			slowMode.panel?.SetActive(false);   // 슬로우 화면 제거
+
+			// 이동 완료할때까지 기다림 (성공 시에만 목표 위치로 이동!)
+			yield return StartCoroutine(MoveTargetPos(targetPos));
+
+			// 슬로우 + 카메라 셰이크
+			if (hits.Length > 0f)
+			{
+				GameManager.Instance.cameraShake.ShakeForSeconds();
+				slowMode.EnterOnlySlow();
+				yield return new WaitForSecondsRealtime(hitStopTime);
+				slowMode.ExitSlow(false); // Shift 슬로우 쿨타임 작동 방지 (false 전달)
+			}
+		}
+		else
+		{
+			// 실패: 이동하지 않고 공격만 수행하며 2초의 연속사용 방지 쿨타임 발동
+			isFailCooldown = true;
+			cooldownTimer = 2f;
+			if (cooldownUI != null)
+			{
+				cooldownUI.ShowCooldown(true);
+				cooldownUI.UpdateCooldown(cooldownTimer, 2f);
+			}
+
+			// 공격 판정 (이동은 안 하지만 맞닿은 문이나 데미지는 입힘)
+			foreach (RaycastHit2D hit in hits)
+			{
+				if (hit.transform.TryGetComponent<DoorController>(out var door))
+					door.OnOpen();
+
+				if (hit.transform.TryGetComponent<IDamageable>(out var damage))
+					damage.TakeDamage(playerAttack, dir);
+
+				if (hit.transform.TryGetComponent<CrackObject>(out var obj))
+					obj.Crack();
+			}
+
+			slowMode.panel?.SetActive(false);   // 슬로우 화면 제거
+
+			// 제자리 타격 시에도 히트스톱 연출을 주어 타격감 보존
+			if (hits.Length > 0f)
+			{
+				GameManager.Instance.cameraShake.ShakeForSeconds();
+				slowMode.EnterOnlySlow();
+				yield return new WaitForSecondsRealtime(hitStopTime);
+				slowMode.ExitSlow(false);
+			}
 		}
 
 		IsSkillAttacking = false;
@@ -336,7 +477,7 @@ public class PlayerSkillAttack : MonoBehaviour
 
 			if (cooldownUI != null)
 			{
-				cooldownUI.UpdateCooldown(cooldownTimer, skillCooldown);
+				cooldownUI.UpdateCooldown(cooldownTimer, isFailCooldown ? 2f : skillCooldown);
 			}
 
 			Debug.Log($"[PlayerSkillAttack] Enemy Killed! Cooldown reduced by {reduction:F2}s. Remaining Cooldown: {cooldownTimer:F2}s");
@@ -344,14 +485,11 @@ public class PlayerSkillAttack : MonoBehaviour
 	}
 
 	// 마우스 뗌과 동시에 스킬 나가기 및 사용
-	public void ExitSkill()
+	public void ExitSkill(bool isTimeout = false)
 	{
-		// 조준 상태가 아니었거나(쿨타임 등으로 인해), 쿨타임 중이면 스킬 발사를 차단합니다.
+		// 조준 상태가 아니거나(쿨다운 등으로 인해), 쿨다운 중이면 스킬 발사를 차단합니다.
 		if (!isActive || IsCooldown) return;
 
-		anim.Play("Dragon_Skill");   // 애니메이션
-
-		if (canUseSkill) StartCoroutine(SkillAttack());
 		isActive = false;
 		line.enabled = false;
 		SetActiveObj(false);
@@ -359,5 +497,22 @@ public class PlayerSkillAttack : MonoBehaviour
 
 		GetComponent<PlayerMovement>().canMove = true;
 		GetComponent<PlayerAttack>().canAttack = true;
+
+		if (isTimeout)
+		{
+			// 3초 조준 제한 시간 만료: 이동하지 않고 2초의 패널티 쿨타임 발동
+			isFailCooldown = true;
+			cooldownTimer = 2f;
+			if (cooldownUI != null)
+			{
+				cooldownUI.ShowCooldown(true);
+				cooldownUI.UpdateCooldown(cooldownTimer, 2f);
+			}
+		}
+		else
+		{
+			anim.Play("Dragon_Skill");   // 애니메이션
+			if (canUseSkill) StartCoroutine(SkillAttack());
+		}
 	}
 }

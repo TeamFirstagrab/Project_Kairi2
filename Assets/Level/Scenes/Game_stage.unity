@@ -37024,7 +37024,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.061}
+  m_AnchoredPosition: {x: -0.13, y: -0.09}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &497196981
@@ -52273,7 +52273,11 @@ PrefabInstance:
       objectReference: {fileID: 1538885747}
     - target: {fileID: 6822659655701916194, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: afterAttackStopTime
-      value: 0.5
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: isDash
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: dashCooldown

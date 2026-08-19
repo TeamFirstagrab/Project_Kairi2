@@ -14,7 +14,8 @@ public class GameManager : MonoSingleton<GameManager>
 
 	[Header("플레이어 정보")]
 	public GameObject playerObj;
-	[HideInInspector] public PlayerController playerController;		// 컨트롤러 스크립트
+	[HideInInspector] public PlayerController playerController;     // 컨트롤러 스크립트
+	[HideInInspector] public PlayerHealth playerHealth;
 
 	[Header("스탯")]
 	public PlayerStats playerStats;
@@ -29,6 +30,7 @@ public class GameManager : MonoSingleton<GameManager>
 
 		// 스크립트 불러오기
 		playerController = GetComponent<PlayerController>();
+		playerHealth = GetComponent<PlayerHealth>();
 
 		// 창 설정
 		Screen.fullScreenMode = FullScreenMode.Windowed;

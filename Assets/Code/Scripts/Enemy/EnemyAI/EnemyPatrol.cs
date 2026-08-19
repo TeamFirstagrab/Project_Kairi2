@@ -59,7 +59,7 @@ public class EnemyPatrol : IEnemyState
 
                         if (hit.collider == null || hit.collider.CompareTag(TagName.player))
                         {
-                            enemy.ChangeState(KimEnemyState.CHASE);
+                            enemy.ChangeState(EnemyState.CHASE);
                             return; // 상태가 바뀌었으므로 즉시 업데이트 종료
                         }
                     }
@@ -105,7 +105,7 @@ public class EnemyPatrol : IEnemyState
         if (patrolTimer >= patrolTime)
         {
             enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);
-            enemy.ChangeState(KimEnemyState.IDLE);
+            enemy.ChangeState(EnemyState.IDLE);
         }
     }
 

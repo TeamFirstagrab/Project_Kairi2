@@ -73,11 +73,11 @@ public class PlayerAttack : MonoBehaviour
 		// 마우스 방향으로 공격 방향 계산
 		Vector2 dir = (mousePos - startPos).normalized;
 
+		// 공격 방향으로 플레이어 Sprite 회전
+		transform.localRotation = Quaternion.Euler(0f, dir.x < 0f ? 180f : 0f, 0f);
+
 		// 공격 거리
-		float targetDist =
-			groundChk.isGrounded || groundChk.isSlope
-				? stats.attackDist
-				: 1.5f;
+		float targetDist = groundChk.isGrounded || groundChk.isSlope ? stats.attackDist : 1.5f;
 
 		Vector2 targetPos = startPos + dir * targetDist;
 
@@ -109,14 +109,9 @@ public class PlayerAttack : MonoBehaviour
 		// ============================================================
 		// 2. 공격 범위의 모든 충돌체 탐색
 		//
-		// 기존 BoxCast는 가장 먼저 맞은 물체 하나만 반환한다.
-		//
-		// 하지만 원하는 동작은
-		//
-		// Door -> Enemy
-		//
-		// 처럼 Door 뒤에 있는 Enemy까지 공격해야 하기 때문에
-		// BoxCastAll을 사용한다.
+		// BoxCastAll을 사용하는 이유:
+		// Door -> Enemy처럼 Door 뒤에 있는 Enemy까지
+		// 탐색하기 위해서이다.
 		// ============================================================
 
 		LayerMask attackMask = ~LayerMask.GetMask(
@@ -151,13 +146,15 @@ public class PlayerAttack : MonoBehaviour
 
 
 		// ============================================================
-		// 3. Enemy와 Door를 각각 수집
+		// 3. Enemy와 Door 판정
 		// ============================================================
 
-		List<Collider2D> enemyColliders = new List<Collider2D>();
+		// 기존에는 enemyColliders 리스트에 모든 Enemy를 저장했다.
+		// 이제는 공격 방향에서 가장 먼저 맞은 Enemy 하나만 저장한다.
+		Collider2D firstEnemy = null;
+		float enemyDistance = Mathf.Infinity;
 
 		DoorController door = null;
-
 		float doorDistance = Mathf.Infinity;
 
 
@@ -173,10 +170,11 @@ public class PlayerAttack : MonoBehaviour
 
 			if (hit.collider.CompareTag(TagName.enemy))
 			{
-				// 같은 Enemy의 여러 Collider가 잡히는 경우를 방지
-				if (!enemyColliders.Contains(hit.collider))
+				// 모든 Enemy를 저장하지 않고 가장 가까운 Enemy 하나만 선택한다.
+				if (hit.distance < enemyDistance)
 				{
-					enemyColliders.Add(hit.collider);
+					enemyDistance = hit.distance;
+					firstEnemy = hit.collider;
 				}
 
 				continue;
@@ -197,6 +195,22 @@ public class PlayerAttack : MonoBehaviour
 					door = hit.collider.GetComponent<DoorController>();
 				}
 			}
+
+			// --------------------------------------------------------
+			// Bullet
+			// --------------------------------------------------------
+
+			if (hit.collider.CompareTag(TagName.bullet))
+			{
+				print($"총알 패링 시도");
+				if(hit.collider.TryGetComponent<EnemyBullet>(out var bullet))
+				{
+					bullet.Deflect(dir);
+					print($"총알 패링 성공");
+				}
+
+				continue;
+			}
 		}
 
 
@@ -210,26 +224,24 @@ public class PlayerAttack : MonoBehaviour
 		//
 		// Door -> Enemy
 		//
-		// 이 구조라면 Door가 먼저 공격을 받으므로
+		// 이런 구조라면 Door가 먼저 공격을 받으므로
 		// Door도 열리고 Enemy도 공격받는다.
 		// ============================================================
 
+		// 기존 enemyColliders 전체를 검사하지 않고
+		// 가장 먼저 맞은 Enemy 하나만 검사한다.
 		bool enemyBeforeDoor = false;
 
-		if (door != null)
+		if (door != null && firstEnemy != null)
 		{
-			foreach (Collider2D enemyCollider in enemyColliders)
-			{
-				float enemyDistance = Vector2.Distance(
-					castStart,
-					enemyCollider.ClosestPoint(castStart)
-				);
+			float firstEnemyDistance = Vector2.Distance(
+				castStart,
+				firstEnemy.ClosestPoint(castStart)
+			);
 
-				if (enemyDistance < doorDistance)
-				{
-					enemyBeforeDoor = true;
-					break;
-				}
+			if (firstEnemyDistance < doorDistance)
+			{
+				enemyBeforeDoor = true;
 			}
 		}
 
@@ -280,7 +292,8 @@ public class PlayerAttack : MonoBehaviour
 		//    타격감용 Slow Mode 실행
 		// ============================================================
 
-		if (enemyColliders.Count > 0)
+		// Enemy가 여러 마리 있더라도 firstEnemy 하나만 확인한다.
+		if (firstEnemy != null)
 		{
 			isSlow = true;
 		}
@@ -309,24 +322,12 @@ public class PlayerAttack : MonoBehaviour
 		// 단, Enemy가 Door보다 뒤에 있어도 Door가 먼저 있으므로
 		// Door까지 이동한 뒤 Enemy를 공격할 수 있도록 한다.
 		// ============================================================
-
-		if (enemyColliders.Count > 0)
+		if (firstEnemy != null)
 		{
-			float nearestEnemyDistance = Mathf.Infinity;
-
-			foreach (Collider2D enemyCollider in enemyColliders)
-			{
-				float distance = Vector2.Distance(
-					rigid.position,
-					enemyCollider.transform.position
-				);
-
-				if (distance < nearestEnemyDistance)
-				{
-					nearestEnemyDistance = distance;
-				}
-			}
-
+			float nearestEnemyDistance = Vector2.Distance(
+				rigid.position,
+				firstEnemy.transform.position
+			);
 
 			// 기존 코드의 공격 거리 제한 로직 유지
 			if (groundChk.isGrounded)
@@ -338,6 +339,27 @@ public class PlayerAttack : MonoBehaviour
 			}
 		}
 
+		// ------------------------------------------------------------
+		// 벽(Wall) / 지형(Ground) 감지 (방안 A)
+		// 공격 방향에 벽이나 지형이 막고 있다면 이동 목표 거리를 감지된 벽 위치까지로 제한
+		// ------------------------------------------------------------
+		LayerMask wallMask = LayerMask.GetMask(
+			LayerName.wall,
+			LayerName.ground
+		);
+
+		RaycastHit2D wallHit = Physics2D.Raycast(
+			castStart,
+			dir,
+			targetDist,
+			wallMask
+		);
+
+		if (wallHit.collider != null)
+		{
+			targetDist = Mathf.Min(targetDist, wallHit.distance);
+		}
+
 
 		// 최종 이동 위치 계산
 		targetPos = rigid.position + dir * targetDist;
@@ -346,13 +368,14 @@ public class PlayerAttack : MonoBehaviour
 		// ============================================================
 		// 9. 공격 이펙트 생성
 		// ============================================================
-
 		GameObject attackObj = SpawnAttackEffect(dir);
 
 
 		// ============================================================
 		// 10. 공격 거리만큼 대쉬
 		// ============================================================
+
+		Vector2 prevPos = rigid.position;
 
 		while (
 			Vector2.Distance(rigid.position, targetPos) > 0.5f &&
@@ -379,32 +402,33 @@ public class PlayerAttack : MonoBehaviour
 			}
 
 			yield return null;
+
+			// 벽에 막혀 플레이어 위치 변화가 거의 없는 경우 조기 종료 (방안 B)
+			if (attackTimer > 0.1f && Vector2.Distance(rigid.position, prevPos) < 0.001f)
+			{
+				break;
+			}
+
+			prevPos = rigid.position;
 		}
 
 
-		// 최종 위치 보정
-		rigid.MovePosition(targetPos);
+		// 목표 위치에 정상 도달한 경우에만 최종 위치 보정
+		if (Vector2.Distance(rigid.position, targetPos) <= 0.5f)
+		{
+			rigid.MovePosition(targetPos);
+		}
 
 
 		// ============================================================
 		// 11. Enemy 데미지 처리
 		//
-		// BoxCastAll로 찾은 모든 Enemy를 공격한다.
-		//
-		// 따라서
-		//
-		// Door -> Enemy -> Enemy
-		//
-		// 구조라면 Door도 열리고 Enemy 두 마리도 공격받는다.
+		// firstEnemy 하나에게만 데미지를 준다.
 		// ============================================================
 
-		foreach (Collider2D enemyCollider in enemyColliders)
+		if (firstEnemy != null)
 		{
-			if (enemyCollider == null)
-				continue;
-
-
-			if (enemyCollider.TryGetComponent<IDamageable>(
+			if (firstEnemy.TryGetComponent<IDamageable>(
 				out IDamageable damageable
 			))
 			{

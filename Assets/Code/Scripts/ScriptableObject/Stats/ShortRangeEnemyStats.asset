@@ -17,11 +17,11 @@ MonoBehaviour:
   MoveSpeed: 1
   PatrolSpeed: 1.5
   ChaseSpeed: 8
-  SightRoundRange: 2
-  SightRange: 5
+  SightRoundRange: 10
+  SightRange: 12
   FindCoolTime: 1
   Attack: 1
   AttackRange: 2
   HP: 1
-  SightAngle: 25
+  SightAngle: 30
   SightHeightLimit: 1.5

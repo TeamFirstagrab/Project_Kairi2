@@ -38,7 +38,7 @@ public class EnemyChase : IEnemyState
         // 쫓고 있던 플레이어가 파괴되거나 씬에서 사라지면 대기 상태로 복원합니다.
         if (playerTransform == null)
         {
-            enemy.ChangeState(KimEnemyState.IDLE);
+            enemy.ChangeState(EnemyState.IDLE);
             return;
         }
 
@@ -56,7 +56,7 @@ public class EnemyChase : IEnemyState
         if (distanceToPlayer <= currentAttackRange)
         {
             enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y); // 즉각 제동
-            enemy.ChangeState(KimEnemyState.ATTACK);
+            enemy.ChangeState(EnemyState.ATTACK);
             return;
         }
 
@@ -71,7 +71,7 @@ public class EnemyChase : IEnemyState
         if (distanceToPlayer >= currentSightRange)
         {
             enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y); // 즉각 제동
-            enemy.ChangeState(KimEnemyState.IDLE);
+            enemy.ChangeState(EnemyState.IDLE);
             return;
         }
 

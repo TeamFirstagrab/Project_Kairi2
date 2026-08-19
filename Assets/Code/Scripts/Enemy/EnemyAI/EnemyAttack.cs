@@ -48,7 +48,7 @@ public class EnemyAttack : IEnemyState
         if (attackTimer >= attackDuration)
         {
             // 공격을 무사히 마쳤으므로, 다시 적 본체 사령탑(enemy)에게 "상대가 아직 살아있다면 쫓아갈 수 있게 즉시 추격(CHASE) 상태로 교환해라!" 하고 명령을 전송합니다.
-            enemy.ChangeState(KimEnemyState.CHASE);
+            enemy.ChangeState(EnemyState.CHASE);
         }
     }
 

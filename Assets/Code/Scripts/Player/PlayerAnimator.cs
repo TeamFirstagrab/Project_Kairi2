@@ -74,7 +74,7 @@ public class PlayerAnimator : MonoBehaviour
 		// 1. 사망
 		if (health != null && health.isDead)
 		{
-			PlayAnimation(AnimationState.Die);
+			PlayAnimation(AnimationState.Idle);
 			return;
 		}
 

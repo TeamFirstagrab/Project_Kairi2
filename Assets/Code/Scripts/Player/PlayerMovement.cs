@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
 	public bool IsWallSliding { get; private set; }
 	public bool IsWallJumping { get; private set; }
 	private float wallJumpTimer;
+	private bool canWallClimb = true;
 
 	// 크라우치
 	private bool dashRequested;
@@ -85,6 +86,11 @@ public class PlayerMovement : MonoBehaviour
 		stats = GameManager.Instance.playerStatsRuntime;
 		bool wasGrounded = groundChecker.isGrounded;
 		groundChecker.CheckGround();
+
+		if (groundChecker.isGrounded)
+		{
+			canWallClimb = true;
+		}
 
 		// 착지 (0.12초간)
 		if (!wasGrounded && groundChecker.isGrounded && rigid.linearVelocityY < -0.5f)
@@ -184,11 +190,20 @@ public class PlayerMovement : MonoBehaviour
 		// 점프 또는 벽 점프 실행
 		if (jumpBufferCounter > 0f)
 		{
-			// 벽 점프 (벽에 닿아 있거나 슬라이딩 중일 때 반대 방향으로 점프)
+			// 벽 점프 및 벽 타기 (벽에 닿아 있거나 슬라이딩 중일 때)
 			if (wallDetector != null && (wallDetector.IsTouchingWall || IsWallSliding))
 			{
-				print($"wall jump (opposite side)");
-				ExecuteWallJump();
+				if (canWallClimb)
+				{
+					print($"wall climb (slide up)");
+					ExecuteWallPushJump();
+					canWallClimb = false;
+				}
+				else
+				{
+					print($"wall jump (opposite side)");
+					ExecuteWallJump();
+				}
 				jumpBufferCounter = 0f;
 			}
 			// 일반 점프

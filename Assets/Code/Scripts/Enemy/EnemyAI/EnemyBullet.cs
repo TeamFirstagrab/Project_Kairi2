@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -100,7 +100,10 @@ public class EnemyBullet : MonoBehaviour
         }
 
         // 공통: 벽 지형 등에 닿으면 탄환 제거
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground") || collision.CompareTag("Ground"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground") || 
+            collision.gameObject.layer == LayerMask.NameToLayer("Wall") || 
+            collision.CompareTag("Ground") || 
+            collision.CompareTag("Wall"))
         {
             Destroy(gameObject);
         }

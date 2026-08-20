@@ -1,6 +1,7 @@
 using UnityEngine;
 using EnumType;
 using System.Collections.Generic;
+using Globals;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -792,5 +793,48 @@ public class Enemy : MonoBehaviour, IDamageable
 			),
 			0.05f
 		);
+	}
+
+	[HideInInspector]
+	public bool isIgnoringPlatform = false;
+
+	public void IgnorePlatformTemporarily(GameObject platformObj)
+	{
+		if (isIgnoringPlatform) return;
+		StartCoroutine(IgnorePlatformRoutine(platformObj));
+	}
+
+	private System.Collections.IEnumerator IgnorePlatformRoutine(GameObject platformObj)
+	{
+		if (platformObj == null) yield break;
+		isIgnoringPlatform = true;
+
+		Collider2D[] platformColliders = platformObj.GetComponents<Collider2D>();
+		Collider2D[] enemyColliders = GetComponents<Collider2D>();
+
+		foreach (var platformCol in platformColliders)
+		{
+			foreach (var enemyCol in enemyColliders)
+			{
+				Physics2D.IgnoreCollision(enemyCol, platformCol, true);
+			}
+		}
+
+		yield return new WaitForSeconds(1.5f);
+
+		if (platformObj != null)
+		{
+			foreach (var platformCol in platformColliders)
+			{
+				if (platformCol != null)
+				{
+					foreach (var enemyCol in enemyColliders)
+					{
+						Physics2D.IgnoreCollision(enemyCol, platformCol, false);
+					}
+				}
+			}
+		}
+		isIgnoringPlatform = false;
 	}
 }

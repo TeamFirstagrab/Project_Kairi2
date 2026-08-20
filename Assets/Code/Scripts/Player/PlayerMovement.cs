@@ -171,7 +171,7 @@ public class PlayerMovement : MonoBehaviour
 		{
 			if (collPlatform.TryGetComponent<OneWayPlatformController>(out var oneWayP))
 			{
-				oneWayP.SetTriggerOn();
+				oneWayP.SetIgnoreCollisionForPlayer(coll);
 				dashRequested = false;      // 대쉬 해제
 			}
 		}

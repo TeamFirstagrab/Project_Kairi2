@@ -98,7 +98,44 @@ public class EnemyPatrol : IEnemyState
             currentPatrolSpeed = enemy.enemyStats.PatrolSpeed;
         }
 
-        enemy.rb.linearVelocity = new Vector2(walkDirection.x * currentPatrolSpeed, enemy.rb.linearVelocity.y);
+        Vector2 moveDirection = walkDirection;
+
+        // 경사면 감지 및 이동 벡터 보정
+        Vector2 rayOrigin = enemy.transform.position;
+        float rayDistance = 2.5f;
+        LayerMask groundMask = enemy.isIgnoringPlatform ? LayerMask.GetMask(LayerName.ground) : LayerMask.GetMask(LayerName.ground, LayerName.oneWayPlatform);
+        RaycastHit2D slopeHit = Physics2D.Raycast(rayOrigin, Vector2.down, rayDistance, groundMask);
+
+        if (slopeHit.collider != null && slopeHit.distance <= 1.1f)
+        {
+            float slopeAngle = Vector2.Angle(Vector2.up, slopeHit.normal);
+            if (slopeAngle > 2f)
+            {
+                moveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+                enemy.rb.linearVelocity = moveDirection * currentPatrolSpeed;
+            }
+            else
+            {
+                enemy.rb.linearVelocity = new Vector2(walkDirection.x * currentPatrolSpeed, 0f);
+            }
+        }
+        else
+        {
+            float velY = enemy.rb.linearVelocity.y;
+
+            // 공중에 있을 때 아래쪽에 경사면이 감지되면 인위적인 하강 속도를 주어 지면에 빠르게 밀착(Glue)시킵니다.
+            if (slopeHit.collider != null)
+            {
+                float slopeAngle = Vector2.Angle(Vector2.up, slopeHit.normal);
+                if (slopeAngle > 2f)
+                {
+                    velY = -currentPatrolSpeed * 0.7f;
+                }
+            }
+
+            if (velY > 0f) velY = 0f;
+            enemy.rb.linearVelocity = new Vector2(walkDirection.x * currentPatrolSpeed, velY);
+        }
 
         // 5. [순찰 시간 초과 판정]
         // 약속된 순찰 목표 시간에 도달한 경우, 물리 정지 제동을 건 뒤 대기(IDLE) 상태로 컴백합니다.

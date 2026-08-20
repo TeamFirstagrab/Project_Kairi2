@@ -79,6 +79,39 @@ public class EnemyChase : IEnemyState
         // 플레이어 좌표가 적의 우측에 있는지, 좌측에 있는지 분석하여 적의 Y축 각도를 0도 혹은 180도로 뒤집습니다.
         float directionX = playerTransform.position.x - enemy.transform.position.x;
 
+        // 플레이어가 자신보다 아래에 있고 현재 원웨이 플랫폼 위에 있다면, 가장 가까운 경사면 진입로(Waypoint)로 강제 유도
+        if (playerTransform.position.y < enemy.transform.position.y - 1.0f && !enemy.isIgnoringPlatform)
+        {
+            RaycastHit2D platformCheck = Physics2D.Raycast(enemy.transform.position, Vector2.down, 1.5f, LayerMask.GetMask(LayerName.oneWayPlatform));
+            if (platformCheck.collider != null && platformCheck.collider.CompareTag(TagName.oneWayPlatform))
+            {
+                SlopeEntrance[] entrances = Object.FindObjectsByType<SlopeEntrance>(FindObjectsSortMode.None);
+                SlopeEntrance closestEntrance = null;
+                float closestDist = float.MaxValue;
+                foreach (var ent in entrances)
+                {
+                    float dist = Vector2.Distance(enemy.transform.position, ent.transform.position);
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        closestEntrance = ent;
+                    }
+                }
+
+                if (closestEntrance != null)
+                {
+                    // 진입로 위치로 타겟 X 조정
+                    directionX = closestEntrance.transform.position.x - enemy.transform.position.x;
+
+                    // 진입로 부근(X축 거리 1.0f 이하)에 도달하면 대상 플랫폼과의 충돌을 일시 무시하여 통과하도록 설정
+                    if (Mathf.Abs(directionX) < 1.0f)
+                    {
+                        enemy.IgnorePlatformTemporarily(closestEntrance.targetPlatform);
+                    }
+                }
+            }
+        }
+
         if (directionX > 0f)
         {
             enemy.transform.eulerAngles = Vector3.zero; // 오른쪽 방향 조준
@@ -90,9 +123,47 @@ public class EnemyChase : IEnemyState
 
         // 이동 진행 방향 결정 (-1 혹은 1)
         float moveSign = directionX > 0f ? 1f : -1f;
+        Vector2 moveDirection = new Vector2(moveSign, 0f);
 
-        // 물리 컴포넌트(Rigidbody2D)에 속력을 가하여 플레이어 방향으로 질주시킵니다.
-        enemy.rb.linearVelocity = new Vector2(moveSign * chaseSpeed, enemy.rb.linearVelocity.y);
+        // 경사면 감지 및 이동 벡터 보정
+        Vector2 rayOrigin = enemy.transform.position;
+        float rayDistance = 2.5f;
+        LayerMask groundMask = enemy.isIgnoringPlatform ? LayerMask.GetMask(LayerName.ground) : LayerMask.GetMask(LayerName.ground, LayerName.oneWayPlatform);
+        RaycastHit2D slopeHit = Physics2D.Raycast(rayOrigin, Vector2.down, rayDistance, groundMask);
+
+        if (slopeHit.collider != null && slopeHit.distance <= 1.1f)
+        {
+            float slopeAngle = Vector2.Angle(Vector2.up, slopeHit.normal);
+            if (slopeAngle > 2f)
+            {
+                moveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+                enemy.rb.linearVelocity = moveDirection * chaseSpeed;
+            }
+            else
+            {
+                // 평지(경사각 <= 2f)에 닿아 있는 경우, Y축 속도 튐 방지를 위해 Y 속도를 0으로 리셋
+                enemy.rb.linearVelocity = new Vector2(moveSign * chaseSpeed, 0f);
+            }
+        }
+        else
+        {
+            float velY = enemy.rb.linearVelocity.y;
+            
+            // 공중에 있을 때 아래쪽에 경사면이 감지되면 인위적인 하강 속도를 주어 지면에 빠르게 밀착(Glue)시킵니다.
+            if (slopeHit.collider != null)
+            {
+                float slopeAngle = Vector2.Angle(Vector2.up, slopeHit.normal);
+                if (slopeAngle > 2f)
+                {
+                    // 경사 각도에 맞춰 아래로 빠르게 끌어당김
+                    velY = -chaseSpeed * 0.7f;
+                }
+            }
+
+            // 공중에 있을 때 Y축 속도가 양수(위쪽 방향)라면, 경사면에서 튀어오른 것이므로 0으로 억제합니다.
+            if (velY > 0f) velY = 0f;
+            enemy.rb.linearVelocity = new Vector2(moveSign * chaseSpeed, velY);
+        }
     }
 
     public void ExitState(Enemy enemy)
